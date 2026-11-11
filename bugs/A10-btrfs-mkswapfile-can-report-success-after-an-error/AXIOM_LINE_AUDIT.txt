@@ -1,0 +1,14 @@
+01 A command completes with an integer exit code.
+02 An exit code of zero traditionally reports success to a calling shell.
+03 A nonzero exit code lets that shell take a failure-handling branch.
+04 A file-creation command can print a diagnostic and still exit with code zero.
+05 Such output leaves a script that tests exit code alone believing creation succeeded.
+06 The upstream issue identifies error paths in cmds/filesystem.c lines 1943 through 1984.
+07 Those paths jump to common cleanup at the end of the function.
+08 The issue reports that cleanup returns zero for those error branches.
+09 A cleanup operation can release resources without changing failure into success.
+10 Missing inference: returning from cleanup must preserve the status of the original operation.
+11 UPSTREAM https://github.com/kdave/btrfs-progs/issues/1186
+12 REPORTED SOURCE commit 4ab0e80be9e3bb1db2e6038e6d4316d35fb7ba8b; line numbers must be confirmed on this commit.
+13 USER-LAPTOP REPRODUCTION: NOT RUN; avoid filesystem formatting or swap activation on a live disk.
+14 NEW THINGS INTRODUCED WITHOUT DERIVATION: NONE IDENTIFIED within lines 01-10; error-path source inspection required before writing a patch.
