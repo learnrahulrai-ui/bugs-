@@ -1,0 +1,7 @@
+WHAT: 1 recorded case; A watch has one descriptor and one current pathname, but two indexes reference the watch
+WHY: Updating only a watch object in one mapping leaves the other mapping stale.
+WHERE: backend_inotify.go: watches.wd; watches.path; WatchList
+WHO: 1 client action (Watch a directory, rename it, query watch list) and 1 owning component (fsnotify).
+WHEN: fixed at commit 853adeb28b4e7b01cf719f12619fcdeea8c06d48
+WITHOUT: compare the control state: Without rename the two maps should agree.
+WHICH: success requires this observation: Compare the identity pair 7<->/tmp/x, not merely list length 1.

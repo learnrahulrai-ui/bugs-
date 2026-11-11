@@ -1,0 +1,11 @@
+1. Customer action: redis-cli HSET; HPEXPIRE; HPERSIST; redis-server restart.
+2. First code path: src/t_hash.c: hpersistCommand, hashTypeGetValue.
+3. Required initial state: A field is a named value inside a hash; token=t1 is one field and its value.
+4. Action chain: HSET session:1 token t1 => token=t1; HPEXPIRE 2000 => deadline set; HPERSIST => deadline removed; wait 2.5 s; SHUTDOWN; restart from AOF; HGET should remain t1.
+5. Reported visible failure: A saved field is present before restart and absent after restart.
+6. Exact report datum: A 2000 ms expiry is removed before 2000 ms pass; after a 2500 ms wait and restart the field vanishes
+7. Independent control: AOF rewrite before restart removes the obsolete command history; compare with and without rewrite.
+8. Assertion to check: After restart HGET session:1 token must equal t1; inspect AOF for unexpected HDEL.
+9. ? Prove the required result from line 3 and the command sequence in line 4.
+10. ?? Find the first step where the reported result disagrees with line 8.
+11. Do not write a fix until the first broken invariant is independently located.

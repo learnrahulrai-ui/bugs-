@@ -1,0 +1,11 @@
+1. Direct evidence URL: https://github.com/fsnotify/fsnotify/commit/853adeb28b
+2. Source revision or range: fixed at commit 853adeb28b4e7b01cf719f12619fcdeea8c06d48
+3. Real code location: backend_inotify.go: watches.wd; watches.path; WatchList
+4. Original reporter observation: A watch has one descriptor and one current pathname, but two indexes reference the watch
+5. The report's observed failure: WatchList names no longer describe the watched directory
+6. A separate control condition: Without rename the two maps should agree.
+7. Observation required to confirm locally: Compare the identity pair 7<->/tmp/x, not merely list length 1.
+8. Verified here: GitHub source report opened for this case when available; no full end-to-end reproducer executed here.
+9. Contrary check: compare the stated control, exact revision, and current branch independently.
+10. Confidence: upstream-reported case; local reproducibility UNVERIFIED.
+11. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in 00-AXIOMS.txt; other files reference its declared terms.

@@ -1,0 +1,12 @@
+1. A program receives inputs and changes state.
+2. A state is the values and objects the program currently holds.
+3. An invariant is a rule that must hold before and after a successful operation.
+4. A machine state includes whether a virtual CPU is running or paused.
+5. A paused guest under debugger is in QEMU's debug runstate.
+6. A migration file saves VM state for another process to load.
+7. The loading process initially has the inmigrate runstate.
+8. Loading the saved debug state requests a transition from inmigrate to debug.
+9. The 7.1.0 transition table omits that pair.
+10. The restore aborts rather than completing the documented state transfer.
+11. The reported failure violates at least one rule described above; the source report is evidence, not proof for every version.
+12. A reproduced failure requires running the same input on a recorded revision and saving the actual output.

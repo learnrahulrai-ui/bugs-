@@ -1,0 +1,7 @@
+WHAT: 1 recorded case; Trace enters vmx_vcpu_create -> kvm_alloc_apic_access_page -> kvm_swap_active_memslots; 143 s hung-task report
+WHY: The wait lasted more than 143 seconds in the reported run.
+WHERE: virt/kvm/kvm_main.c: kvm_swap_active_memslots; arch/x86/kvm/lapic.c
+WHO: 1 client action (open /dev/kvm; create VM; KVM_CREATE_VCPU) and 1 owning component (Linux KVM).
+WHEN: upstream reported 2025-11-17; retests 2026
+WITHOUT: compare the control state: Compare KVM_CREATE_VCPU without the reproducer's state mutations.
+WHICH: success requires this observation: Capture exact kvm_swap_active_memslots stack and held locks; diagnose before naming culprit.

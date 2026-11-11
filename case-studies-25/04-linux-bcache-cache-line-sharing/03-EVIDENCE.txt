@@ -1,0 +1,11 @@
+1. Direct evidence URL: https://github.com/torvalds/linux/commit/7b1002f7cfe5
+2. Source revision or range: historical fix 7b1002f7cfe5
+3. Real code location: drivers/md/bcache/writeback.c: bcache_dev_sectors_dirty_add
+4. Original reporter observation: 1 sector=512 bytes; 8192 sectors per stripe; 1 cache line=64 bytes; 20 threads measured about 50x per-call slowdown
+5. The report's observed failure: More CPU workers slow down dirty-data accounting
+6. A separate control condition: Compare line traffic at same dirty set before and after commit; do not equate throughput with cache-line transfers.
+7. Observation required to confirm locally: A claim of 50x is reported for authors' hardware, not a guaranteed local result.
+8. Verified here: GitHub source report opened for this case when available; no full end-to-end reproducer executed here.
+9. Contrary check: compare the stated control, exact revision, and current branch independently.
+10. Confidence: upstream-reported case; local reproducibility UNVERIFIED.
+11. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in 00-AXIOMS.txt; other files reference its declared terms.

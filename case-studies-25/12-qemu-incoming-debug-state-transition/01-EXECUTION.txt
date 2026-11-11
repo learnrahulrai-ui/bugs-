@@ -1,0 +1,11 @@
+1. Customer action: Start guest with gdbstub; pause guest; migrate to compressed file; restore with -incoming.
+2. First code path: softmmu/runstate.c: runstate_transitions_def (7.1).
+3. Required initial state: A machine state includes whether a virtual CPU is running or paused.
+4. Action chain: Build QEMU 7.1.0; create a guest; start -s -S; pause through GDB; HMP migrate exec gzip; restore via -incoming exec gzip -d.
+5. Reported visible failure: Paused VM snapshot cannot resume; QEMU aborts.
+6. Exact report datum: Restore tries runstate inmigrate -> debug and prints invalid transition
+7. Independent control: Save guest while not debug-paused; compare restore state.
+8. Assertion to check: Capture 'invalid runstate transition: inmigrate -> debug' and process exit.
+9. ? Prove the required result from line 3 and the command sequence in line 4.
+10. ?? Find the first step where the reported result disagrees with line 8.
+11. Do not write a fix until the first broken invariant is independently located.

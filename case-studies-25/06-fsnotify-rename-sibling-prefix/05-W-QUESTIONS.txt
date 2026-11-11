@@ -1,0 +1,7 @@
+WHAT: 1 recorded case; A string prefix is not the same as a path ancestor: /tmp/a prefixes /tmp/ab but /tmp/ab is not inside /tmp/a
+WHY: A string-only prefix update changes both /tmp/a and /tmp/ab; only the first should change.
+WHERE: backend_inotify.go: handleEvent; backend_windows.go
+WHO: 1 client action (Watch /tmp/a and /tmp/ab; rename /tmp/a -> /tmp/x) and 1 owning component (fsnotify).
+WHEN: fixed at 162b4216ab8f92ecd26425530bee198972c9b3cb
+WITHOUT: compare the control state: /tmp/a/sub must become /tmp/x/sub; /tmp/ab/sub must remain /tmp/ab/sub.
+WHICH: success requires this observation: Expected current watch names: /tmp/x, /tmp/x/sub, /tmp/ab, /tmp/ab/sub.

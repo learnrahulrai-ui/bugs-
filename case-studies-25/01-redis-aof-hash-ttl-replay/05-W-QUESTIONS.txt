@@ -1,0 +1,7 @@
+WHAT: 1 recorded case; A 2000 ms expiry is removed before 2000 ms pass; after a 2500 ms wait and restart the field vanishes
+WHY: The replay code checks today's time rather than the historical command state and skips HPERSIST.
+WHERE: src/t_hash.c: hpersistCommand, hashTypeGetValue
+WHO: 1 client action (redis-cli HSET; HPEXPIRE; HPERSIST; redis-server restart) and 1 owning component (Redis).
+WHEN: 8.10.2 / unstable 5e332cab
+WITHOUT: compare the control state: AOF rewrite before restart removes the obsolete command history; compare with and without rewrite.
+WHICH: success requires this observation: After restart HGET session:1 token must equal t1; inspect AOF for unexpected HDEL.

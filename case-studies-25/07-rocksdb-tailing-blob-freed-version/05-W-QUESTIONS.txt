@@ -1,0 +1,7 @@
+WHAT: 1 recorded case; Blob threshold=64 bytes; values=4096 bytes; the iterator retains a pointer after owning Version is freed
+WHY: The outer iterator later uses its old address after the object's lifetime has ended.
+WHERE: db/forward_iterator.cc; db/blob/blob_fetcher.cc; db/db_iter.cc
+WHO: 1 client action (Create tailing iterator; write blob values; flush and compact; continue Next) and 1 owning component (RocksDB).
+WHEN: 11.13.0 and main 074134d98
+WITHOUT: compare the control state: Blob=false and tailing=false are distinct reported noncrash controls.
+WHICH: success requires this observation: ASan stack must connect Version::Unref to VersionBlobFetcherBase::FetchBlob.

@@ -1,0 +1,13 @@
+1. Use a disposable Linux environment; never test on production data.
+2. Target reported project: fsnotify.
+3. Tested revision claimed by upstream: fixed at 162b4216ab8f92ecd26425530bee198972c9b3cb.
+4. Original issue or patch: https://github.com/fsnotify/fsnotify/issues/755
+5. Path to inspect: backend_inotify.go: handleEvent; backend_windows.go
+6. Starting action: Watch /tmp/a and /tmp/ab; rename /tmp/a -> /tmp/x
+7. Reproduction order: Run TestRenameRecursiveDoesNotRenameSiblingPrefixWatch on fixed commit; then apply just that regression test to the parent and compare outcomes.
+8. Negative control: /tmp/a/sub must become /tmp/x/sub; /tmp/ab/sub must remain /tmp/ab/sub.
+9. Detect success/failure: Expected current watch names: /tmp/x, /tmp/x/sub, /tmp/ab, /tmp/ab/sub.
+10. Safety: Create temporary test directories only.
+11. Upstream reporter reproduced this case. It has NOT been executed in this ChatGPT container.
+12. Local test status: UNTESTED_HERE; no fabricated timings, traces, or pass/fail claims.
+13. See run.sh for an executable attempt or the limitations of that environment.

@@ -1,0 +1,12 @@
+1. A program receives inputs and changes state.
+2. A state is the values and objects the program currently holds.
+3. An invariant is a rule that must hold before and after a successful operation.
+4. A WAL is a file containing changes required to rebuild data after restart.
+5. A logical record can occupy several physical pieces; FIRST and LAST bound one logical record.
+6. A checksum is a computed number from a byte sequence; equal bytes must yield the same checksum.
+7. The reader starts checksum state when it reads the first piece of A.
+8. A damaged or padding physical piece makes the reader abandon A.
+9. If the reader retains A's checksum state while starting B, the checksum describes A-prefix+B rather than B.
+10. Recovery validates B against the wrong checksum and rejects otherwise usable bytes.
+11. The reported failure violates at least one rule described above; the source report is evidence, not proof for every version.
+12. A reproduced failure requires running the same input on a recorded revision and saving the actual output.

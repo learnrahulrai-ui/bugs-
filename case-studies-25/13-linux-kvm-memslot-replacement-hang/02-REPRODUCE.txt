@@ -1,0 +1,13 @@
+1. Use a disposable Linux environment; never test on production data.
+2. Target reported project: Linux KVM.
+3. Tested revision claimed by upstream: upstream reported 2025-11-17; retests 2026.
+4. Original issue or patch: https://syzkaller.appspot.com/bug?extid=5c566b850d6ab6f0427a
+5. Path to inspect: virt/kvm/kvm_main.c: kvm_swap_active_memslots; arch/x86/kvm/lapic.c
+6. Starting action: open /dev/kvm; create VM; KVM_CREATE_VCPU
+7. Reproduction order: Boot an instrumented guest VM with nested KVM; run the syzkaller C reproducer from source page; collect hung-task traces and lock holders.
+8. Negative control: Compare KVM_CREATE_VCPU without the reproducer's state mutations.
+9. Detect success/failure: Capture exact kvm_swap_active_memslots stack and held locks; diagnose before naming culprit.
+10. Safety: Must run only inside disposable nested-virtualization VM.
+11. Upstream reporter reproduced this case. It has NOT been executed in this ChatGPT container.
+12. Local test status: UNTESTED_HERE; no fabricated timings, traces, or pass/fail claims.
+13. See run.sh for an executable attempt or the limitations of that environment.

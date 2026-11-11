@@ -1,0 +1,13 @@
+1. Use a disposable Linux environment; never test on production data.
+2. Target reported project: RocksDB.
+3. Tested revision claimed by upstream: reported 2026-10-20; pin issue's tested source.
+4. Original issue or patch: https://github.com/meta/rocksdb/issues/15440
+5. Path to inspect: range_del_aggregator.cc; column_family.cc; external_sst_file_ingestion_job.cc
+6. Starting action: DeleteRange twice; ingest external SST; Get(k11), Get(k13)
+7. Reproduction order: Use issue's SST ingestion reproducer; control: only first DeleteRange returns explicit rejection; test two overlapping deletions returns OK and both keys absent.
+8. Negative control: Run single tombstone and double tombstone with same SST payload.
+9. Detect success/failure: Compare status and visible key count; success with 0 visible keys is failed invariant.
+10. Safety: Only temporary DB paths; preserve logs after flush+compaction.
+11. Upstream reporter reproduced this case. It has NOT been executed in this ChatGPT container.
+12. Local test status: UNTESTED_HERE; no fabricated timings, traces, or pass/fail claims.
+13. See run.sh for an executable attempt or the limitations of that environment.

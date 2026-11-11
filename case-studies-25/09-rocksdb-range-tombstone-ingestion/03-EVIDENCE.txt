@@ -1,0 +1,11 @@
+1. Direct evidence URL: https://github.com/meta/rocksdb/issues/15440
+2. Source revision or range: reported 2026-10-20; pin issue's tested source
+3. Real code location: range_del_aggregator.cc; column_family.cc; external_sst_file_ingestion_job.cc
+4. Original reporter observation: DeleteRange [k09,k20) and [k15,k20); replace [k07,k15) with keys k11,k13; both missing
+5. The report's observed failure: Ingestion returns OK but two newly loaded records are absent
+6. A separate control condition: Run single tombstone and double tombstone with same SST payload.
+7. Observation required to confirm locally: Compare status and visible key count; success with 0 visible keys is failed invariant.
+8. Verified here: GitHub source report opened for this case when available; no full end-to-end reproducer executed here.
+9. Contrary check: compare the stated control, exact revision, and current branch independently.
+10. Confidence: upstream-reported case; local reproducibility UNVERIFIED.
+11. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in 00-AXIOMS.txt; other files reference its declared terms.

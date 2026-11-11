@@ -1,0 +1,11 @@
+1. Customer action: DB open reads saved write-ahead log after restart.
+2. First code path: db/log_reader.cc: log::Reader::ReadRecord; db/log_writer.cc.
+3. Required initial state: A WAL is a file containing changes required to rebuild data after restart.
+4. Action chain: Build upstream log_test; at PR 14709 inspect BadRecordInFragmentedRecordResetsRecordChecksum test; run it against parent revision and patch revision.
+5. Reported visible failure: Database refuses to open, reporting corrupted write batch despite valid returned record.
+6. Exact report datum: A fragmented record A is abandoned; record B inherits checksum state from A
+7. Independent control: Check hash(B) directly and compare to returned checksum on both revisions.
+8. Assertion to check: Test must fail on old reader and pass after independent fix; cite exact commit rather than treating an open PR as merged.
+9. ? Prove the required result from line 3 and the command sequence in line 4.
+10. ?? Find the first step where the reported result disagrees with line 8.
+11. Do not write a fix until the first broken invariant is independently located.

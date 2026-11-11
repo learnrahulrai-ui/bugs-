@@ -1,0 +1,11 @@
+1. Customer action: Watch a directory, rename it, query watch list.
+2. First code path: backend_inotify.go: watches.wd; watches.path; WatchList.
+3. Required initial state: A watched directory has a name, e.g. /tmp/a.
+4. Action chain: At parent commit create a watcher; add /tmp/a; rename /tmp/a to /tmp/x; compare WatchList() with internal descriptor-to-path watch map; repeat after fix.
+5. Reported visible failure: WatchList names no longer describe the watched directory.
+6. Exact report datum: A watch has one descriptor and one current pathname, but two indexes reference the watch
+7. Independent control: Without rename the two maps should agree.
+8. Assertion to check: Compare the identity pair 7<->/tmp/x, not merely list length 1.
+9. ? Prove the required result from line 3 and the command sequence in line 4.
+10. ?? Find the first step where the reported result disagrees with line 8.
+11. Do not write a fix until the first broken invariant is independently located.

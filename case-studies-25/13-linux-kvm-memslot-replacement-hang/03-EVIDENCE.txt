@@ -1,0 +1,11 @@
+1. Direct evidence URL: https://syzkaller.appspot.com/bug?extid=5c566b850d6ab6f0427a
+2. Source revision or range: upstream reported 2025-11-17; retests 2026
+3. Real code location: virt/kvm/kvm_main.c: kvm_swap_active_memslots; arch/x86/kvm/lapic.c
+4. Original reporter observation: Trace enters vmx_vcpu_create -> kvm_alloc_apic_access_page -> kvm_swap_active_memslots; 143 s hung-task report
+5. The report's observed failure: Creating virtual CPU blocks for more than 143 s
+6. A separate control condition: Compare KVM_CREATE_VCPU without the reproducer's state mutations.
+7. Observation required to confirm locally: Capture exact kvm_swap_active_memslots stack and held locks; diagnose before naming culprit.
+8. Verified here: GitHub source report opened for this case when available; no full end-to-end reproducer executed here.
+9. Contrary check: compare the stated control, exact revision, and current branch independently.
+10. Confidence: upstream-reported case; local reproducibility UNVERIFIED.
+11. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in 00-AXIOMS.txt; other files reference its declared terms.

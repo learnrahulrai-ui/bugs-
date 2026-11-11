@@ -1,0 +1,12 @@
+1. A program receives inputs and changes state.
+2. A state is the values and objects the program currently holds.
+3. An invariant is a rule that must hold before and after a successful operation.
+4. An iterator is an object that returns one key/value after another.
+5. A blob is a large value stored outside normal key entries; here 4096 > 64 bytes.
+6. A Version describes which files contain the iterator's data.
+7. The outer iterator keeps an address of Version but does not own a lifetime reference.
+8. A flush changes the active Version; the inner iterator releases the previous Version.
+9. The outer iterator later uses its old address after the object's lifetime has ended.
+10. A successful pointer lookup is not proof the pointed-to object still exists.
+11. The reported failure violates at least one rule described above; the source report is evidence, not proof for every version.
+12. A reproduced failure requires running the same input on a recorded revision and saving the actual output.

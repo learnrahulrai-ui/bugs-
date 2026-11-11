@@ -1,0 +1,13 @@
+1. Use a disposable Linux environment; never test on production data.
+2. Target reported project: Linux KVM.
+3. Tested revision claimed by upstream: linux-next d517cb8cea01; upstream c339f4010dea.
+4. Original issue or patch: https://syzkaller.appspot.com/bug?extid=fa52a184ebce1b30ad49
+5. Path to inspect: arch/x86/kvm/x86.c and arch/x86/kvm/emulate.c
+6. Starting action: open /dev/kvm; create VM/vCPU; ioctl KVM_RUN
+7. Reproduction order: Build the report's kernel revision in a throwaway VM; download C repro from the exact syzkaller report; compile; capture dmesg and compare against unmodified VM.
+8. Negative control: Repeat the same input on a different kernel revision, not a different unrecorded guest state.
+9. Detect success/failure: Exact WARNING stack must name x86_emulate_insn; absence of a warning in one run does not prove fixed.
+10. Safety: Kernel fuzz repro can panic or hang the host; VM isolation mandatory.
+11. Upstream reporter reproduced this case. It has NOT been executed in this ChatGPT container.
+12. Local test status: UNTESTED_HERE; no fabricated timings, traces, or pass/fail claims.
+13. See run.sh for an executable attempt or the limitations of that environment.

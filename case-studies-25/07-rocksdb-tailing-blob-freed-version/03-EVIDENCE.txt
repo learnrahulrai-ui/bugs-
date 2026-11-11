@@ -1,0 +1,11 @@
+1. Direct evidence URL: https://github.com/meta/rocksdb/issues/15445
+2. Source revision or range: 11.13.0 and main 074134d98
+3. Real code location: db/forward_iterator.cc; db/blob/blob_fetcher.cc; db/db_iter.cc
+4. Original reporter observation: Blob threshold=64 bytes; values=4096 bytes; the iterator retains a pointer after owning Version is freed
+5. The report's observed failure: Long scan crashes while new data is being flushed
+6. A separate control condition: Blob=false and tailing=false are distinct reported noncrash controls.
+7. Observation required to confirm locally: ASan stack must connect Version::Unref to VersionBlobFetcherBase::FetchBlob.
+8. Verified here: GitHub source report opened for this case when available; no full end-to-end reproducer executed here.
+9. Contrary check: compare the stated control, exact revision, and current branch independently.
+10. Confidence: upstream-reported case; local reproducibility UNVERIFIED.
+11. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in 00-AXIOMS.txt; other files reference its declared terms.

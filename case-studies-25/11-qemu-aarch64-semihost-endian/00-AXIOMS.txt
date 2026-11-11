@@ -1,0 +1,12 @@
+1. A program receives inputs and changes state.
+2. A state is the values and objects the program currently holds.
+3. An invariant is a rule that must hold before and after a successful operation.
+4. A byte is an integer from 0 to 255.
+5. An integer made of several bytes must specify which byte is most significant.
+6. A big-endian producer stores the most significant byte first.
+7. A little-endian reader expects the least significant byte first.
+8. The guest and host disagree about the order of bytes in an exit argument.
+9. QEMU reads 0x2600020000000000 where the intended exit selector is 0x20026.
+10. Comparing those unequal numbers chooses a different exit path.
+11. The reported failure violates at least one rule described above; the source report is evidence, not proof for every version.
+12. A reproduced failure requires running the same input on a recorded revision and saving the actual output.

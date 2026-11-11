@@ -1,0 +1,12 @@
+1. A program receives inputs and changes state.
+2. A state is the values and objects the program currently holds.
+3. An invariant is a rule that must hold before and after a successful operation.
+4. A path names a file or directory, e.g. /tmp/a.
+5. A descendant lies below a directory boundary, e.g. /tmp/a/sub.
+6. The string /tmp/ab begins with the characters /tmp/a.
+7. But the next character in /tmp/ab is b, not a path separator /.
+8. Therefore /tmp/ab is not a descendant of /tmp/a.
+9. A string-only prefix update changes both /tmp/a and /tmp/ab; only the first should change.
+10. A proper descendant check tests the separator boundary after the old path.
+11. The reported failure violates at least one rule described above; the source report is evidence, not proof for every version.
+12. A reproduced failure requires running the same input on a recorded revision and saving the actual output.

@@ -1,0 +1,11 @@
+1. Customer action: open /dev/kvm; create VM; KVM_CREATE_VCPU.
+2. First code path: virt/kvm/kvm_main.c: kvm_swap_active_memslots; arch/x86/kvm/lapic.c.
+3. Required initial state: A memory slot describes a range of guest physical memory.
+4. Action chain: Boot an instrumented guest VM with nested KVM; run the syzkaller C reproducer from source page; collect hung-task traces and lock holders.
+5. Reported visible failure: Creating virtual CPU blocks for more than 143 s.
+6. Exact report datum: Trace enters vmx_vcpu_create -> kvm_alloc_apic_access_page -> kvm_swap_active_memslots; 143 s hung-task report
+7. Independent control: Compare KVM_CREATE_VCPU without the reproducer's state mutations.
+8. Assertion to check: Capture exact kvm_swap_active_memslots stack and held locks; diagnose before naming culprit.
+9. ? Prove the required result from line 3 and the command sequence in line 4.
+10. ?? Find the first step where the reported result disagrees with line 8.
+11. Do not write a fix until the first broken invariant is independently located.

@@ -1,0 +1,11 @@
+1. Customer action: open /dev/kvm; create VM/vCPU; ioctl KVM_RUN.
+2. First code path: arch/x86/kvm/x86.c and arch/x86/kvm/emulate.c.
+3. Required initial state: KVM is a Linux interface that runs a guest CPU while the host controls it.
+4. Action chain: Build the report's kernel revision in a throwaway VM; download C repro from the exact syzkaller report; compile; capture dmesg and compare against unmodified VM.
+5. Reported visible failure: Guest code execution produces a host kernel WARNING.
+6. Exact report datum: The report includes a C reproducer and an Oct 29 2026 upstream crash; some retests did not crash
+7. Independent control: Repeat the same input on a different kernel revision, not a different unrecorded guest state.
+8. Assertion to check: Exact WARNING stack must name x86_emulate_insn; absence of a warning in one run does not prove fixed.
+9. ? Prove the required result from line 3 and the command sequence in line 4.
+10. ?? Find the first step where the reported result disagrees with line 8.
+11. Do not write a fix until the first broken invariant is independently located.

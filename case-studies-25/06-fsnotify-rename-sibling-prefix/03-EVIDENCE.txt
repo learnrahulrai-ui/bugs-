@@ -1,0 +1,11 @@
+1. Direct evidence URL: https://github.com/fsnotify/fsnotify/issues/755
+2. Source revision or range: fixed at 162b4216ab8f92ecd26425530bee198972c9b3cb
+3. Real code location: backend_inotify.go: handleEvent; backend_windows.go
+4. Original reporter observation: A string prefix is not the same as a path ancestor: /tmp/a prefixes /tmp/ab but /tmp/ab is not inside /tmp/a
+5. The report's observed failure: Events for untouched sibling /tmp/ab are reported using wrong path /tmp/xb
+6. A separate control condition: /tmp/a/sub must become /tmp/x/sub; /tmp/ab/sub must remain /tmp/ab/sub.
+7. Observation required to confirm locally: Expected current watch names: /tmp/x, /tmp/x/sub, /tmp/ab, /tmp/ab/sub.
+8. Verified here: GitHub source report opened for this case when available; no full end-to-end reproducer executed here.
+9. Contrary check: compare the stated control, exact revision, and current branch independently.
+10. Confidence: upstream-reported case; local reproducibility UNVERIFIED.
+11. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in 00-AXIOMS.txt; other files reference its declared terms.

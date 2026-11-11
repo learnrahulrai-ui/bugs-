@@ -1,0 +1,13 @@
+1. Use a disposable Linux environment; never test on production data.
+2. Target reported project: RocksDB.
+3. Tested revision claimed by upstream: recyclable WAL / WAL compression; PR 14709.
+4. Original issue or patch: https://github.com/meta/rocksdb/issues/15007
+5. Path to inspect: db/log_reader.cc: log::Reader::ReadRecord; db/log_writer.cc
+6. Starting action: DB open reads saved write-ahead log after restart
+7. Reproduction order: Build upstream log_test; at PR 14709 inspect BadRecordInFragmentedRecordResetsRecordChecksum test; run it against parent revision and patch revision.
+8. Negative control: Check hash(B) directly and compare to returned checksum on both revisions.
+9. Detect success/failure: Test must fail on old reader and pass after independent fix; cite exact commit rather than treating an open PR as merged.
+10. Safety: Use a disposable RocksDB data directory.
+11. Upstream reporter reproduced this case. It has NOT been executed in this ChatGPT container.
+12. Local test status: UNTESTED_HERE; no fabricated timings, traces, or pass/fail claims.
+13. See run.sh for an executable attempt or the limitations of that environment.

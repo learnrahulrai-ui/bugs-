@@ -1,0 +1,7 @@
+WHAT: 1 recorded case; 16-byte key 0123456789abcdef becomes first 8 bytes 01234567 followed by timestamp bytes 05 00 00 00 00 00 00 00
+WHY: The fallback assumes an 8-byte timestamp for a key that has none.
+WHERE: db/write_batch_internal.h: TimestampUpdater; utilities/transactions/pessimistic_transaction.cc
+WHO: 1 client action (BeginTransaction; DisableIndexing; write to two column families; SetCommitTimestamp(5); Commit) and 1 owning component (RocksDB).
+WHEN: main 609269e0a / 11.14.0
+WITHOUT: compare the control state: Enable indexing as control; use timestamp-only writes as separate control.
+WHICH: success requires this observation: Commit=OK and Get(original 16-byte key)=NotFound is failure; hex stored key ends 0500000000000000.

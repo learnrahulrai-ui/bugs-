@@ -1,0 +1,11 @@
+1. Customer action: Create tailing iterator; write blob values; flush and compact; continue Next.
+2. First code path: db/forward_iterator.cc; db/blob/blob_fetcher.cc; db/db_iter.cc.
+3. Required initial state: An iterator is an object that returns one key/value after another.
+4. Action chain: Build reported revision with ASan; use issue's uaf.cc; compare tailing+blob with tailing disabled and blob disabled.
+5. Reported visible failure: Long scan crashes while new data is being flushed.
+6. Exact report datum: Blob threshold=64 bytes; values=4096 bytes; the iterator retains a pointer after owning Version is freed
+7. Independent control: Blob=false and tailing=false are distinct reported noncrash controls.
+8. Assertion to check: ASan stack must connect Version::Unref to VersionBlobFetcherBase::FetchBlob.
+9. ? Prove the required result from line 3 and the command sequence in line 4.
+10. ?? Find the first step where the reported result disagrees with line 8.
+11. Do not write a fix until the first broken invariant is independently located.

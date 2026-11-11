@@ -1,0 +1,12 @@
+1. A program receives inputs and changes state.
+2. A state is the values and objects the program currently holds.
+3. An invariant is a rule that must hold before and after a successful operation.
+4. A field is a named value inside a hash; token=t1 is one field and its value.
+5. A time limit of 2000 ms means the field expires 2000 ms after the limit is assigned.
+6. HPERSIST removes that time limit; a field with no limit should remain after the original 2000 ms.
+7. AOF is the sequence of commands saved for replay; replay means running saved commands to rebuild memory.
+8. The original expiration time is in the past during a later replay; the saved HPERSIST must still apply to the historical field.
+9. The replay code checks today's time rather than the historical command state and skips HPERSIST.
+10. An old expiration survives replay, so the field disappears even though the saved command removed the limit.
+11. The reported failure violates at least one rule described above; the source report is evidence, not proof for every version.
+12. A reproduced failure requires running the same input on a recorded revision and saving the actual output.

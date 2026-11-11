@@ -1,0 +1,10 @@
+1. Line 1 of 00-AXIOMS.txt defines program input and state change.
+2. Line 2 defines state using line 1.
+3. Line 3 defines invariant using lines 1-2.
+4. Every later line in 00-AXIOMS.txt either defines a new term or follows from earlier terms and the stated upstream datum.
+5. Reported observations are not promoted to derived guarantees.
+6. The code file names in 01-EXECUTION.txt are source identifiers, not newly inferred quantities.
+7. The version in 02-REPRODUCE.txt is upstream's claimed version, not an independent local observation.
+8. Zero local bug executions have been claimed.
+9. Open question: Compare the identity pair 7<->/tmp/x, not merely list length 1.
+10. NEW THINGS INTRODUCED WITHOUT DERIVATION: NONE (within the logical chain; external facts remain explicitly cited as source reports).

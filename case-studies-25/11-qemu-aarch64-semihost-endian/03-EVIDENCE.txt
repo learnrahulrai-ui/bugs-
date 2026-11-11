@@ -1,0 +1,11 @@
+1. Direct evidence URL: https://gitlab.com/qemu-project/qemu/-/issues/3258
+2. Source revision or range: QEMU 10.2.50 v10.2.0-283-g0fc482b73d
+3. Real code location: semihosting/arm-compat-semi.c
+4. Original reporter observation: Observed argument 0x2600020000000000 compared with constant 0x20026
+5. The report's observed failure: Guest requests exit 0 but QEMU returns exit 1
+6. A separate control condition: Run little-endian AArch64 target with same semihosting exit request.
+7. Observation required to confirm locally: Expected QEMU process exit status 0; upstream reported 1 for big-endian.
+8. Verified here: GitHub source report opened for this case when available; no full end-to-end reproducer executed here.
+9. Contrary check: compare the stated control, exact revision, and current branch independently.
+10. Confidence: upstream-reported case; local reproducibility UNVERIFIED.
+11. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in 00-AXIOMS.txt; other files reference its declared terms.

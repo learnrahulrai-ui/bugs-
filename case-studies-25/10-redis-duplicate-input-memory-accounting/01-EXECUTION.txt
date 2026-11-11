@@ -1,0 +1,11 @@
+1. Customer action: Create set ss, sorted set zt; ZINTERSTORE zdst 3 zt ss ss.
+2. First code path: src/t_zset.c: zunionInterDiffGenericCommand; src/db.c.
+3. Required initial state: A key names one stored object, e.g. ss.
+4. Action chain: Run upstream issue commands with key-memory-histograms and debug assert enabled; compare repeated ss input to unique inputs.
+5. Reported visible failure: Memory accounting assertion says stored total is wrong.
+6. Exact report datum: expected 56547 bytes, recorded 52451 bytes; difference 4096 bytes = 512 buckets x 8 bytes
+7. Independent control: Use input ss once as control; assert no accounting discrepancy.
+8. Assertion to check: 56547-52451=4096; inspect server assertion and preserve full console log.
+9. ? Prove the required result from line 3 and the command sequence in line 4.
+10. ?? Find the first step where the reported result disagrees with line 8.
+11. Do not write a fix until the first broken invariant is independently located.

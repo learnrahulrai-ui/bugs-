@@ -1,0 +1,7 @@
+WHAT: 1 recorded case; The report includes a C reproducer and an Oct 29 2026 upstream crash; some retests did not crash
+WHY: An unexpected emulator result reaches a WARN; the existence of a WARN does not prove the proposed fix.
+WHERE: arch/x86/kvm/x86.c and arch/x86/kvm/emulate.c
+WHO: 1 client action (open /dev/kvm; create VM/vCPU; ioctl KVM_RUN) and 1 owning component (Linux KVM).
+WHEN: linux-next d517cb8cea01; upstream c339f4010dea
+WITHOUT: compare the control state: Repeat the same input on a different kernel revision, not a different unrecorded guest state.
+WHICH: success requires this observation: Exact WARNING stack must name x86_emulate_insn; absence of a warning in one run does not prove fixed.

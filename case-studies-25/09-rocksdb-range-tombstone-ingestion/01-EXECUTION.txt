@@ -1,0 +1,11 @@
+1. Customer action: DeleteRange twice; ingest external SST; Get(k11), Get(k13).
+2. First code path: range_del_aggregator.cc; column_family.cc; external_sst_file_ingestion_job.cc.
+3. Required initial state: A range [start,end) includes start and excludes end.
+4. Action chain: Use issue's SST ingestion reproducer; control: only first DeleteRange returns explicit rejection; test two overlapping deletions returns OK and both keys absent.
+5. Reported visible failure: Ingestion returns OK but two newly loaded records are absent.
+6. Exact report datum: DeleteRange [k09,k20) and [k15,k20); replace [k07,k15) with keys k11,k13; both missing
+7. Independent control: Run single tombstone and double tombstone with same SST payload.
+8. Assertion to check: Compare status and visible key count; success with 0 visible keys is failed invariant.
+9. ? Prove the required result from line 3 and the command sequence in line 4.
+10. ?? Find the first step where the reported result disagrees with line 8.
+11. Do not write a fix until the first broken invariant is independently located.
