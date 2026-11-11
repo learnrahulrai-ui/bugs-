@@ -1,0 +1,15 @@
+01 A test program asks a helper for a named controller.
+02 A controller is a named record from a fixed table.
+03 Searching this table returns a pointer to a record when the name matches.
+04 The same search returns a null pointer when no record matches.
+05 The input nosuchctrl contains valid name characters, but is absent from that table.
+06 The search therefore returns null for nosuchctrl.
+07 A field read through a null pointer does not name a valid record.
+08 lib/tst_cgroup.c line 854 obtains the search result.
+09 The same file line 856 reads ctrl->ctrl_name before its null check at line 861.
+10 The first illegal read precedes the later check: SIGSEGV occurs instead of intended TBROK diagnostic.
+11 Missing inference: no test of pointer validity can protect an earlier dereference.
+12 Version-dependent source locations must be confirmed by comparing affected commit.
+13 UPSTREAM https://github.com/linux-test-project/ltp/issues/1343
+14 USER-LAPTOP REPRODUCTION: NOT RUN. Do not pretend crash reproduced from issue report alone.
+15 NEW THINGS INTRODUCED WITHOUT DERIVATION: NONE IDENTIFIED within lines 01-11; exact C abstract-machine interpretation requires a standards reference.
