@@ -1,0 +1,14 @@
+01 One pathname can identify one directory entry.
+02 An absent entry can become present when one create operation succeeds.
+03 Another create operation for the still-present entry reports already-exists.
+04 Twelve independent commands can observe absence before the first successful create.
+05 The first successful creator can return exit code zero.
+06 A later caller can observe the shared entry after getting already-exists.
+07 Seeing the entry present does not prove that later caller created it.
+08 The upstream report records already-exists followed by a false zero exit status.
+09 Missing inference: object existence was mistaken for proof of the caller's successful action.
+10 Report configuration: 12 workers, 5000 rounds; no user-laptop reproduction.
+11 Sandbox control: /bin/mkdir, 5 rounds, 12 workers, 0 violations.
+12 Run: python3 mkdir_race.py --rounds 5000 --cmd "coreutils mkdir" after building the relevant uutils version.
+13 NEW THINGS INTRODUCED WITHOUT DERIVATION: NONE IDENTIFIED in numbered chain; source-level proof of upstream branch remains pending.
+Upstream issue: https://github.com/uutils/coreutils/issues/16344
