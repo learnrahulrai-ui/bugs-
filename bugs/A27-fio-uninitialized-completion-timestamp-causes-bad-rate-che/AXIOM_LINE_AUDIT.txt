@@ -1,0 +1,17 @@
+01 A timestamp records seconds and a fraction of one second.
+02 One second consists of exactly 1000000000 nanoseconds.
+03 A timespec subsecond field must stay between 0 and 999999999 inclusive.
+04 Declaring a C local object without initialization does not guarantee meaningful contents.
+05 fio do_io declares comp_time without initialization according to the upstream issue.
+06 The issue describes comp_time receiving valid time only after queue-full waits or inline I/O completion.
+07 A rate-limited asynchronous workload can reap queued completions without executing either of those writes.
+08 The reported workload requests 500 I/O operations per second and allows up to 16 outstanding requests.
+09 When progress becomes nonzero, a minimum-rate check reads comp_time despite line 07.
+10 The upstream core captured tv_nsec = 4835703278458516699 in the uninitialized structure.
+11 The captured value exceeds the largest valid nanosecond fraction 999999999.
+12 The time function asserts its valid range, so the reported process aborts with SIGABRT.
+13 Missing inference: a read of an object requires that every program path reaching the read has first assigned a valid value.
+14 UPSTREAM https://github.com/axboe/fio/issues/2128
+15 REPORTER'S ENVIRONMENT fio 3.42; reporter notes same workload does not fail on every host.
+16 USER-LAPTOP REPRODUCTION: NOT RUN. Use a scratch loop device within a VM, never a live /dev/nvme device.
+17 NEW THINGS INTRODUCED WITHOUT DERIVATION: NONE IDENTIFIED within lines 01-13; exact compiler treatment of uninitialized values requires additional evidence.
