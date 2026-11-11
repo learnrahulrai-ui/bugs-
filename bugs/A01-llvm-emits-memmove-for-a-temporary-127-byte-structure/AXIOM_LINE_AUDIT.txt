@@ -1,0 +1,19 @@
+01 A byte is one addressable storage unit in this C program.
+02 An array containing 127 unsigned bytes occupies 127 consecutive byte locations.
+03 A structure holding this array is one object with 127 byte locations.
+04 A sequence of these objects places adjacent 127-byte spans in memory.
+05 A valid integer index selects one complete span from that sequence.
+06 Equal indices select the same span; different indices select disjoint spans.
+07 An explicit temporary assignment reads one complete source object first.
+08 The second assignment then writes the already-read 127 values to one destination object.
+09 Direct object assignment must preserve the same observable byte values.
+10 A compiler converts C statements to machine instructions, preserving defined effects.
+11 memmove is a library routine which copies correctly even when source and destination partly overlap.
+12 Clang 17 is a compiler; -O2 asks it to optimize the translation.
+13 Clang 17 generated a memmove call for the temporary form but inlined loads and stores for direct assignment.
+14 Line 06 excludes partial overlap for these source and destination objects, so line 11 provides a guarantee not required for this case.
+15 Missing inference: compiler selection did not preserve the identical-or-disjoint constraint through the temporary form.
+16 Verified in sandbox: Clang 17, -O2, 127 bytes; not tested on user's laptop.
+17 Defect type: missed optimization, not established data corruption.
+18 NEW THINGS INTRODUCED WITHOUT DERIVATION: NONE IDENTIFIED in lines 01 to 17; external language semantics require an independent standards proof.
+Upstream issue: https://github.com/llvm/llvm-project/issues/86499
