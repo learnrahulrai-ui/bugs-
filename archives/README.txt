@@ -1,0 +1,1 @@
+Archives/professor_swarm_real_bug_cases_v2.zip is a reconstructed ZIP of the original 20 case index entries and prompt, not byte-identical to the earlier ZIP. Full detailed individual investigations are in bugs/ and source cloud in research/WORD_CLOUD_EXTENDED.txt. A ZIP containing every GitHub file is https://github.com/learnrahulrai-ui/bugs-/archive/refs/heads/main.zip
