@@ -1,0 +1,34 @@
+CoDel congestion logic misuses packet size floor
+
+ACTUAL INPUT
+Network queue sees packets under congestion and decides whether to drop.
+
+SOURCE ENTRY
+net/sched CoDel queue-management code
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Drop decision uses delay and configured policy; byte thresholds affect admission to decision.
+
+WHAT FAILED IN REPORTED CASE
+Fixed minimum packet-size floor of 256 bytes suppresses appropriate drops on low-MTU traffic; queue remains congested contrary to policy.
+
+MISSING CONNECTION TO DERIVE
+Fixed constant needs a relationship to real packet MTU and control invariant, not an unexplained default.
+
+? Prove drop decision uses delay and configured policy; byte thresholds affect admission to decision. before allowing next state transition.
+?? Locate first operation where: fixed minimum packet-size floor of 256 bytes suppresses appropriate drops on low-MTU traffic; queue remains congested contrary to policy.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Upstream fix 54518e0e827f... in Linux stable changes.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://www.opennet.ru/kernel/6.18.56.html

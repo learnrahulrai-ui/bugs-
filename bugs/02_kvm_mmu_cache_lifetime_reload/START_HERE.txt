@@ -1,0 +1,34 @@
+KVM cache pointer outlives cache object
+
+ACTUAL INPUT
+Administrator loads core KVM module and vendor KVM module, unloads only vendor module, then reloads it.
+
+SOURCE ENTRY
+arch/x86/kvm/mmu/mmu.c: mmu_destroy_caches; kvm_mmu_vendor_module_init
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Core KVM module stores pointers to two cache objects; vendor unload destroys those objects.
+
+WHAT FAILED IN REPORTED CASE
+Destroy operation leaves pointers non-null; core module stays loaded; vendor reload fails on first allocation; cleanup reads second pointer left from previous module lifetime; freed cache is accessed.
+
+MISSING CONNECTION TO DERIVE
+Non-null address proves stored bits, not continued object ownership or lifetime.
+
+? Prove core KVM module stores pointers to two cache objects; vendor unload destroys those objects. before allowing next state transition.
+?? Locate first operation where: destroy operation leaves pointers non-null; core module stays loaded; vendor reload fails on first allocation; cleanup reads second pointer left from previous module lifetime; freed cache is accessed.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Linux kernel PATCH v3 with KASAN reproduction 2026-07-18.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://lists.openwall.net/linux-kernel/2026/07/18/639

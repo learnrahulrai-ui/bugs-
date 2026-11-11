@@ -1,0 +1,103 @@
+20 separately sourced defect case files; 6804 original conceptual blocks; 17 populated core themes.
+Upstream bug / patch / source source status differs by file; none reproduced locally in this session.
+These are original explanatory case dossiers, not verbatim copies of repository source files. Source URLs locate original code and patch.
+
+01 SQLite WAL reset and checkpoint race
+  https://www.sqlite.org/wal.html#walresetbug
+  Verified upstream fixed defect; SQLite 3.51.3 and later, with specified backports.
+  version coherence; replicated completion; torn persistence
+
+02 KVM x86 MMU cache use-after-free during vendor module reload
+  https://lists.openwall.net/linux-kernel/2026/07/18/639
+  Verified upstream patch with KASAN trace and injected-failure reproduction.
+  single owner / many references; concurrent lifetime; allocation accounting
+
+03 Linux inotify merge loses rename identity
+  https://lkml.iu.edu/hypermail/linux/kernel/2610.3/07456.html
+  Documented upstream bug and PATCH v2 dated 2026-10-27; merge status not independently established.
+  object identity vs name; version coherence; privilege boundary / IPC
+
+04 Redis SRANDMEMBER stalls while hash-table rehash is held during fork
+  https://github.com/redis/redis/issues/12200
+  Verified upstream issue #12200 with linked resolution #12276; reported under production workload.
+  capacity / bounded search; hash collision / probing; version coherence
+
+05 Linux bcache CPU false-sharing regression
+  https://www.kernel.org/doc/html/latest/kernel-hacking/false-sharing.html
+  Verified upstream performance fix referenced by Linux kernel false-sharing documentation.
+  cache-line sharing
+
+06 Linux get-user-pages fast path length overflow
+  https://linux.googlesource.com/linux/kernel/git/torvalds/linux/+/21a3888d3d2f87b7f15ccea1f0befd57346fe899
+  Verified upstream fix committed 2026-11-03.
+  arithmetic boundary; virtual-memory page state
+
+07 Linux ext4 metadata checksum endian mismatch
+  https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg430295.html
+  Verified upstream patch commit 171a7f21a76a0958c225b97c00a97a10390d40ee.
+  binary layout; byte order
+
+08 Git partial-write error handling contract
+  https://git.powerel.org/kernel/git/commit/d34cf19b89
+  Verified Git upstream clean-up commit d34cf19b89 dated 2007-01-11; related correctness contract documented.
+  partial I/O; torn persistence
+
+09 Linux ftrace oversized event read infinite-loop guard
+  https://code.googlesource.com/linux/torvalds/linux/+/1e2f2d31997a9496f99e2b43255d6a48b06fbcc2/kernel/trace/trace.c
+  Verified in upstream kernel source comment and guard; standalone historical fixing commit not identified.
+  capacity / bounded search; partial I/O; observability recursion
+
+10 OpenTelemetry Python log export recursion
+  https://github.com/open-telemetry/opentelemetry-python/pull/4695
+  Verified upstream fix #4695 noted in 1.37.0 changelog.
+  observability recursion; concurrent lifetime
+
+11 bpftrace spurious lost-event reports and ordering defects
+  https://github.com/bpftrace/bpftrace/issues/2646
+  Verified bpftrace issue #2646, closed via linked #2715.
+  probe overflow; observability recursion
+
+12 KVM shadow MMU maps memory into obsolete root after reclamation
+  https://cos.googlesource.com/third_party/kernel/+/f8942cf365df41f4179e94e9c9af498b8509984f
+  Verified upstream patch 2abd5287f08319fa35764566b15c6e22cb1068db described in stable backport.
+  virtual-memory page state; concurrent lifetime; version coherence
+
+13 ext4 iomap warning from inode size beyond filesystem maximum
+  https://syzbot.org/bug?extid=8973d96aa456c9171655
+  Verified syzbot upstream warning, fixed 2025-07-14.
+  arithmetic boundary; virtual-memory page state; binary layout
+
+14 Cloud Hypervisor VM reboot blocked by vhost-user backend reconnect failure
+  https://github.com/cloud-hypervisor/cloud-hypervisor/issues/6439
+  Verified user-reported upstream issue #6439; complete root cause and fix not established by cited issue alone.
+  privilege boundary / IPC; network enforcement; version coherence
+
+15 SQLite WAL restart header write ordering and corruption
+  https://sqlite.org/src/info/ff5be73dee
+  Verified SQLite historical ticket explicitly cited by source code.
+  torn persistence; binary layout; replicated completion
+
+16 Linux bio recursion removal creates separate mempool progress condition
+  https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux.git/+/refs/heads/linux-6.18.y/block/bio.c
+  Verified failure condition and protection documented directly in upstream block layer; historical standalone bug identifier not established.
+  deferred block I/O; capacity / bounded search
+
+17 Linux inotify add/remove watch published before reference acquisition
+  https://mirror.iscas.ac.cn/git/git.kernel.org/pub/scm/linux/kernel/git/stable/linux/-/commits/b742bb82f1676d50103ade0ba89bfb79debabe73
+  Verified historical Linux upstream fix discussed in kernel stable commit history.
+  concurrent lifetime; single owner / many references
+
+18 Linux CoDel 256-byte floor incorrectly suppresses congestion drops
+  https://www.opennet.ru/kernel/6.18.56.html
+  Verified upstream fix 54518e0e827f4ca9229ae657022c60bf60f5c1bf; stable changelog records reproducible conditions.
+  policy semantics equivalence; network enforcement; arithmetic boundary
+
+19 Ceph RGW bypass-gc removes shared data from copied objects
+  https://tracker.ceph.com/issues/73348
+  Documented Ceph issue #73348; fixed releases cited in operator bug listing.
+  object identity vs name; single owner / many references; replicated completion
+
+20 Ceph OSD throttled duration wraps due to zero timestamp
+  https://docs.ceph.com/en/latest/rados/troubleshooting/troubleshooting-osd/
+  Verified defect in Ceph upstream troubleshooting documentation.
+  arithmetic boundary; observability recursion; replicated completion

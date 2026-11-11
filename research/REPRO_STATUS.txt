@@ -1,0 +1,9 @@
+RUN STATUS: SQLite WAL concurrency prerequisites exercised without reproducing bug.
+Date: 2026-11-12
+Sandbox SQLite: 3.46.1
+Write connection committed: 600 rows
+Separate checkpoint connection ran: 600 PRAGMA wal_checkpoint(PASSIVE) calls
+Final row count: 600
+PRAGMA integrity_check: ok
+Exceptions: none
+Conclusion: normal concurrency path passed. Reported WAL-reset race NOT reproduced. Official SQLite analysis needed instrumentation. Other 19 defects: NOT EXECUTED.

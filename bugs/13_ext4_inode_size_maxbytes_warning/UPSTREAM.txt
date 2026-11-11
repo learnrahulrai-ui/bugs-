@@ -1,0 +1,11 @@
+ext4 iomap path sees inode size past filesystem limit
+
+Upstream source: https://syzbot.org/bug?extid=8973d96aa456c9171655
+
+Evidence: syzbot report marked fixed 2025-07-14.
+
+First code path: ext4 iomap path; syzbot extid 8973d96aa456c9171655
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

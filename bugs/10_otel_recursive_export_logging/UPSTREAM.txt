@@ -1,0 +1,11 @@
+Telemetry exporter logs into its own exporter
+
+Upstream source: https://github.com/open-telemetry/opentelemetry-python/pull/4695
+
+Evidence: Upstream PR 4695; fix referenced in 1.37.0 release.
+
+First code path: OpenTelemetry Python log exporter and SDK logging handler
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

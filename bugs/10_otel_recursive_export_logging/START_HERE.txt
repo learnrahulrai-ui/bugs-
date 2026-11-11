@@ -1,0 +1,34 @@
+Telemetry exporter logs into its own exporter
+
+ACTUAL INPUT
+Application emits log; OpenTelemetry SDK collects and exports it.
+
+SOURCE ENTRY
+OpenTelemetry Python log exporter and SDK logging handler
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Exporter failures may themselves emit diagnostic logs.
+
+WHAT FAILED IN REPORTED CASE
+Diagnostic log enters same exporter → exporter logs again → no terminating boundary; recursion or repeated export grows.
+
+MISSING CONNECTION TO DERIVE
+Observation channel must not feed its own unbounded failure path.
+
+? Prove exporter failures may themselves emit diagnostic logs. before allowing next state transition.
+?? Locate first operation where: diagnostic log enters same exporter → exporter logs again → no terminating boundary; recursion or repeated export grows.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Upstream PR 4695; fix referenced in 1.37.0 release.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://github.com/open-telemetry/opentelemetry-python/pull/4695

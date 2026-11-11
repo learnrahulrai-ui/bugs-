@@ -1,0 +1,11 @@
+Cloud Hypervisor Fedora VM intermittently hangs during boot
+
+Upstream source: https://github.com/cloud-hypervisor/cloud-hypervisor/issues/6439
+
+Evidence: User-reported GitHub issue 6439, May 2024; source describes four VMs repeated 100 times.
+
+First code path: cloud-hypervisor issue 6439; exact code cause UNKNOWN
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

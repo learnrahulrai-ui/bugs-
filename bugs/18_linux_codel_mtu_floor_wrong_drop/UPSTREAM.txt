@@ -1,0 +1,11 @@
+CoDel congestion logic misuses packet size floor
+
+Upstream source: https://www.opennet.ru/kernel/6.18.56.html
+
+Evidence: Upstream fix 54518e0e827f... in Linux stable changes.
+
+First code path: net/sched CoDel queue-management code
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

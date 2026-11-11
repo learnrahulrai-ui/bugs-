@@ -1,0 +1,11 @@
+ftrace event larger than reader capacity
+
+Upstream source: https://code.googlesource.com/linux/torvalds/linux/+/1e2f2d31997a9496f99e2b43255d6a48b06fbcc2/kernel/trace/trace.c
+
+Evidence: Source guard documented in kernel; historical fixing commit not established by original dossier.
+
+First code path: kernel/trace/trace.c event-read guard
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

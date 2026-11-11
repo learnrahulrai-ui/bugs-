@@ -1,0 +1,11 @@
+SQLite WAL restart durability depends on write order
+
+Upstream source: https://sqlite.org/src/info/ff5be73dee
+
+Evidence: Historical SQLite source ticket, reproduction not established in dossier.
+
+First code path: src/wal.c and historical ticket ff5be73dee
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

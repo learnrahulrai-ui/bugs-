@@ -1,0 +1,11 @@
+bpftrace reports lost events with wrong meaning
+
+Upstream source: https://github.com/bpftrace/bpftrace/issues/2646
+
+Evidence: Issue 2646 closed by linked 2715 according to source dossier.
+
+First code path: bpftrace event-loss handling issue 2646
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

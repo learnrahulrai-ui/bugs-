@@ -1,0 +1,11 @@
+Block I/O recursion can exhaust progress resources
+
+Upstream source: https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux.git/+/refs/heads/linux-6.18.y/block/bio.c
+
+Evidence: Documented failure condition and protection in Linux source; not established as a newly unresolved bug.
+
+First code path: block/bio.c; bioset/mempool rescue path
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

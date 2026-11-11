@@ -1,0 +1,34 @@
+ftrace event larger than reader capacity
+
+ACTUAL INPUT
+Kernel trace consumer requests next event from tracing buffer.
+
+SOURCE ENTRY
+kernel/trace/trace.c event-read guard
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Event reader must either consume event, report insufficient capacity, or stop.
+
+WHAT FAILED IN REPORTED CASE
+Unconsumable event stays at head of buffer while reader retries same condition; no state advances; repeated loop does not finish.
+
+MISSING CONNECTION TO DERIVE
+Every loop iteration needs a decreasing unfinished obligation or an explicit exit.
+
+? Prove event reader must either consume event, report insufficient capacity, or stop. before allowing next state transition.
+?? Locate first operation where: unconsumable event stays at head of buffer while reader retries same condition; no state advances; repeated loop does not finish.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Source guard documented in kernel; historical fixing commit not established by original dossier.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://code.googlesource.com/linux/torvalds/linux/+/1e2f2d31997a9496f99e2b43255d6a48b06fbcc2/kernel/trace/trace.c

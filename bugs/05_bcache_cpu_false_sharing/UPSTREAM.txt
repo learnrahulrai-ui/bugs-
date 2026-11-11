@@ -1,0 +1,11 @@
+bcache counters contend for shared cache line
+
+Upstream source: https://www.kernel.org/doc/html/latest/kernel-hacking/false-sharing.html
+
+Evidence: Kernel documentation describes a bcache performance fix, but a precise source commit was not preserved in original index.
+
+First code path: bcache fields referenced by Linux false-sharing documentation
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

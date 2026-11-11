@@ -1,0 +1,34 @@
+bpftrace reports lost events with wrong meaning
+
+ACTUAL INPUT
+Operator starts a bpftrace probe and reads output reporting lost events.
+
+SOURCE ENTRY
+bpftrace event-loss handling issue 2646
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Event transport tracks dropped samples separately from application event values.
+
+WHAT FAILED IN REPORTED CASE
+Reporting path associates wrong count or ordering state with output; operator diagnoses nonexistent loss or misses real loss.
+
+MISSING CONNECTION TO DERIVE
+Observability output needs same event identity and accounting period as underlying loss.
+
+? Prove event transport tracks dropped samples separately from application event values. before allowing next state transition.
+?? Locate first operation where: reporting path associates wrong count or ordering state with output; operator diagnoses nonexistent loss or misses real loss.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Issue 2646 closed by linked 2715 according to source dossier.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://github.com/bpftrace/bpftrace/issues/2646

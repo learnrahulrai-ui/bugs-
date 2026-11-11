@@ -1,0 +1,11 @@
+Ceph OSD duration calculation wraps from uninitialized time
+
+Upstream source: https://docs.ceph.com/en/latest/rados/troubleshooting/troubleshooting-osd/
+
+Evidence: Ceph upstream troubleshooting documentation; precise fixing commit not established.
+
+First code path: Ceph OSD throttled-time statistics
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

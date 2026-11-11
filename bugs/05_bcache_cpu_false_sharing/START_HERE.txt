@@ -1,0 +1,34 @@
+bcache counters contend for shared cache line
+
+ACTUAL INPUT
+Multiple CPUs update separate values in kernel bcache structures.
+
+SOURCE ENTRY
+bcache fields referenced by Linux false-sharing documentation
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+CPU ownership and cache ownership operate on entire physical cache lines, not on independent source-language fields.
+
+WHAT FAILED IN REPORTED CASE
+Distinct CPU writes fall into same 64-byte coherence region; line ownership moves between CPUs; throughput falls despite no logical data sharing.
+
+MISSING CONNECTION TO DERIVE
+Independence of variables does not imply independence of physical cache-line traffic.
+
+? Prove cPU ownership and cache ownership operate on entire physical cache lines, not on independent source-language fields. before allowing next state transition.
+?? Locate first operation where: distinct CPU writes fall into same 64-byte coherence region; line ownership moves between CPUs; throughput falls despite no logical data sharing.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Kernel documentation describes a bcache performance fix, but a precise source commit was not preserved in original index.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://www.kernel.org/doc/html/latest/kernel-hacking/false-sharing.html

@@ -1,0 +1,34 @@
+Ceph RGW cleanup removes bytes still used by another object
+
+ACTUAL INPUT
+Object store copies or shares backend data between user-visible objects.
+
+SOURCE ENTRY
+Ceph RGW garbage collection and shared object references
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Deleting one object may remove only its name while another object still references same stored bytes.
+
+WHAT FAILED IN REPORTED CASE
+Garbage collection bypass drops shared backing data before all owners release it; surviving object retains name but loses data.
+
+MISSING CONNECTION TO DERIVE
+Deletion eligibility depends on all live owners, not on one removed name.
+
+? Prove deleting one object may remove only its name while another object still references same stored bytes. before allowing next state transition.
+?? Locate first operation where: garbage collection bypass drops shared backing data before all owners release it; surviving object retains name but loses data.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Ceph tracker issue 73348; exact fixed releases require upstream verification.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://tracker.ceph.com/issues/73348

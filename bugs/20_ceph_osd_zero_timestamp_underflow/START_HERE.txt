@@ -1,0 +1,34 @@
+Ceph OSD duration calculation wraps from uninitialized time
+
+ACTUAL INPUT
+Ceph OSD reports how long an operation spent throttled.
+
+SOURCE ENTRY
+Ceph OSD throttled-time statistics
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Elapsed time requires meaningful beginning and ending timestamps from same clock.
+
+WHAT FAILED IN REPORTED CASE
+Start timestamp equals zero because throttling never started; subtraction treats zero as real start; reported duration becomes implausibly large or wraps.
+
+MISSING CONNECTION TO DERIVE
+A timestamp's numeric value alone does not prove event occurred; sentinel state must be separated from time arithmetic.
+
+? Prove elapsed time requires meaningful beginning and ending timestamps from same clock. before allowing next state transition.
+?? Locate first operation where: start timestamp equals zero because throttling never started; subtraction treats zero as real start; reported duration becomes implausibly large or wraps.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Ceph upstream troubleshooting documentation; precise fixing commit not established.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://docs.ceph.com/en/latest/rados/troubleshooting/troubleshooting-osd/

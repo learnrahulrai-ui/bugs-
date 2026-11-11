@@ -1,0 +1,11 @@
+GUP length transformation exceeds integer range
+
+Upstream source: https://linux.googlesource.com/linux/kernel/git/torvalds/linux/+/21a3888d3d2f87b7f15ccea1f0befd57346fe899
+
+Evidence: Upstream fix committed 2026-11-03.
+
+First code path: mm/gup.c fast user-page pinning path; commit 21a3888d3d2f...
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

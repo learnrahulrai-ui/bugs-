@@ -1,0 +1,11 @@
+Redis SRANDMEMBER hangs during background rewrite
+
+Upstream source: https://github.com/redis/redis/issues/12200
+
+Evidence: redis/redis issue 12200 and linked resolution 12276; reported hang.
+
+First code path: Redis dictGetSomeKeys and SRANDMEMBER call chain
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

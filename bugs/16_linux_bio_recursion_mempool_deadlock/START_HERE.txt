@@ -1,0 +1,34 @@
+Block I/O recursion can exhaust progress resources
+
+ACTUAL INPUT
+Kernel block layer submits a bio while another submitted bio needs memory-pool resources to finish.
+
+SOURCE ENTRY
+block/bio.c; bioset/mempool rescue path
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+A memory pool admits limited objects; future free operations may depend on earlier requests completing.
+
+WHAT FAILED IN REPORTED CASE
+Recursive submission consumes final available objects and waits for an object that completion of blocked work should release.
+
+MISSING CONNECTION TO DERIVE
+Resource reservation is insufficient unless at least one pending operation can always make progress.
+
+? Prove a memory pool admits limited objects; future free operations may depend on earlier requests completing. before allowing next state transition.
+?? Locate first operation where: recursive submission consumes final available objects and waits for an object that completion of blocked work should release.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Documented failure condition and protection in Linux source; not established as a newly unresolved bug.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux.git/+/refs/heads/linux-6.18.y/block/bio.c

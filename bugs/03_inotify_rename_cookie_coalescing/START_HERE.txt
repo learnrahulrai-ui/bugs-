@@ -1,0 +1,34 @@
+inotify merges rename events that require distinct identities
+
+ACTUAL INPUT
+Application watches directory for rename notifications and later associates departure and arrival events.
+
+SOURCE ENTRY
+fs/notify/inotify: event queue merge path
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Rename notifications carry identity information required to pair source with destination.
+
+WHAT FAILED IN REPORTED CASE
+Kernel event merge path treats independently meaningful rename notifications as interchangeable; merged event can conceal identity required by watcher.
+
+MISSING CONNECTION TO DERIVE
+Equal-looking event data does not prove equal underlying operations; pairing data must survive compaction.
+
+? Prove rename notifications carry identity information required to pair source with destination. before allowing next state transition.
+?? Locate first operation where: kernel event merge path treats independently meaningful rename notifications as interchangeable; merged event can conceal identity required by watcher.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Kernel patch v2 2026-10-27; merge status unconfirmed.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://lkml.iu.edu/hypermail/linux/kernel/2610.3/07456.html

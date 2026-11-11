@@ -1,0 +1,11 @@
+KVM cache pointer outlives cache object
+
+Upstream source: https://lists.openwall.net/linux-kernel/2026/07/18/639
+
+Evidence: Linux kernel PATCH v3 with KASAN reproduction 2026-07-18.
+
+First code path: arch/x86/kvm/mmu/mmu.c: mmu_destroy_caches; kvm_mmu_vendor_module_init
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

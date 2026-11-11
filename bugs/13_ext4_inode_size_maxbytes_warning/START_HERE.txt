@@ -1,0 +1,34 @@
+ext4 iomap path sees inode size past filesystem limit
+
+ACTUAL INPUT
+Filesystem operation maps file blocks based on inode length.
+
+SOURCE ENTRY
+ext4 iomap path; syzbot extid 8973d96aa456c9171655
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Filesystem maximum file size bounds every valid block mapping and file extension.
+
+WHAT FAILED IN REPORTED CASE
+Inode size reported beyond filesystem maximum reaches iomap path; kernel warning arises because earlier validation failed to guard mapping.
+
+MISSING CONNECTION TO DERIVE
+Trust in stored inode length must be derived from filesystem limit, not merely width of size field.
+
+? Prove filesystem maximum file size bounds every valid block mapping and file extension. before allowing next state transition.
+?? Locate first operation where: inode size reported beyond filesystem maximum reaches iomap path; kernel warning arises because earlier validation failed to guard mapping.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+syzbot report marked fixed 2025-07-14.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://syzbot.org/bug?extid=8973d96aa456c9171655

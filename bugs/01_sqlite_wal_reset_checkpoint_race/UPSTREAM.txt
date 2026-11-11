@@ -1,0 +1,11 @@
+SQLite WAL reset loses checkpoint generation
+
+Upstream source: https://www.sqlite.org/wal.html#walresetbug
+
+Evidence: SQLite official 2026-03-03 analysis; bug fixed in 3.51.3.
+
+First code path: src/wal.c: walCheckpoint, walRestartLog, walIndexRecover
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

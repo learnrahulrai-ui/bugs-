@@ -1,0 +1,34 @@
+SQLite WAL restart durability depends on write order
+
+ACTUAL INPUT
+SQLite database transaction is appended to WAL and made durable.
+
+SOURCE ENTRY
+src/wal.c and historical ticket ff5be73dee
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+On-disk header, frame contents and durability operations have required order.
+
+WHAT FAILED IN REPORTED CASE
+Log restart or header update gets persisted in order inconsistent with data needed for recovery; power loss can expose valid-looking metadata with missing content.
+
+MISSING CONNECTION TO DERIVE
+Durability is not only which bytes were written; it is which bytes must reach storage before other bytes.
+
+? Prove on-disk header, frame contents and durability operations have required order. before allowing next state transition.
+?? Locate first operation where: log restart or header update gets persisted in order inconsistent with data needed for recovery; power loss can expose valid-looking metadata with missing content.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Historical SQLite source ticket, reproduction not established in dossier.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://sqlite.org/src/info/ff5be73dee

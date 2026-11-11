@@ -1,0 +1,83 @@
+PROFESSOR SWARM REAL OPEN-SOURCE BUG INVESTIGATION
+6804 indexed question blocks; 17 populated core themes; 20 individually sourced real-world defect investigations.
+The original 6804 blocks are conceptual questions, NOT 6804 independently verified defects. A theme label can differ from the row's focal question; never turn an index tag into fabricated proof. Each dossier contains one upstream issue, patch, documented defective behavior, or acknowledged limitation and tells which evidence grade applies.
+
+OUTPUT RULES
+For each real defect, use the customer's first actual action, the first concrete code path, and the operator's failure observation. Write the state before each action and the state after it, moving from observed bytes, object lifetimes, queue positions, packet decisions, and commit evidence to the necessary invariant. Identify the missing mental connection rather than guessing a developer's intelligence or intention. Separate a documented root cause from a plausible interpretation. Count only real numbers found in a source, a reproducible measurement, or a mathematically derived boundary. No fabricated examples or toy scenarios. Challenge the model with a hard failure-chain puzzle derived from the defect and reveal exactly why the bad chain fails; omit a ready-made source patch. Show successful path and failing path with true/false predicates. Verify one operation on one process and one machine before asserting multiple operations, then four users and a second machine; do not inflate scale before proof of single-operation correctness. Preserve all necessary original relationships rather than replacing them with unrelated stories. Link upstream evidence and document what still needs a local run.
+
+ADDED QUESTIONS FOR EVERY BUG
+What actually failed for a user?
+What action entered the first faulty code path?
+Where did the original value, object identity, reference, generation, or commitment evidence enter?
+What exact state changed between the last safe decision and the first unsafe decision?
+Why was the previous state insufficient to justify the next one?
+Where did an equality comparison erase an identity required downstream?
+What work did an apparently harmless cache, optimization, or monitoring operation introduce?
+What independent event made a previous proof stale?
+What hidden dependency did the developer fail to model?
+How does the working path preserve correctness for one operation?
+How does the failing path violate correctness before scale is introduced?
+What observation distinguishes the source code's intent from actual behavior?
+Which exact source line, upstream patch, issue, crash report, or test establishes the defect?
+Which link is necessary for correctness, and what downstream state collapses if removed?
+Where does memory lifetime end while a pointer remains visible?
+Where does a count cease to represent original input because a previous conversion lost information?
+Where does a byte sequence gain a different meaning because of CPU endianness or format version?
+Where does a name or lookup key stop identifying the same object?
+Where can a queue retry indefinitely without decreasing remaining work?
+When does one observer's diagnostic re-enter the observer and make event count grow?
+Where do replicated writes become durable, and what evidence does a client actually receive?
+Which exact tests establish success, failure, error reporting, crash recovery, and bounded completion?
+How does one customer operation remain correct before two, a thousand, four users, and another machine are admitted?
+Where is the hard conceptual mistake, not a low-value syntax, offset, or counting mistake?
+What is verified, what remains unverified, and what local experiment can resolve the gap?
+
+PUZZLE RULE
+Use only the real source defect for the harder puzzle. Expose the complete broken dependency chain and necessary invariant. Do not invent scenarios, values, statistics, or code. Do not provide a source-level patch as an answer. Show exact transition and why its alternative breaks. No attribution of low intelligence to engineers.
+
+EVIDENCE CONSTRAINT
+A verified issue report is proof of reported symptoms, not automatically proof of the reporter's root-cause theory. A published patch explanation is stronger for cause. A source comment documents a design safeguard but does not by itself establish a separate historical bug report. A published regression test is stronger still. All cases state what has NOT been tested locally.
+
+INDEX THEME COUNTS
+ 2024  cache-line sharing  (first block 166)
+ 1332  privilege boundary / IPC  (first block 1153)
+  751  virtual-memory page state  (first block 654)
+  616  version coherence  (first block 163)
+  470  arithmetic boundary  (first block 362)
+  416  speculation / side channel  (first block 487)
+  405  capacity / bounded search  (first block 55)
+  177  partial I/O  (first block 1154)
+  161  policy semantics equivalence  (first block 2917)
+  159  concurrent lifetime  (first block 59)
+  132  hash collision / probing  (first block 39)
+   76  binary layout  (first block 7)
+   51  torn persistence  (first block 1)
+   12  deferred block I/O  (first block 290)
+   12  object identity vs name  (first block 5061)
+    6  single owner / many references  (first block 8)
+    4  replicated completion  (first block 5528)
+
+UNMAPPED OR NOT PROVEN BY THE SELECTED CASES
+Speculation / side channel is present in the source index but no new non-CVE locally reproducible case was established in this research pass. No dossier is fabricated solely to fill this slot.
+
+REAL BUG FILES
+01_sqlite_wal_reset_checkpoint_race.txt | SQLite WAL reset and checkpoint race | https://www.sqlite.org/wal.html#walresetbug
+02_kvm_mmu_cache_lifetime_reload.txt | KVM x86 MMU cache use-after-free during vendor module reload | https://lists.openwall.net/linux-kernel/2026/07/18/639
+03_inotify_rename_cookie_coalescing.txt | Linux inotify merge loses rename identity | https://lkml.iu.edu/hypermail/linux/kernel/2610.3/07456.html
+04_redis_srandmember_fork_hang.txt | Redis SRANDMEMBER stalls while hash-table rehash is held during fork | https://github.com/redis/redis/issues/12200
+05_bcache_cpu_false_sharing.txt | Linux bcache CPU false-sharing regression | https://www.kernel.org/doc/html/latest/kernel-hacking/false-sharing.html
+06_linux_gup_length_shift_overflow.txt | Linux get-user-pages fast path length overflow | https://linux.googlesource.com/linux/kernel/git/torvalds/linux/+/21a3888d3d2f87b7f15ccea1f0befd57346fe899
+07_ext4_big_endian_checksum_bytes.txt | Linux ext4 metadata checksum endian mismatch | https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg430295.html
+08_git_partial_write_contract.txt | Git partial-write error handling contract | https://git.powerel.org/kernel/git/commit/d34cf19b89
+09_linux_ftrace_oversized_event_loop.txt | Linux ftrace oversized event read infinite-loop guard | https://code.googlesource.com/linux/torvalds/linux/+/1e2f2d31997a9496f99e2b43255d6a48b06fbcc2/kernel/trace/trace.c
+10_otel_recursive_export_logging.txt | OpenTelemetry Python log export recursion | https://github.com/open-telemetry/opentelemetry-python/pull/4695
+11_bpftrace_lost_events_wrong_reporting.txt | bpftrace spurious lost-event reports and ordering defects | https://github.com/bpftrace/bpftrace/issues/2646
+12_kvm_shadow_mmu_obsolete_root.txt | KVM shadow MMU maps memory into obsolete root after reclamation | https://cos.googlesource.com/third_party/kernel/+/f8942cf365df41f4179e94e9c9af498b8509984f
+13_ext4_inode_size_maxbytes_warning.txt | ext4 iomap warning from inode size beyond filesystem maximum | https://syzbot.org/bug?extid=8973d96aa456c9171655
+14_cloud_hypervisor_vhost_user_reconnect_hang.txt | Cloud Hypervisor VM reboot blocked by vhost-user backend reconnect failure | https://github.com/cloud-hypervisor/cloud-hypervisor/issues/6439
+15_sqlite_wal_header_sync_ordering.txt | SQLite WAL restart header write ordering and corruption | https://sqlite.org/src/info/ff5be73dee
+16_linux_bio_recursion_mempool_deadlock.txt | Linux bio recursion removal creates separate mempool progress condition | https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux.git/+/refs/heads/linux-6.18.y/block/bio.c
+17_inotify_watch_reference_race.txt | Linux inotify add/remove watch published before reference acquisition | https://mirror.iscas.ac.cn/git/git.kernel.org/pub/scm/linux/kernel/git/stable/linux/-/commits/b742bb82f1676d50103ade0ba89bfb79debabe73
+18_linux_codel_mtu_floor_wrong_drop.txt | Linux CoDel 256-byte floor incorrectly suppresses congestion drops | https://www.opennet.ru/kernel/6.18.56.html
+19_ceph_rgw_bypass_gc_shared_object_data.txt | Ceph RGW bypass-gc removes shared data from copied objects | https://tracker.ceph.com/issues/73348
+20_ceph_osd_zero_timestamp_underflow.txt | Ceph OSD throttled duration wraps due to zero timestamp | https://docs.ceph.com/en/latest/rados/troubleshooting/troubleshooting-osd/

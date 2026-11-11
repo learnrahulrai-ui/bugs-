@@ -1,0 +1,11 @@
+inotify merges rename events that require distinct identities
+
+Upstream source: https://lkml.iu.edu/hypermail/linux/kernel/2610.3/07456.html
+
+Evidence: Kernel patch v2 2026-10-27; merge status unconfirmed.
+
+First code path: fs/notify/inotify: event queue merge path
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

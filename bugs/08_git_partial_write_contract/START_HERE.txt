@@ -1,0 +1,34 @@
+Git output path fails to account for partial writes
+
+ACTUAL INPUT
+Git writes data to file descriptor; operating system accepts a write request.
+
+SOURCE ENTRY
+Git write wrappers and historical d34cf19b89 cleanup
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+One write system call can report fewer bytes than requested; accepted prefix remains valid.
+
+WHAT FAILED IN REPORTED CASE
+Caller treats short successful write as full completion; suffix never reaches destination; later read observes incomplete content.
+
+MISSING CONNECTION TO DERIVE
+Successful system call does not prove all requested bytes reached recipient.
+
+? Prove one write system call can report fewer bytes than requested; accepted prefix remains valid. before allowing next state transition.
+?? Locate first operation where: caller treats short successful write as full completion; suffix never reaches destination; later read observes incomplete content.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+2007 upstream Git clean-up commit; precise independent reproducer not present in index.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://git.powerel.org/kernel/git/commit/d34cf19b89

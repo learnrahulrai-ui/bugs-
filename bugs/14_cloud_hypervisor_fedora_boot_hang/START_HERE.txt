@@ -1,0 +1,34 @@
+Cloud Hypervisor Fedora VM intermittently hangs during boot
+
+ACTUAL INPUT
+Operator repeatedly creates Fedora 37 virtual machines using Cloud Hypervisor v35.0 or v38.0.
+
+SOURCE ENTRY
+cloud-hypervisor issue 6439; exact code cause UNKNOWN
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Fresh boot and reboot should reach guest readiness; operation must eventually terminate.
+
+WHAT FAILED IN REPORTED CASE
+Issue reports sporadic boot hangs across repeated launch/reboot cycles; root cause NOT proven. Earlier research incorrectly called this a vhost-user reconnect failure; source does not establish that claim.
+
+MISSING CONNECTION TO DERIVE
+Do not infer root cause from neighboring device or backend features; first establish the stuck state by guest/host logs.
+
+? Prove fresh boot and reboot should reach guest readiness; operation must eventually terminate. before allowing next state transition.
+?? Locate first operation where: issue reports sporadic boot hangs across repeated launch/reboot cycles; root cause NOT proven. Earlier research incorrectly called this a vhost-user reconnect failure; source does not establish that claim.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+User-reported GitHub issue 6439, May 2024; source describes four VMs repeated 100 times.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://github.com/cloud-hypervisor/cloud-hypervisor/issues/6439

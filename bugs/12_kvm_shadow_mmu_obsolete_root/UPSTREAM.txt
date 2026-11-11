@@ -1,0 +1,11 @@
+KVM writes mapping into obsolete shadow page-table root
+
+Upstream source: https://cos.googlesource.com/third_party/kernel/+/f8942cf365df41f4179e94e9c9af498b8509984f
+
+Evidence: Stable backport cites upstream commit 2abd5287f083...
+
+First code path: KVM x86 shadow MMU root/obsolescence paths
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

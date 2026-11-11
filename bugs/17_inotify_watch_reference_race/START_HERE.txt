@@ -1,0 +1,34 @@
+inotify watch becomes visible before lifetime is secured
+
+ACTUAL INPUT
+Program registers and removes filesystem watches while kernel delivers notifications.
+
+SOURCE ENTRY
+fs/notify inotify watch insert/remove lifecycle
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+A watch reference must keep memory valid for any reader that can reach watch.
+
+WHAT FAILED IN REPORTED CASE
+Watch state becomes reachable before reference ownership is complete or removal intersects acquisition; reader can dereference freed watch.
+
+MISSING CONNECTION TO DERIVE
+Visibility and lifetime ownership must be established atomically relative to each other.
+
+? Prove a watch reference must keep memory valid for any reader that can reach watch. before allowing next state transition.
+?? Locate first operation where: watch state becomes reachable before reference ownership is complete or removal intersects acquisition; reader can dereference freed watch.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Historical Linux commit b742bb82f167... cited in stable history.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://mirror.iscas.ac.cn/git/git.kernel.org/pub/scm/linux/kernel/git/stable/linux/-/commits/b742bb82f1676d50103ade0ba89bfb79debabe73

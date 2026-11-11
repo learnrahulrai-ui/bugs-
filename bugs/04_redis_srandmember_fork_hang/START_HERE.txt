@@ -1,0 +1,34 @@
+Redis SRANDMEMBER hangs during background rewrite
+
+ACTUAL INPUT
+Redis application calls SRANDMEMBER while persistence process forks; set is changed by SSCAN and SREM.
+
+SOURCE ENTRY
+Redis dictGetSomeKeys and SRANDMEMBER call chain
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Dictionary resizing moves entries between two tables while random selection searches them.
+
+WHAT FAILED IN REPORTED CASE
+Selection logic assumes sampled location covers live entries; rehash and shrinking alter live region; search repeats without terminating during reported workload.
+
+MISSING CONNECTION TO DERIVE
+Random sampling must have a bounded path to an actual live entry even while table changes shape.
+
+? Prove dictionary resizing moves entries between two tables while random selection searches them. before allowing next state transition.
+?? Locate first operation where: selection logic assumes sampled location covers live entries; rehash and shrinking alter live region; search repeats without terminating during reported workload.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+redis/redis issue 12200 and linked resolution 12276; reported hang.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://github.com/redis/redis/issues/12200

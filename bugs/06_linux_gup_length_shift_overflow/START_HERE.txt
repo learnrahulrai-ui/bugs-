@@ -1,0 +1,34 @@
+GUP length transformation exceeds integer range
+
+ACTUAL INPUT
+Kernel caller requests fast pinning of user pages covering byte range.
+
+SOURCE ENTRY
+mm/gup.c fast user-page pinning path; commit 21a3888d3d2f...
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+A length in bytes is changed into page count for pointer-array allocation or iteration.
+
+WHAT FAILED IN REPORTED CASE
+Bit shift or addition at type boundary wraps or changes required coverage; later page walk uses length no longer equal to original requested range.
+
+MISSING CONNECTION TO DERIVE
+Integer representation limits must hold across each unit conversion and every length check.
+
+? Prove a length in bytes is changed into page count for pointer-array allocation or iteration. before allowing next state transition.
+?? Locate first operation where: bit shift or addition at type boundary wraps or changes required coverage; later page walk uses length no longer equal to original requested range.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Upstream fix committed 2026-11-03.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://linux.googlesource.com/linux/kernel/git/torvalds/linux/+/21a3888d3d2f87b7f15ccea1f0befd57346fe899

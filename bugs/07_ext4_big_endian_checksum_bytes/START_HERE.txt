@@ -1,0 +1,34 @@
+ext4 metadata checksum input bytes differ by CPU byte order
+
+ACTUAL INPUT
+Filesystem reads and validates binary metadata on CPUs with different byte orders.
+
+SOURCE ENTRY
+ext4 metadata checksum code, historical commit 171a7f21...
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Persistent metadata contains byte sequence; CPU can represent same integer with opposite memory order.
+
+WHAT FAILED IN REPORTED CASE
+Checksum path consumes host-specific byte order rather than disk-defined order; metadata valid on one host fails validation on another.
+
+MISSING CONNECTION TO DERIVE
+Checksum must cover persistent bytes, not reinterpretation determined by processor.
+
+? Prove persistent metadata contains byte sequence; CPU can represent same integer with opposite memory order. before allowing next state transition.
+?? Locate first operation where: checksum path consumes host-specific byte order rather than disk-defined order; metadata valid on one host fails validation on another.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Historical upstream patch documented by linux-kernel mailing list.
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg430295.html

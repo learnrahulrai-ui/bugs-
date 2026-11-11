@@ -1,0 +1,11 @@
+inotify watch becomes visible before lifetime is secured
+
+Upstream source: https://mirror.iscas.ac.cn/git/git.kernel.org/pub/scm/linux/kernel/git/stable/linux/-/commits/b742bb82f1676d50103ade0ba89bfb79debabe73
+
+Evidence: Historical Linux commit b742bb82f167... cited in stable history.
+
+First code path: fs/notify inotify watch insert/remove lifecycle
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.

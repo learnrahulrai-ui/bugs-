@@ -1,0 +1,34 @@
+KVM writes mapping into obsolete shadow page-table root
+
+ACTUAL INPUT
+Guest changes memory access; KVM updates shadow memory translation structures.
+
+SOURCE ENTRY
+KVM x86 shadow MMU root/obsolescence paths
+
+WHAT MUST BE TRUE BEFORE NEXT ACTION
+Shadow root remains valid only while generation and ownership permit further writes.
+
+WHAT FAILED IN REPORTED CASE
+Reclamation marks root obsolete; concurrent mapping path acts on stale root; write can resurrect mapping into root already retired.
+
+MISSING CONNECTION TO DERIVE
+Proof of address validity is insufficient; mapping root must belong to current translation generation.
+
+? Prove shadow root remains valid only while generation and ownership permit further writes. before allowing next state transition.
+?? Locate first operation where: reclamation marks root obsolete; concurrent mapping path acts on stale root; write can resurrect mapping into root already retired.
+
+ONE INPUT -> TWO INPUTS -> THOUSAND INPUTS -> FOUR USERS -> SECOND MACHINE
+Advance only after current ring preserves same ownership, identity, order and termination rule. Workload scale cannot repair a broken rule.
+
+PROOF TO WRITE YOURSELF
+Record exact state before operation, action, state after operation, first invalid assumption, source function, and a failing assertion. Do not copy upstream patch before deriving assertion.
+
+EVIDENCE LEVEL
+Stable backport cites upstream commit 2abd5287f083...
+
+LOCAL RUN STATUS
+NOT EXECUTED. No reproduction claimed.
+
+SOURCE
+https://cos.googlesource.com/third_party/kernel/+/f8942cf365df41f4179e94e9c9af498b8509984f

@@ -1,0 +1,18 @@
+KVM cache pointer outlives cache object
+
+LOCAL RESULT
+No source checkout, compile, fault injection, or target-specific kernel run executed.
+
+PRECONDITIONS FROM UPSTREAM
+KASAN + kernel v7.1.3 + CONFIG_KVM=m + CONFIG_KVM_INTEL=m; one-shot injected failure on second vendor init; avoid production kernel; AMD adaptation not established.
+
+REPRODUCE LATER
+First identify version and source commit in upstream reference. Save before/after snapshots and environment. Run one normal operation with an explicit expected result. Trigger exact stated failure on same version. Keep input and scheduling record. Confirm incorrect observed state, then reproduce under unchanged conditions. Only after proof widen workload or machines.
+
+PRESERVE LOGS
+Write version, build flags, exact command, input, exit status, stdout, stderr, relevant kernel warnings and expected-versus-actual state to RUN_LOG.txt.
+
+DO NOT APPLY FIX YET
+Derive first broken assumption and create test that fails without a fix.
+
+Source: https://lists.openwall.net/linux-kernel/2026/07/18/639

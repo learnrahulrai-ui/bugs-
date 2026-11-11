@@ -1,0 +1,11 @@
+Ceph RGW cleanup removes bytes still used by another object
+
+Upstream source: https://tracker.ceph.com/issues/73348
+
+Evidence: Ceph tracker issue 73348; exact fixed releases require upstream verification.
+
+First code path: Ceph RGW garbage collection and shared object references
+
+Official source trees/patches remain at upstream URLs. Full upstream file has not been mirrored; no exact revision is invented.
+
+Difference between a source claim and measurement: source can document defect; only a matching local test can show it in this environment.
