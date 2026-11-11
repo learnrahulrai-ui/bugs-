@@ -1,0 +1,18 @@
+01 A UDP datagram contains a fixed sequence of transmitted bytes.
+02 A receiver allocates storage before receiving a datagram.
+03 Transmitting 150 bytes toward storage of 100 bytes permits at most 100 bytes to be physically copied.
+04 MSG_TRUNC is a receive flag that can report the full transmitted 150-byte length.
+05 A reported length therefore differs from the copied length by 150 minus 100 = 50 bytes.
+06 An incremental registered buffer ring holds two independent buffers of 100 bytes each.
+07 Before receiving, first buffer has 100 available bytes and second buffer has 100 available bytes.
+08 Correct physical accounting after the first receive leaves 0 available in first and 100 available in second.
+09 The issue reports that kernel accounting consumed 150 reported bytes rather than 100 copied bytes.
+10 Kernel state instead leaves 0 available in first, advances second by 50, and reports 50 available in second.
+11 The first 50 bytes of second buffer were never written, so the cursor claims 50 bytes of consumption without physical payload.
+12 A following datagram of 49 bytes writes only at second[50..98], bypassing second[0..49].
+13 A following datagram of 51 bytes has only 50 remaining bytes of room; report records one discarded byte although completion reports 51.
+14 Missing inference: datagram length, bytes stored, and bytes consumed from registered memory are different quantities.
+15 UPSTREAM https://github.com/axboe/liburing/issues/1619
+16 REPORTED ENVIRONMENT Linux 6.18.26, liburing 2.5. Issue body contains full incremental_udp.c source and commands.
+17 USER-LAPTOP REPRODUCTION: NOT RUN. Expected failure may depend on the kernel version.
+18 NEW THINGS INTRODUCED WITHOUT DERIVATION: NONE IDENTIFIED within lines 01-14; the report's kernel accounting implementation needs independent code review.
