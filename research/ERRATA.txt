@@ -1,0 +1,3 @@
+IMPORTANT SOURCE CORRECTION
+Previous index described Cloud Hypervisor issue #6439 as vhost-user backend reconnect failure. Primary issue reports Fedora 37 boot hangs under repeated VM launch/reboot, without a confirmed cause. Source: https://github.com/cloud-hypervisor/cloud-hypervisor/issues/6439
+Source index and word cloud preserved as generated research; individual case files use evidence grades. No upstream defect or source code should be treated as locally reproduced without a matching run.
