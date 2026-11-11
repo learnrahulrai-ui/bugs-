@@ -1,0 +1,6 @@
+Research snapshot 2026-11-12.
+35 earlier source cases; 32 individual public GitHub issues, 1 multi-issue comparison catalog A07, 2 university teaching labs A28 and A29.
+Every issue status is a tracker status on that date, not a guarantee that an exact affected build fails now.
+Only A01 has been executed locally in the provided Linux sandbox; no user laptop execution.
+Open issue = unresolved report, not a diagnosis confirmed by independent runtime testing.
+Folders `bugs/` contain individual issue reports, `collections/` holds aggregate A07, `labs/` contain teaching labs.

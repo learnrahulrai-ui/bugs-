@@ -1,0 +1,34 @@
+CASE A05
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. One pathname refers to one directory entry.
+02. Creating an absent entry succeeds once; creating it again without removal gets an already-exists error.
+03. Twelve callers can all see absence before the first successful creation.
+04. A successful existence check after the error proves a directory exists, not that the caller created it.
+05. The report records already-exists from mkdir followed by exit status zero.
+06. Missing reasoning: final shared state does not identify which caller performed the state change.
+
+WHERE THE REASONING FAILED
+Missing reasoning: final shared state does not identify which caller performed the state change.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A05 uutils mkdir may claim success on a failed concurrent create
+What: Two actors create one pathname; a racing EEXIST may be treated as success even without -p.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: Rust mkdir implementation and Python concurrency reproducer in issue
+Who: uutils/coreutils code/test + the local caller exercising it.
+When: Open issue when inspected
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Issue uses 12 processes and 5000 rounds; GNU comparison: 0 double-success rounds; uutils report: thousands.
+Action: Build uutils from its checkout (cargo build --release); run the exact issue Python reproducer; contrast GNU mkdir and uutils.
+Call chain: Shell/Python -> mkdir call -> EEXIST handling -> exit status.
+Laptop: User-owned empty temporary directory; no root.
+Restriction: Current tool versions not run on this machine.
+Primary evidence: https://github.com/uutils/coreutils/issues/16344
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

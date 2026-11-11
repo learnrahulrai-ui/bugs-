@@ -1,0 +1,33 @@
+CASE A13
+STATUS: closed (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A scrub worker must use its configured throughput limit while working.
+02. A main thread may start a worker and later wait for its completion.
+03. Restoring a shared limit before joining allows an active worker to observe the restored value.
+04. The report locates restoration before pthread_join.
+05. Missing reasoning: worker lifetime, not launch time, bounds how long shared settings must remain active.
+
+WHERE THE REASONING FAILED
+Missing reasoning: worker lifetime, not launch time, bounds how long shared settings must remain active.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A13 btrfs scrub throttle state restored before workers finish
+What: A worker may continue operating after the process changes a limit intended to remain active.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: scrub start worker execution, throttle state reset, pthread_join
+Who: kdave/btrfs-progs code/test + the local caller exercising it.
+When: Fixed in later v7.3; historical regression exercise
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: 2 devices; intended limit X on each; report shows device 1 with X and device 2 with 0 (no limit).
+Action: Use affected historical btrfs-progs, two loop images, run scrub under tracing with capped I/O.
+Call chain: CLI -> set per-device limit -> start workers -> restore -> join.
+Laptop: Requires root and throwaway filesystem; VM only.
+Restriction: Do not assume current v7.3 has bug.
+Primary evidence: https://github.com/kdave/btrfs-progs/issues/1165
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

@@ -1,0 +1,34 @@
+CASE A18
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A UDP datagram has one transmitted length.
+02. A 150-byte datagram does not fit in a 100-byte receiving buffer.
+03. MSG_TRUNC reports 150 although only 100 payload bytes are copied.
+04. Two 100-byte registered buffers are tracked as separate memory spans.
+05. The reported kernel consumes all 100 from the first buffer and 50 from the second without writing the second buffer.
+06. Missing reasoning: return length describes the datagram, not physical bytes written to supplied memory.
+
+WHERE THE REASONING FAILED
+Missing reasoning: return length describes the datagram, not physical bytes written to supplied memory.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A18 io_uring MSG_TRUNC consumes buffer bytes that were never copied
+What: A reported datagram length exceeds actual transferred bytes; cursor is advanced by report instead of copied byte count.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: recvmsg(MSG_TRUNC) -> incremental provided buffers
+Who: axboe/liburing code/test + the local caller exercising it.
+When: Issue open; Linux fix commit referenced in issue
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: 150-byte UDP datagram; 2 buffers of 100; first 100 physically copied but cursor advances 150; next 49/51-byte followups expose mismatch.
+Action: Use exact issue incremental_udp.c; cc -O2 -Wall -Wextra -Werror incremental_udp.c -luring -o incremental_udp; ./incremental_udp --follow 51.
+Call chain: UDP socket -> recvmsg MSG_TRUNC -> CQE value -> buffer tail state.
+Laptop: Run on older kernel version referenced in issue in VM; current may include fix.
+Restriction: Historical kernel fix exists; not evidence of current unfixed defect.
+Primary evidence: https://github.com/axboe/liburing/issues/1619
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

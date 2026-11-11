@@ -1,0 +1,33 @@
+CASE A11
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A file's bytes must remain readable after a filesystem is constructed.
+02. Compression changes stored representation while preserving original bytes as an invariant.
+03. Shrinking changes placement while preserving the same bytes.
+04. The report observes read errors after combined compression and shrinking.
+05. Missing reasoning: combined transformation preserved neither the required data reachability nor its checked result.
+
+WHERE THE REASONING FAILED
+Missing reasoning: combined transformation preserved neither the required data reachability nor its checked result.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A11 btrfs mkfs compression/shrink regression
+What: Version change causes generated compressed rootfs to contain files that report I/O errors.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: mkfs.btrfs --compress zlib:9 --shrink; root tree generated from source directory
+Who: kdave/btrfs-progs code/test + the local caller exercising it.
+When: Open issue at research time
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Reported regression: btrfs-progs v6.19.1 succeeds and v7.0 fails; 20 MiB sample fixture.
+Action: Using 2 scratch filesystems, reproduce issue command with --compress zlib:9 --shrink and compare all file hashes.
+Call chain: source tree -> mkfs.btrfs image -> mount image -> read files.
+Laptop: Root/mount only inside VM; scratch disk image.
+Restriction: No real disk write.
+Primary evidence: https://github.com/kdave/btrfs-progs/issues/1135
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

@@ -1,0 +1,34 @@
+CASE A03
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. An integer stores bits, each equal to zero or one.
+02. Population count adds the one-bits.
+03. For 0x55 the one-bits are four; for 0xFF they are eight.
+04. The reported source loop computes the same mathematical count as a population-count operation.
+05. The compiler did not recognize the equivalence in the reported compilation.
+06. Missing reasoning: recognition of a mathematically equivalent bit recurrence.
+
+WHERE THE REASONING FAILED
+Missing reasoning: recognition of a mathematically equivalent bit recurrence.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A03 LLVM fails to recognize a population-count idiom
+What: A 1-bit-at-a-time conditional count is not collapsed to a population-count instruction in the reported case.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: LLVM optimizer, bit operations, source snippet in issue
+Who: llvm/llvm-project code/test + the local caller exercising it.
+When: Open issue at research time
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Inputs 0x00, 0x01, 0x55, 0xFF have 0,1,4,8 bits set; verify numerical outputs separately from instruction choice.
+Action: Compile the exact loop shown in the issue using clang -O2/-O3 -S; compare source form to __builtin_popcount.
+Call chain: C loop -> optimization -> x86-64 assembly.
+Laptop: C compiler only.
+Restriction: Architecture and compiler version affect code generation.
+Primary evidence: https://github.com/llvm/llvm-project/issues/129805
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

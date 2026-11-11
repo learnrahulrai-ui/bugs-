@@ -1,0 +1,32 @@
+CASE A12
+STATUS: closed (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. Compressed bytes must be converted into original bytes before they are restored.
+02. A compressed short inline extent carries both length and compression information.
+03. The report records zstd frame incomplete when restoring inline data.
+04. Missing reasoning: compressed extent boundaries were not correctly preserved into decompression.
+
+WHERE THE REASONING FAILED
+Missing reasoning: compressed extent boundaries were not correctly preserved into decompression.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A12 btrfs restore loses data from zstd inline extents
+What: Restorer compares full compressed frame against uncompressed length and truncates reconstruction.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: btrfs restore; zstd-compressed inline extent handling
+Who: kdave/btrfs-progs code/test + the local caller exercising it.
+When: Fixed in later v7.3; historical regression exercise
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Reported 300-byte file -> restored 0 bytes; compressed frame length represented on disk up to 4096 bytes.
+Action: Use an older affected btrfs-progs tag in VM; 256 MiB loop image and ~300-byte compressed input as in issue.
+Call chain: application read -> extent metadata -> btrfs restore -> restored file bytes.
+Laptop: Loop device scratch image; root in VM.
+Restriction: Fixed issue: do not present as new unpatched bug.
+Primary evidence: https://github.com/kdave/btrfs-progs/issues/1171
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

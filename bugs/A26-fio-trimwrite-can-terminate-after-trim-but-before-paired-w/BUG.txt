@@ -1,0 +1,33 @@
+CASE A26
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A trim operation releases a block's allocated storage.
+02. A paired trim-and-write operation is intended to restore data after trimming.
+03. Stopping after the trim and before its matching write breaks the pair.
+04. The report counts 3412 trims but 3411 writes.
+05. Missing reasoning: termination was allowed between dependent operations instead of at a completed pair boundary.
+
+WHERE THE REASONING FAILED
+Missing reasoning: termination was allowed between dependent operations instead of at a completed pair boundary.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A26 fio trimwrite can terminate after trim but before paired write
+What: Program stops between a dependent trim and write; operation pair is incomplete despite success exit.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: backend.c do_io loop and pair-state markers
+Who: axboe/fio code/test + the local caller exercising it.
+When: Open issue, patch commit referenced
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Reported trims=3412, writes=3411; also 2412/2411 and 2373/2372; difference is 1.
+Action: Use issue repro.fio with scratch 1GiB loop image, runtime=4s, iodepth=8, bsrange=4k-128k; compare counts in write_iolog.
+Call chain: fio --rw=trimwrite -> trim -> stop check -> paired write.
+Laptop: DESTRUCTIVE on target: only disposable loop image inside VM.
+Restriction: Issue has proposed fix commit; record version.
+Primary evidence: https://github.com/axboe/fio/issues/2122
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

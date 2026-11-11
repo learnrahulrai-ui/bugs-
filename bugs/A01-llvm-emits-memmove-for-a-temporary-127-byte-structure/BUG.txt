@@ -1,0 +1,34 @@
+CASE A01
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: OBSERVED with clang 17: memmove@PLT for temporary form; inline instructions for direct form.
+
+THE DEPENDENCY CHAIN
+01. One stored value occupies 127 consecutive bytes.
+02. An array places 127-byte values one after another.
+03. Two valid element indices select either one identical 127-byte span or two disjoint spans.
+04. A temporary value preserves all 127 source bytes during assignment.
+05. The reported Clang output calls memmove, although the direct assignment gets inline copies.
+06. Missing reasoning: compiler lowering does not retain the identical-or-disjoint relation through the temporary form.
+
+WHERE THE REASONING FAILED
+Missing reasoning: compiler lowering does not retain the identical-or-disjoint relation through the temporary form.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A01 LLVM emits memmove for a temporary 127-byte structure
+What: When two elements in the same 127-byte array are selected, the regions are equal or disjoint. The report argues LLVM intrinsic memcpy is legal, while the generated call is memmove.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: Clang -O2 code generation; issue includes a C test and resulting assembly
+Who: llvm/llvm-project code/test + the local caller exercising it.
+When: Open issue at research time
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: 127 bytes; compare a temporary-based copy and a direct copy; record assembly calls, not wall-clock claims.
+Action: Create the C reproducer from the issue. Run clang -O2 -S -o - copy.c; search emitted calls for memcpy or memmove.
+Call chain: C entry: Foo tmp = p[src]; p[dst] = tmp -> generated assembly. Compare direct p[dst]=p[src].
+Laptop: No kernel access; C compiler only.
+Restriction: Optimization defect, NOT evidence of data corruption.
+Primary evidence: https://github.com/llvm/llvm-project/issues/86499
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

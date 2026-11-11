@@ -1,0 +1,32 @@
+CASE A20
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A wait blocks until a condition changes or an error occurs.
+02. A file-capability probe used during io_uring_enter can take locks.
+03. The report records io_file_supports_nowait leading to lockup.
+04. Missing reasoning: a probe that waits on work dependent on its own blocked execution cannot finish.
+
+WHERE THE REASONING FAILED
+Missing reasoning: a probe that waits on work dependent on its own blocked execution cannot finish.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A20 io_uring nowait detection path can hang
+What: State checked earlier no longer holds by the time it is used, leaving task blocked.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: io_file_supports_nowait, io_uring_enter, contention
+Who: axboe/liburing code/test + the local caller exercising it.
+When: Open issue at research time
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Use 2 threads, one state change, one request; classify 1s/5s timeout and stack trace.
+Action: Read issue full proof, run within timeout 5s in a VM; collect sysrq stack if blocked.
+Call chain: file flags/state check -> queue path -> io_uring_enter wait.
+Laptop: Hanging repro: never run on unsaved host work.
+Restriction: Reported deadlock; do not claim every kernel version affected.
+Primary evidence: https://github.com/axboe/liburing/issues/1623
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

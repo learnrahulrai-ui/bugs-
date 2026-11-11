@@ -1,0 +1,33 @@
+CASE A23
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A file's logical length differs from allocated disk blocks.
+02. A sparse 5 MiB file can consume zero data blocks for its hole.
+03. A deduplication savings claim must use a declared measure: logical bytes or physical storage.
+04. The report records 5 MiB saved despite zero allocated blocks.
+05. Missing reasoning: logical file length was treated as physical space saved.
+
+WHERE THE REASONING FAILED
+Missing reasoning: logical file length was treated as physical space saved.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A23 hardlink reports 5MiB saved for sparse files using 0 blocks
+What: Apparent length is counted as bytes saved although sparse files have 0 allocated blocks.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: hardlink --reflink=always sparse-file detection and accounting
+Who: util-linux/util-linux code/test + the local caller exercising it.
+When: Issue open; commits referenced (check current branch)
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: 2 files x 5MiB apparent; du allocated=0 KiB; reported Saved 5MiB on each repeated run.
+Action: On scratch Btrfs mount: truncate -s 5M a b; du a b; hardlink -vc a b --reflink=always; repeat.
+Call chain: filesystem extents -> reflink choice -> saved-space statistic.
+Laptop: Best with Btrfs, disposable directory.
+Restriction: Bug report may have follow-up commits; see issue activity.
+Primary evidence: https://github.com/util-linux/util-linux/issues/4563
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

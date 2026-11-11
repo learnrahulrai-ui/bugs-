@@ -1,0 +1,33 @@
+CASE A14
+STATUS: closed (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. An iterator stores enough state to find the next item.
+02. An error can invalidate the stored iterator state.
+03. A second request must not read invalidated state without establishing validity again.
+04. The report records an out-of-bounds access after a preceding error.
+05. Missing reasoning: a failed state transition does not leave the object in an ordinary ready state.
+
+WHERE THE REASONING FAILED
+Missing reasoning: a failed state transition does not leave the object in an ordinary ready state.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A14 btrfs subvolume iterator accesses invalid data after an error
+What: After ioctl error, internal item count still describes 4096 items; the second next call reads data not safely available.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: libbtrfsutil btrfs_util_subvolume_iterator_next_info, search buffer and error handling
+Who: kdave/btrfs-progs code/test + the local caller exercising it.
+When: Fixed in v7.3; historical exercise
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: 4096 reported items after failed ioctl; compare next() call 1 and call 2 and observe pointer/return.
+Action: Checkout affected pre-fix tag, compile issue reproducer with ASan, force error then call iterator twice.
+Call chain: application -> iterator -> ioctl error -> iterator reused.
+Laptop: User-space lib + optional controlled btrfs test environment.
+Restriction: Historical fixed bug.
+Primary evidence: https://github.com/kdave/btrfs-progs/issues/1158
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

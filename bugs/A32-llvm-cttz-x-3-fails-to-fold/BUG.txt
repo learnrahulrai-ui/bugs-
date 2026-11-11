@@ -1,0 +1,32 @@
+CASE A32
+STATUS: closed (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. Multiplying an unsigned integer by an odd number preserves information about how many trailing zero bits it has, modulo the integer width.
+02. Counting trailing zeros after multiplication can therefore reuse the original count.
+03. The report gives LLVM an instruction combination that misses this reduction.
+04. Missing reasoning: the optimizer did not infer a preserved property through odd multiplication.
+
+WHERE THE REASONING FAILED
+Missing reasoning: the optimizer did not infer a preserved property through odd multiplication.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A32 LLVM cttz(x*3) fails to fold
+What: Multiplication by odd integer preserves number of trailing zero bits for nonzero values; optimizer missed an inference.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: LLVM known-bits and count-trailing-zeros optimization
+Who: llvm/llvm-project code/test + the local caller exercising it.
+When: Closed; historical LLVM patch
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: x=4 => x*3=12; both have two trailing zero bits; x=8 => 24 three.
+Action: Reproduce old LLVM IR with opt/llc from issue; compare before/after linked commit.
+Call chain: integer expression -> known-bit analysis -> cttz lowering.
+Laptop: Compiler user-space.
+Restriction: Fixed issue.
+Primary evidence: https://github.com/llvm/llvm-project/issues/213877
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

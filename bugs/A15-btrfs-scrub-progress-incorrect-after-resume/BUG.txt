@@ -1,0 +1,33 @@
+CASE A15
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. Progress is completed work divided by total work.
+02. A multi-device scan counts work across devices, not merely the currently resumed device.
+03. Resume changes which work remains without changing the original total definition.
+04. The report shows an incorrect completed percentage after resume.
+05. Missing reasoning: the numerator and denominator no longer refer to the same scope.
+
+WHERE THE REASONING FAILED
+Missing reasoning: the numerator and denominator no longer refer to the same scope.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A15 btrfs scrub progress incorrect after resume
+What: A resumed multi-device scrub combines per-device counters inconsistently.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: btrfs scrub status, persistent per-device progress counters
+Who: kdave/btrfs-progs code/test + the local caller exercising it.
+When: Open reported Apr 2026
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Reported 45.11 TiB completed / 66.52 TiB total should be about 67.82%; another device displays NaN.
+Action: Read issue and scrutinize scrub status calculation with saved recorded values; live reproduction requires multidisk or simulated VM.
+Call chain: resume -> per-device counters -> global progress computation.
+Laptop: Nonlocal reproduction; use recorded output first.
+Restriction: Not a fast laptop exercise.
+Primary evidence: https://github.com/kdave/btrfs-progs/issues/1106
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

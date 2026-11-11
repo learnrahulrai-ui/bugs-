@@ -1,0 +1,32 @@
+CASE A10
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A command returns a status that calling scripts can inspect.
+02. A failed operation must be distinguishable from a successful one by the documented exit contract.
+03. The issue reports mkswapfile failures with exit status zero.
+04. Missing reasoning: successful function return was confused with a completed successful operation.
+
+WHERE THE REASONING FAILED
+Missing reasoning: successful function return was confused with a completed successful operation.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A10 btrfs mkswapfile can report success after an error
+What: A failed branch reaches shared cleanup that returns exit code 0.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: cmds/filesystem.c, mkswapfile error branches near 1943-1996 in report
+Who: kdave/btrfs-progs code/test + the local caller exercising it.
+When: Open issue Oct 19 2026
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Compare failed operation code !=0 with process exit 0; for a shell, 0 means success and 1 means failure.
+Action: Read full issue and source; provoke a documented validation error using a test directory on disposable filesystem; save stderr and echo $?.
+Call chain: btrfs filesystem mkswapfile -> internal error -> cleanup -> shell exit.
+Laptop: Keep on temporary btrfs loop image or noncritical test path.
+Restriction: Never operate on system swap or production Btrfs.
+Primary evidence: https://github.com/kdave/btrfs-progs/issues/1186
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

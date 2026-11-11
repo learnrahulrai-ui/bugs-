@@ -1,0 +1,33 @@
+CASE A33
+STATUS: closed (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A binary contains instructions at byte addresses.
+02. A stripped binary lacks some symbolic names but still contains those instruction bytes.
+03. A request to attach at a numeric address should be evaluated by valid address rules, not name availability.
+04. The issue reports failed numeric-address uprobe attachment.
+05. Missing reasoning: symbol discovery and valid instruction address are different inputs.
+
+WHERE THE REASONING FAILED
+Missing reasoning: symbol discovery and valid instruction address are different inputs.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A33 bpftrace cannot attach uprobe at specified stripped-binary offset
+What: Attach parser expects symbol lookup path for an offset that has no named symbol.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: uprobes with raw offsets in binaries lacking symbols
+Who: bpftrace/bpftrace code/test + the local caller exercising it.
+When: Issue reported open; inspect exact version
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Compile 1 tiny function; strip symbols; compare 1 named attach and 1 offset attach.
+Action: Build bpftrace version matching issue; trace local stripped hello binary, inspect error and ELF addresses.
+Call chain: binary address -> bpftrace parser -> attach error.
+Laptop: Requires CAP_BPF/perf permissions; VM.
+Restriction: Do not assume modern master affected; verify.
+Primary evidence: https://github.com/bpftrace/bpftrace/issues/5144
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

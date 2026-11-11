@@ -1,0 +1,33 @@
+CASE A22
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A mount namespace controls which path names are visible.
+02. A loop device can keep a backing file open after the original namespace disappears.
+03. Displaying a remembered name does not prove that name still identifies the same reachable file.
+04. The report records an incorrect backing path after namespace removal.
+05. Missing reasoning: object lifetime was confused with namespace-specific path lifetime.
+
+WHERE THE REASONING FAILED
+Missing reasoning: object lifetime was confused with namespace-specific path lifetime.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A22 losetup displays wrong backing file after mount namespace expires
+What: Backing filename string refers to a namespace that no longer exists; a displayed path does not locate the correct object.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: losetup reporting for loop device bound from a vanished mount namespace
+Who: util-linux/util-linux code/test + the local caller exercising it.
+When: Open issue at research time
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: 1 loop image; 2 mount namespaces; compare /proc/*/mountinfo before and after namespace removal.
+Action: Follow issue isolated container reproduction; use a loop device on throwaway image; compare ls -l /sys/block/loop*/loop/backing_file.
+Call chain: create loop in namespace -> exit namespace -> losetup -a from host.
+Laptop: Root/loop device; VM recommended.
+Restriction: Do not detach any existing loop device.
+Primary evidence: https://github.com/util-linux/util-linux/issues/4166
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

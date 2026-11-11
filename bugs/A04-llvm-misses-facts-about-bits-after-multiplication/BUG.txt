@@ -1,0 +1,33 @@
+CASE A04
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. Multiplication combines two integer inputs.
+02. A known-bit fact states a bit value is fixed across all permitted inputs.
+03. Preserving known-bit facts through multiplication requires reasoning about carry propagation.
+04. The issue requests propagation of a multiplication-specific fact into code selection.
+05. Missing reasoning: the optimizer loses a useful constraint after a multiply; correctness failure is not established.
+
+WHERE THE REASONING FAILED
+Missing reasoning: the optimizer loses a useful constraint after a multiply; correctness failure is not established.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A04 LLVM misses facts about bits after multiplication
+What: The code-generation analysis loses known-bit constraints after a multiply; inspect the reported IR.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: llvm/lib/CodeGen/SelectionDAG/TargetLowering.cpp, KnownBits::mul
+Who: llvm/llvm-project code/test + the local caller exercising it.
+When: Open issue at research time
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Compare x=0,1,2,3 and x*x=0,1,4,9; record known low-bit constraints.
+Action: Run the IR reproducer attached to issue through opt/llc for matching LLVM version.
+Call chain: Input IR -> known-bits pass -> generated instruction sequence.
+Laptop: LLVM toolchain, no privileged access.
+Restriction: Not evidence of arithmetic miscalculation unless an incorrect output is separately proven.
+Primary evidence: https://github.com/llvm/llvm-project/issues/212546
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

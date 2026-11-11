@@ -1,0 +1,33 @@
+CASE A34
+STATUS: closed (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A work queue holds tasks until they are executed.
+02. Adding 20 units and completing one grows pending work by 19 in the simplified exercise.
+03. After ten repeated additions the undrained total is 190, if no other worker drains them.
+04. The report observes deferred task-work backlog delaying retries.
+05. Missing reasoning: per-wait progress does not prove queued work drains at the rate it arrives.
+
+WHERE THE REASONING FAILED
+Missing reasoning: per-wait progress does not prove queued work drains at the rate it arrives.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A34 liburing DEFER_TASKRUN timeout work can accumulate
+What: A workload can generate more deferred work than each wait iteration consumes, making latency rise.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: IORING_SETUP_DEFER_TASKRUN, LINK_TIMEOUT, task work queue
+Who: axboe/liburing code/test + the local caller exercising it.
+When: Closed as duplicate; historical case
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Test with 20 work units per iteration and 1 completion waited on; count outstanding after 10/100 iterations.
+Action: Read original issue for reproducer; collect pending counter and CQEs with bounded run 5s in VM.
+Call chain: linked timeout -> completion enqueue -> task-work drain -> backlog.
+Laptop: May stall: VM/timeout; status closed duplicate.
+Restriction: Do not mark open.
+Primary evidence: https://github.com/axboe/liburing/issues/1645
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

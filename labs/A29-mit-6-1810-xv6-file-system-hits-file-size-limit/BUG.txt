@@ -1,0 +1,33 @@
+CASE A29
+STATUS: LAB (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A disk block stores a finite number of bytes.
+02. A file maps logical blocks through a finite on-disk structure.
+03. The university lab asks students to extend the limit.
+04. The case is a lab assignment, not a filed bug.
+05. Missing reasoning for the exercise: maximum representable mapping bounds largest reachable file.
+
+WHERE THE REASONING FAILED
+Missing reasoning for the exercise: maximum representable mapping bounds largest reachable file.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A29 MIT 6.1810 xv6 file system hits file-size limit
+What: Direct and single-indirect pointers limit maximum logical blocks; double-indirect path missing.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: kernel/fs.c bmap; bigfile
+Who: mit-pdos/xv6-riscv code/test + the local caller exercising it.
+When: Teaching lab with seeded limitation, not reported production issue
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Baseline bigfile fails about 268 blocks (12+256); target after lab 65803 blocks (11+256+256*256), 1024B/block.
+Action: Follow MIT lab checkout fs; make qemu; run bigfile in QEMU; trace bmap and on-disk inode.
+Call chain: bigfile writes -> bmap -> inode addresses -> disk block allocation.
+Laptop: VM, no host filesystem changes.
+Restriction: LAB not real unfixed upstream bug.
+Primary evidence: https://pdos.csail.mit.edu/6.S081/2026/labs/fs.html
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

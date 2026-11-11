@@ -1,0 +1,32 @@
+CASE A17
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. An input operation can request more bytes than it actually receives.
+02. A buffer cursor must advance by bytes stored, not bytes requested.
+03. The report states cursor movement follows request size on a non-pollable path.
+04. Missing reasoning: request length and completed length were treated as the same fact.
+
+WHERE THE REASONING FAILED
+Missing reasoning: request length and completed length were treated as the same fact.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A17 io_uring incremental buffer advance uses request rather than actual bytes
+What: 12-byte regular file read through 16-byte request; reported buffer cursor consumes 16 instead of actual 12.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: Incremental provided buffers; read completion accounting
+Who: axboe/liburing code/test + the local caller exercising it.
+When: Open issue at research time
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: file=12 bytes; request=16 bytes; expected consumed=12, reported consumed=16; repeat 3 requests from offset 0.
+Action: Use attached reproducer from issue; compile with liburing and run under kernel supporting incremental buffers; inspect CQE res and buffer cursor.
+Call chain: open regular file -> submit reads -> CQE result -> buffer consumption.
+Laptop: Potential kernel version requirement; local test in VM.
+Restriction: Issue reflects kernel behavior, not automatically a defect in liburing itself.
+Primary evidence: https://github.com/axboe/liburing/issues/1555
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

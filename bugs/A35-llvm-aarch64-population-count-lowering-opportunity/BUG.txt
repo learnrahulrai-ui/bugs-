@@ -1,0 +1,33 @@
+CASE A35
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. An eight-bit word has eight zero-or-one positions.
+02. Population count ranges from zero through eight for an eight-bit word.
+03. A target instruction selector can choose a different sequence for eight-bit and sixteen-bit values.
+04. The issue proposes special-case ARM lowering.
+05. Missing reasoning: general lowering missed an efficient operation for narrower inputs; not evidence of wrong result.
+
+WHERE THE REASONING FAILED
+Missing reasoning: general lowering missed an efficient operation for narrower inputs; not evidence of wrong result.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A35 LLVM AArch64 population-count lowering opportunity
+What: Backend selects suboptimal sequence for count comparison on AArch64.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: AArch64 target backend and population-count compare
+Who: llvm/llvm-project code/test + the local caller exercising it.
+When: Open issue at research time
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: 8-bit 0x55 has 4 ones, 0xFF has 8; compare compiler 2 variants by instructions.
+Action: Cross-compile for aarch64-linux-gnu target and inspect -O2 -S output.
+Call chain: C popcount -> LLVM intrinsic -> AArch64 selection.
+Laptop: Cross-compilation on x86 laptop; cannot execute AArch64 result without emulator.
+Restriction: Architecture-specific; do not claim x86 runtime reproduction.
+Primary evidence: https://github.com/llvm/llvm-project/issues/159552
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

@@ -1,0 +1,32 @@
+CASE A31
+STATUS: closed (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A kprobe attaches tracing to a specified function.
+02. A matching rule can use a wildcard or an exact name.
+03. The issue reports incorrect eligibility for an exact-name match.
+04. Missing reasoning: optimization selection incorrectly depended on spelling form rather than actual attachment eligibility.
+
+WHERE THE REASONING FAILED
+Missing reasoning: optimization selection incorrectly depended on spelling form rather than actual attachment eligibility.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A31 bpftrace exact-name kprobe misses session optimization
+What: A fast-path gate checks for a wildcard although exact-name probes also meet capability constraints.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: src/ast/passes/ap_probe_expansion.cpp lines 57-59, 163-164 in report
+Who: bpftrace/bpftrace code/test + the local caller exercising it.
+When: Closed Jun 4 2026 by PR #5176
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Compare 1 exact name and 1 wildcard probe; inspect produced attach path, not performance guess.
+Action: Read issue/PR and replay on old bpftrace tag; compare exact and wildcard compile/execution.
+Call chain: -e program -> AST expansion -> session probe decision -> attach.
+Laptop: Kernel BPF permissions, VM recommended.
+Restriction: Historical bug fixed; use to study review.
+Primary evidence: https://github.com/bpftrace/bpftrace/issues/5103
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

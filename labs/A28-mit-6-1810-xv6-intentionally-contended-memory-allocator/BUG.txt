@@ -1,0 +1,33 @@
+CASE A28
+STATUS: LAB (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A shared allocator returns memory from a pool.
+02. A single shared lock serializes concurrent requests.
+03. The university exercise intentionally starts with lock contention.
+04. The case is a lab design target, not a real reported software defect.
+05. Missing reasoning for the exercise: contention is a system property, not proof of functional incorrectness.
+
+WHERE THE REASONING FAILED
+Missing reasoning for the exercise: contention is a system property, not proof of functional incorrectness.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A28 MIT 6.1810 xv6 intentionally contended memory allocator
+What: An allocator with 1 shared lock serializes CPUs when many allocations happen concurrently.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: kernel/kalloc.c, kalloctest, per-CPU contention
+Who: mit-pdos/xv6-riscv code/test + the local caller exercising it.
+When: Teaching lab with seeded deficiency, not reported production issue
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: 2026 lab records 109387 and 501926 test-and-set counts on failing baseline; actual counts depend on CPU run.
+Action: git clone https://github.com/mit-pdos/xv6-riscv; follow MIT 2026 lab branch instructions git checkout lock; make qemu; kalloctest.
+Call chain: xv6 user program -> allocator -> global lock -> contention counters.
+Laptop: QEMU RISC-V guest, independent of host kernel.
+Restriction: LAB not an existing unfixed community bug.
+Primary evidence: https://pdos.csail.mit.edu/6.S081/2026/labs/lock.html
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

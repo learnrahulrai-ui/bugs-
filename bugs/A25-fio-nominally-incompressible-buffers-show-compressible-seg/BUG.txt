@@ -1,0 +1,33 @@
+CASE A25
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A workload generator writes data to a test file.
+02. Setting compression percentage zero intends data that does not compress under the chosen test's criterion.
+03. A 10 MiB output split into 8 KiB blocks contains 1280 blocks.
+04. The report measures 149 of 1280 blocks compressing by at least 128 bytes.
+05. Missing reasoning: a generator option is not proof of the statistical property of every generated block.
+
+WHERE THE REASONING FAILED
+Missing reasoning: a generator option is not proof of the statistical property of every generated block.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A25 fio nominally incompressible buffers show compressible segments
+What: Generated data for compression=0 shows repeated patterns on recent fio versions.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: fio random/refill buffer generator; data verification via zlib
+Who: axboe/fio code/test + the local caller exercising it.
+When: Open issue Oct 2026
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: 10MiB with 8192-byte blocks =1280; 149 compress >=128 bytes in fio 3.42, 0 in v3.19; smallest 7517 bytes.
+Action: ./fio --name=job1 --filename=fio-output.bin --rw=write --bs=8k --size=10M --randseed=99 --randrepeat=0 --refill_buffers=1 --buffer_compress_percentage=0; analyze 8KiB blocks with zlib.
+Call chain: fio generator -> 10MiB temp file -> 1280 block compression check.
+Laptop: User-owned temp file, no root, no devices.
+Restriction: Use fio binary path from checkout, not unrelated executable name.
+Primary evidence: https://github.com/axboe/fio/issues/2157
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

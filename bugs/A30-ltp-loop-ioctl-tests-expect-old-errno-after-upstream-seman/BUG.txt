@@ -1,0 +1,33 @@
+CASE A30
+STATUS: closed (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. An ioctl command requests an operation through a numeric command value.
+02. Linux kernel behavior determines which error number a rejected request returns.
+03. A test expecting the former number fails after kernel semantics change.
+04. The report records test failure on a newer kernel.
+05. Missing reasoning: a test's expected error number is a version-dependent contract claim.
+
+WHERE THE REASONING FAILED
+Missing reasoning: a test's expected error number is a version-dependent contract claim.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A30 LTP loop ioctl tests expect old errno after upstream semantic change
+What: Kernel no longer supports LOOP_CHANGE_FD; tests incorrectly require old return code.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: ioctl_loop02, ioctl_loop03; kernel commit d4fabede1da0
+Who: linux-test-project/ltp code/test + the local caller exercising it.
+When: Closed Nov 6 2026 with 0722ad0
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Old expected EINVAL=22; kernel returns EOPNOTSUPP=95; 2 tests fail.
+Action: Inspect pre-fix LTP revision and run ioctl_loop02/03 against kernel 7.4-rc1 only inside VM.
+Call chain: test -> LOOP_CHANGE_FD ioctl -> errno 95 -> stale assertion.
+Laptop: Root/loop device and kernel test VM.
+Restriction: Regression in TEST EXPECTATION, not necessarily kernel defect.
+Primary evidence: https://github.com/linux-test-project/ltp/issues/1345
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

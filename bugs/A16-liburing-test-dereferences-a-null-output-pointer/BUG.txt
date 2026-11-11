@@ -1,0 +1,32 @@
+CASE A16
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A pointer value of zero does not refer to a valid output object.
+02. A test can check whether an output pointer was returned.
+03. The report shows a test dereferencing the pointer despite missing output.
+04. Missing reasoning: a test harness must obey the same pointer-validity rule as production code.
+
+WHERE THE REASONING FAILED
+Missing reasoning: a test harness must obey the same pointer-validity rule as production code.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A16 liburing test dereferences a null output pointer
+What: Caller supplies NULL to a helper that expects a writable result address, then later consumes it.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: test/sqpoll-disable-exit.c, io_uring_setup output parameters
+Who: axboe/liburing code/test + the local caller exercising it.
+When: Open issue; proposed PR #1650
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: 2 NULL arguments in syz_io_uring_setup; crash appears on successful ring creation.
+Action: Build liburing tests; use gdb on sqpoll-disable-exit; review issue and open PR #1650 without adopting fix.
+Call chain: test main -> syz_io_uring_setup -> returned ring -> dereference.
+Laptop: Disposable VM; io_uring setup permission depends on host policy.
+Restriction: Patch PR proposed; upstream state may change.
+Primary evidence: https://github.com/axboe/liburing/issues/1632
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

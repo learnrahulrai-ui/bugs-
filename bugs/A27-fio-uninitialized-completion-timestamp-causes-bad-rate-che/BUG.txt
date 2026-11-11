@@ -1,0 +1,33 @@
+CASE A27
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A timestamp is meaningful only after an event records it.
+02. Elapsed time subtracts a recorded earlier value from a recorded later value.
+03. A code path reaches check_min_rate with uninitialized completion time.
+04. The report records an assertion in time-difference code.
+05. Missing reasoning: the first read of completion time was not dominated by an initialization on every path.
+
+WHERE THE REASONING FAILED
+Missing reasoning: the first read of completion time was not dominated by an initialization on every path.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A27 fio uninitialized completion timestamp causes bad rate check
+What: Completion time is read on control path where it was not initialized; timestamp arithmetic can abort.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: backend.c do_io -> comp_time -> check_min_rate -> gettime.c
+Who: axboe/fio code/test + the local caller exercising it.
+When: Open issue, proposed fix commit and reviewer objection
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Reported iodepth=16, rate_iops=500, bs=16KiB; timestamp tv_nsec=4835703278458516699 violates 0..999999999; SIGABRT=6.
+Action: Copy issue job but replace real /dev/nvme1n1 with scratch loop device. To force reported failure use controlled test build with issue-provided poison value, not production drive.
+Call chain: async I/O -> quiesce completion -> check_min_rate -> rel_time_since assert.
+Laptop: VM and disposable loop image only, not host block device.
+Restriction: Do not paste reporter suggestion as final fix.
+Primary evidence: https://github.com/axboe/fio/issues/2128
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

@@ -1,0 +1,32 @@
+CASE A06
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A command-line format selects output naming rules.
+02. Invalid input must be judged against the format grammar before a name is emitted.
+03. The report compares accepted and rejected suffix specifications between uutils and GNU.
+04. Missing reasoning: one implementation permits a syntax not accepted by its reference grammar.
+
+WHERE THE REASONING FAILED
+Missing reasoning: one implementation permits a syntax not accepted by its reference grammar.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A06 uutils csplit accepts an invalid format
+What: An invalid format is accepted where the reference utility rejects it.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: csplit -b option parsing and GNU differential test
+Who: uutils/coreutils code/test + the local caller exercising it.
+When: Open issue when inspected
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Generate six lines with seq 1 6; GNU exit 1 versus reported uutils exit 0.
+Action: seq 1 6 > /tmp/csplit-six.txt; run the issue-provided csplit -b format with both tools; compare exit and files.
+Call chain: Arguments -> format parser -> error path -> process status.
+Laptop: Temporary file only.
+Restriction: Quote the format exactly from issue; shell quoting matters.
+Primary evidence: https://github.com/uutils/coreutils/issues/16350
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

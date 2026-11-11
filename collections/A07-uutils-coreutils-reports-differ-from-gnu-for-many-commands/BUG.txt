@@ -1,0 +1,33 @@
+CASE A07
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. One command has one stated behavior for each input.
+02. A comparison tool can discover differences but does not prove every difference is a defect.
+03. The upstream issue aggregates about 180 differences across many commands.
+04. Missing reasoning cannot be assigned to one developer or one operation without isolating an individual mismatch.
+05. Classify this folder as a catalog, not a single verified defect.
+
+WHERE THE REASONING FAILED
+Classify this folder as a catalog, not a single verified defect.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A07 uutils coreutils reports differ from GNU for many commands
+What: Two independent implementations return different outputs or exit codes on the same input.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: Issue attachment contains a differential corpus for cp, du, df, and others
+Who: uutils/coreutils code/test + the local caller exercising it.
+When: Open issue when inspected; heterogeneous claims require validation
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Reported: df --block-size=0 -k: GNU 1 vs uutils 0; cp -l --reflink: GNU 0 vs uutils 1.
+Action: Choose one corpus case; create only temporary inputs; run GNU and uutils; capture status as echo $?, stdout and stderr.
+Call chain: Input fixture -> two binaries -> compare output/status -> isolate source branch.
+Laptop: User-owned temporary directory.
+Restriction: Issue corpus is a reported test collection, not independently confirmed results.
+Primary evidence: https://github.com/uutils/coreutils/issues/15254
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

@@ -1,0 +1,33 @@
+CASE A09
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A worker thread runs instructions independently of other workers.
+02. exit() terminates the process, not only one worker.
+03. A worker-triggered process exit can interrupt another worker and cleanup state.
+04. The issue reports an unsafe worker exit race ending in SIGSEGV.
+05. Missing reasoning: worker-local failure was treated as safe process-wide termination.
+
+WHERE THE REASONING FAILED
+Missing reasoning: worker-local failure was treated as safe process-wide termination.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A09 LTP netstress background thread termination hides a crash
+What: A worker invokes process-wide exit while other workers remain active; harness drops output and ignores child status.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: net_stress.interface; worker client_fn -> safe_connect -> tst_brk_ -> exit
+Who: linux-test-project/ltp code/test + the local caller exercising it.
+When: Open issue at research time
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: One worker per CPU; reported process got signal 11; use 2, 4, 8 threads and compare exit/wait behavior.
+Action: Build LTP 20250930 (reported version); reproduce its netstress background test in an isolated network namespace.
+Call chain: netstress -l client -> worker failure -> exit() -> other workers -> test status.
+Laptop: Local network namespace or VM; no external hosts.
+Restriction: Reported crash, thread schedule determines reproduction.
+Primary evidence: https://github.com/linux-test-project/ltp/issues/1305
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

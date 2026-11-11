@@ -1,0 +1,32 @@
+CASE A21
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A command argument list is parsed into distinct strings.
+02. Quoted text in a shell command must retain intended grouping.
+03. The report records bpftrace -c splitting arguments incorrectly.
+04. Missing reasoning: an argument string is not equivalent to a list of already parsed argument boundaries.
+
+WHERE THE REASONING FAILED
+Missing reasoning: an argument string is not equivalent to a list of already parsed argument boundaries.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A21 bpftrace -c command splits shell quoting incorrectly
+What: Child argument parser splits on spaces even inside quotations.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: src/utils/create_child() argument parsing
+Who: bpftrace/bpftrace code/test + the local caller exercising it.
+When: Open issue at research time
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Input command has 2 words inside 1 quoted argument: echo "test test"; compare count of arguments/quotes.
+Action: Execute exact bpftrace -c example from issue; compare to /bin/sh -c and strace execve argv.
+Call chain: CLI -c -> split -> execve argv -> child output.
+Laptop: Ordinary unprivileged argv test; tracing needs permissions.
+Restriction: Use report version bpftrace 0.23.5.
+Primary evidence: https://github.com/bpftrace/bpftrace/issues/5119
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

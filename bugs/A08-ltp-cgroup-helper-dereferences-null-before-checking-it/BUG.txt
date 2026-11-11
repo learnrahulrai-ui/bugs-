@@ -1,0 +1,33 @@
+CASE A08
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A pointer identifies an object only when its value is valid.
+02. A missing controller lookup returns a null pointer.
+03. Reading a field through null cannot create a valid controller description.
+04. The reported helper reads ctrl before its null check.
+05. Missing reasoning: the check must guard the first use, not merely appear somewhere after it.
+
+WHERE THE REASONING FAILED
+Missing reasoning: the check must guard the first use, not merely appear somewhere after it.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A08 LTP cgroup helper dereferences null before checking it
+What: Unknown but well-formed controller name produces a null entry; access comes before validation.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: lib/tst_cgroup.c: cgroup_find_ctrl -> tst_cg_require (reported lines 854-861)
+Who: linux-test-project/ltp code/test + the local caller exercising it.
+When: Open issue at inspection, Oct 22 2026
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: At reported lines 854/856/861: lookup -> dereference -> check, so the check is too late; expected TBROK vs observed SIGSEGV=11.
+Action: Clone ltp; open issue full poc_ltp_cgrequire.c and build as instructed there; test controller name nosuchctrl in a disposable process.
+Call chain: main -> tst_cg_require -> cgroup_find_ctrl -> NULL -> strcmp.
+Laptop: Build LTP and run standalone user-space POC; no mount reached.
+Restriction: Do not copy a suggested patch; reconstruct the failing line first.
+Primary evidence: https://github.com/linux-test-project/ltp/issues/1343
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

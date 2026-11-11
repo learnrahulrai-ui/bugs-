@@ -1,0 +1,33 @@
+CASE A24
+STATUS: closed (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. A mount operation connects a mount object to a visible path.
+02. A bind mount can place another view at a name that already denotes the same tree.
+03. Name-based listing can encounter distinct mount objects with the same displayed path.
+04. The report records findmnt --target showing duplicates.
+05. Missing reasoning: displayed path is not a unique mount-object identity.
+
+WHERE THE REASONING FAILED
+Missing reasoning: displayed path is not a unique mount-object identity.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A24 findmnt reports duplicate mount targets after bind-mount on itself
+What: Two mount records can describe the same displayed target; output repeats target.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: findmnt --target enumeration and duplicate bind mounts
+Who: util-linux/util-linux code/test + the local caller exercising it.
+When: Closed by fix #4451; historical
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: 1 path, 2 mount records; old findmnt emits target twice.
+Action: Use historical util-linux version; isolated namespace: unshare -m --propagation private sh, bind-mount test dir on itself, findmnt -n -o TARGET --target path.
+Call chain: mount table -> findmnt target selection -> printed rows.
+Laptop: Mount namespace, root/unprivileged user namespace setup.
+Restriction: Historical: do not present as open bug.
+Primary evidence: https://github.com/util-linux/util-linux/issues/4424
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.

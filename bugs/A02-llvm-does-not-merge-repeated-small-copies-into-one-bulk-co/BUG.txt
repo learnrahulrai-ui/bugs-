@@ -1,0 +1,33 @@
+CASE A02
+STATUS: open (GitHub issue metadata checked 2026-11-12 where applicable).
+USER LAPTOP REPRODUCTION: NOT RUN.
+LOCAL SANDBOX REPRODUCTION: NOT RUN.
+
+THE DEPENDENCY CHAIN
+01. One copy moves a source span to a destination span.
+02. A loop repeats that copy for adjacent spans.
+03. Adjacent, nonoverlapping spans permit one larger operation only when iteration order and any observable side effects remain equivalent.
+04. The issue reports multiple smaller operations where a bulk operation was expected.
+05. Missing reasoning: compiler optimization did not prove all required equivalences before combining repetitions.
+
+WHERE THE REASONING FAILED
+Missing reasoning: compiler optimization did not prove all required equivalences before combining repetitions.
+
+SOURCE RESEARCH AND ORIGINAL REPRODUCTION INSTRUCTIONS
+A02 LLVM does not merge repeated small copies into one bulk copy
+What: A sequence of adjacent copies leaves multiple per-element operations in generated code.
+Why: trace the violated operation-level contract; do not assume a proposed patch is the only valid fix.
+Where: LLVM loop optimizer and memcpy lowering
+Who: llvm/llvm-project code/test + the local caller exercising it.
+When: Open issue at research time
+Without: reproduce with the smallest temporary input; note permissions and version prerequisites.
+Which numeric discrepancy: Use 1-, 8-, 32- and 128-element loops; count call sites/instructions rather than assuming a speed ratio.
+Action: Build the reported sample at -O2, then inspect LLVM IR with clang -O2 -S -emit-llvm.
+Call chain: Loop source -> LLVM IR -> assembly, before and after vector or builtin variant.
+Laptop: Ordinary host compiler.
+Restriction: Compiler-version dependent.
+Primary evidence: https://github.com/llvm/llvm-project/issues/117332
+Check: compare issue contents with source at a recorded commit, and a test/patch when linked; do not infer a fix from the title.
+
+SOURCE LIMIT: A GitHub report is evidence of a reported behavior, not an independent local proof. Source code and issue comments must be checked for each affected version.
+LINE CHECK: The numbered chain begins from an operation-specific fact and adds dependencies before the issue-specific inference. The appended research notes preserve the prior, not yet line-audited investigation. No claim of a complete source-line-by-source-line proof is made.
