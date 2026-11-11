@@ -1,0 +1,25 @@
+QEMU legacy pc-q35-7.2: multifd plus postcopy/preempt hang
+UPSTREAM EVIDENCE: https://www.mail-archive.com/qemu-devel@nongnu.org/msg1227109.html
+PINNED BASELINE: Upstream September 2026 pre-fix report; compare checkout against pre-fix baseline 5624b266cdd513506fb333e9041778407b6d1ac4.
+STATUS: Confirmed upstream author supplied exact qtest reproducer. NOT executed here.
+NO SOLUTION IS PROVIDED.
+
+WHAT: 1 migration-test configuration hangs with pc-q35-7.2 and 3 enabled capabilities.
+WHY: Migration does not complete even with channel data present; application downtime extends indefinitely while blocked.
+WHERE: QEMU migration/channel.c, migration/socket.c and tests/qtest/migration-test.
+WHO: 1 source QEMU, 1 destination QEMU, multiple migration network channels.
+WHEN: During incoming channel setup for multifd + postcopy-ram + postcopy-preempt.
+WITHOUT: Control: disable one of 3 capabilities, rerun identical test and log the behavior. This is a diagnostic control, not a correction.
+WHICH: Test selector /x86_64/migration/multifd+postcopy/preempt/plain; machine pc-q35-7.2.
+
+COMPLETE NUMERICAL EXAMPLE:
+Channels 0 and 1 appear in source logs before destination stalls; capture channel acceptance order and last trace event.
+Any hypothetical values in that example are a MODEL, not observed test output.
+
+DISTINCT REASONING PUZZLE:
+Unrelated dispatcher: packets arrive on channels 0,1,2 in the order 2,0,1 while the receiver waits on 2 before registering 0 and 1. State the ordering property needed to make progress.
+
+UNANSWERED QUESTIONS:
+? Which channel is expected next by the receiver? ?? Does arrival order equal processing order? ? At which event does the test stop advancing? ?? How does the same test behave after disabling just postcopy-preempt?
+
+DO NOT read upstream fixes until answering the questions.

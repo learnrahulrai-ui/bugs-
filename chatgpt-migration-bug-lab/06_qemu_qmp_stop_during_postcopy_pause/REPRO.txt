@@ -1,0 +1,16 @@
+UPSTREAM ISSUE: https://gitlab.com/qemu-project/qemu/-/issues/1052
+REPORTED OS: RHEL 7.8, kernel 3.10.0-1127.19.1.el7.x86_64. QEMU version not pinned by extract; record actual binary SHA before test.
+PREREQUISITES: 2 QEMU endpoints with postcopy-capable migration, QMP access to both, disposable guests.
+UPSTREAM MANUAL SEQUENCE:
+1. Start migration.
+2. Wait for first migration iteration to complete.
+3. On source QMP issue migrate-start-postcopy (QMP spelling).
+4. On source QMP issue migrate-pause.
+5. On destination QMP issue stop.
+6. Check response for the same QMP request ID; capture process/thread state when no response arrives.
+EXAMPLE QMP MESSAGE: {"execute":"stop","id":17}
+DIAGNOSTIC THRESHOLD: log if no response with id=17 within 10 s. That 10 s is a study threshold, not a value from the original report.
+REPORTED SYMPTOM: QMP stop receives no reply; 2 vCPU threads received repeated SIGUSR1 in debugger transcript.
+NEGATIVE CONTROL: issue stop before entering postcopy-paused state, keeping all other guest settings identical.
+DO NOT CLAIM this works on current QEMU without version confirmation.
+LOCAL TEST STATUS: NOT RUN. No fix recorded.

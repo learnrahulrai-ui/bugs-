@@ -1,0 +1,13 @@
+OFFICIAL SECURITY ADVISORY: https://xenbits.xenproject.org/xsa/advisory-495.html
+ID: XSA-495, CVE-2026-42493, public 2026-07-28.
+VULNERABLE CLASS: x86 Xen builds with SHADOW_PAGING=y, according to Xen security team.
+NO EXPLOIT OR HOST-WIDE DENIAL-OF-SERVICE REPRODUCER IS PROVIDED.
+SAFE INSPECTION ONLY:
+1. In an isolated Xen build tree, record version (e.g., 4.20.x) and the value SHADOW_PAGING.
+2. Identify log-dirty APIs and shadow table lifecycle from code; write an entry->exit trace.
+3. Record which operations acquire and release paging locks and where rescheduling is permitted.
+4. Compare 2 source revisions, but do not copy the published corrective patch or infer a fix.
+5. Run only harmless tracing in a disposable VM; do not generate intentional host-wide resource exhaustion.
+MODEL NUMBERS (NOT EXPLOIT): a 10,000-entry operation at 100 us/entry occupies 1 s; 3 competing tasks wait. Compute upper bound from measured execution times instead of claiming these are advisory measurements.
+PREDICTION TASK: What kernel and hypervisor counters distinguish 1 slow guest from a blocked host?
+LOCAL TEST STATUS: NOT RUN. No solution recorded.

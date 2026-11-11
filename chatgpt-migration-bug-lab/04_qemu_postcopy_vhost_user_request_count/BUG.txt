@@ -1,0 +1,25 @@
+QEMU postcopy with vhost-user: remaining bytes zero but completion hangs
+UPSTREAM EVIDENCE: https://www.mail-archive.com/qemu-devel@nongnu.org/msg1218978.html
+PINNED BASELINE: 595273f1b71e7de40867223d1566be8355353921 (parent of upstream correction)
+STATUS: Confirmed upstream hang; original report described 9 residual entries out of about 244000 page requests. NOT executed here.
+NO SOLUTION IS PROVIDED.
+
+WHAT: Destination query-migrate reports postcopy-active, remaining=0, yet migration does not finish.
+WHY: Even a nonzero count of 9 outstanding requests prevents a zero-required completion state.
+WHERE: QEMU migration/postcopy-ram.c and migration/ram.c, using 2 address spaces: QEMU and vhost-user process.
+WHO: 2 endpoints plus 1 separate vhost-user backend; 9 residual entries reported.
+WHEN: Postcopy-preempt enabled; backend touches a shared page before its arrival.
+WITHOUT: Control: repeat an identical migration without vhost-user backend demand faults; compare request counts and completion.
+WHICH: Reported example has about 244000 requests, 9 residual -> 9 / 244000 = 0.0036885%. Zero remaining bytes and nonzero request count must be inspected separately.
+
+COMPLETE NUMERICAL EXAMPLE:
+After every page is sent, query-migrate status=postcopy-active and remaining=0. Independently record outstanding_request_count and destination/source blocked stacks.
+Any hypothetical values in that example are a MODEL, not observed test output.
+
+DISTINCT REASONING PUZZLE:
+Independent queue puzzle: enqueue IDs [5,7,9] as keys [A,B,C], acknowledge as [X,Y,Z], and observe pending=3 after processing=3. What invariant must identifiers obey?
+
+UNANSWERED QUESTIONS:
+? Which event creates one pending page request? ?? Where is an outstanding count reduced? ? Which process owns each virtual address? ?? Which identities are compared when a request is retired?
+
+DO NOT read upstream fixes until answering the questions.

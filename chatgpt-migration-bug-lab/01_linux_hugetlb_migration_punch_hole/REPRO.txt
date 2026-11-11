@@ -1,0 +1,18 @@
+SOURCE REPRODUCER: https://syzkaller.appspot.com/x/repro.c?x=17f3ba7c580000
+SOURCE KERNEL CONFIG: https://syzkaller.appspot.com/x/.config?x=5b213914b883d014
+SOURCE LOG: https://syzkaller.appspot.com/x/log.txt?x=16d69304580000
+SOURCE SYZ REPRO: https://syzkaller.appspot.com/x/repro.syz?x=133e89e2580000
+SOURCE COMMIT: 5472d60c129f (Linux upstream 6.18-rc development kernel).
+STATUS: A real syzbot C reproducer exists. Never executed by this assistant.
+ENVIRONMENT: Disposable kernel VM, snapshot before start. syzbot boot cmdline includes sysctl.vm.nr_hugepages=4 sysctl.vm.nr_overcommit_hugepages=4 numa=fake=2. Use exact source kernel config, because a 1-NUMA-node host with zero hugepages will not reach the same path.
+STEP 1: Build/boot the source kernel at 5472d60c129f in a disposable VM.
+STEP 2: Save uname -a, /proc/cmdline, /proc/meminfo, /sys/devices/system/node/online.
+STEP 3: Download the exact C reproducer into the VM; inspect its syscalls and any resource changes.
+STEP 4: Compile: cc -O2 -pthread repro.c -o repro   [compiler invocation for the downloaded C; check compile diagnostics].
+STEP 5: Execute only inside the disposable VM with serial-console logging, as root if required by source.
+STEP 6: Capture ps -eLo pid,tid,stat,wchan:32,comm; dmesg; kernel stacks when threads remain blocked. If the VM becomes unresponsive, reset the VM snapshot; SIGKILL will not wake D-state threads.
+STEP 7: Verify two threads with TGID 5747-like grouping; exact PIDs vary between runs.
+NUMERIC TRACE FROM PROVIDED ANALYSIS: 2 MiB huge page = 0x200000. mmap length 0xff5000 -> 0x1000000. madvise length 0x600002 -> PAGE_ALIGN -> 0x601000. Page 3 start 0x600000.
+NEGATIVE CONTROL: change madvise length to 0x600000 only in a separate copied repro; do not call it a proven fix.
+OBSERVABLE: task hung in __rmap_walk_file + a peer waiting in folio_wait_bit_common.
+LOCAL TEST STATUS: NOT RUN.

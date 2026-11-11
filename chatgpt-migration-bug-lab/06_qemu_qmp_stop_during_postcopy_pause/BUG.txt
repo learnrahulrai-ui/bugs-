@@ -1,0 +1,25 @@
+QEMU QMP stop request hangs in postcopy-paused state
+UPSTREAM EVIDENCE: https://gitlab.com/qemu-project/qemu/-/issues/1052
+PINNED BASELINE: Environment reported: RHEL 7.8, kernel 3.10.0-1127.19.1.el7.x86_64; exact QEMU commit NOT supplied.
+STATUS: Public issue report with manual sequence; NOT executed here; issue status and current fix state require verification.
+NO SOLUTION IS PROVIDED.
+
+WHAT: After 5 reported actions, destination QMP stop command returns no reply.
+WHY: At least 1 management request remains pending, blocking management automation.
+WHERE: Destination QMP monitor and KVM vCPU threads during QEMU postcopy.
+WHO: 1 source monitor, 1 destination monitor; 2 CPU threads (CPU 0 and CPU 1) shown in reported debugger output.
+WHEN: After postcopy transition followed by migrate-pause on source.
+WITHOUT: Control: send stop before transition to postcopy; record reply timing using identical VM workload.
+WHICH: QMP sequence: migrate -> first iteration -> migrate-start-postcopy -> migrate-pause -> destination stop.
+
+COMPLETE NUMERICAL EXAMPLE:
+On step 5 send QMP command {"execute":"stop"} with id=17. Record whether a response with id=17 arrives within the chosen 10 s diagnostic window; 10 s is a test threshold, not a reported bug constant.
+Any hypothetical values in that example are a MODEL, not observed test output.
+
+DISTINCT REASONING PUZZLE:
+Independent service: request ID 17 is accepted; reply count stays 0 after 10 s. Can client prove operation completed? What additional observation is required?
+
+UNANSWERED QUESTIONS:
+? Which monitor owns the unanswered command? ?? Which vCPU thread is blocked? ? Does pause stop the return path or only execution? ?? What happens to other QMP commands while stop is pending?
+
+DO NOT read upstream fixes until answering the questions.

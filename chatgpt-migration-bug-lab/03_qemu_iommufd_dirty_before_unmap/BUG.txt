@@ -1,0 +1,25 @@
+QEMU VFIO iommufd: dirty-bit query order on DMA unmap
+UPSTREAM EVIDENCE: https://lore.kernel.org/qemu-devel/20251218062643.624796-3-zhenzhong.duan@intel.com/
+PINNED BASELINE: 31ec4aadd066852e2cf823f47d7fbbe9ebeca955 (parent of upstream correction)
+STATUS: Confirmed from upstream January 2026 commit; no public standalone reproducer established; NOT executed here.
+NO SOLUTION IS PROVIDED.
+
+WHAT: Dirty-state tracking and DMA unmapping overlap: a query made after removal fails to account for prior writes.
+WHY: A missing 4096-byte dirty page is sufficient to make one restored byte wrong.
+WHERE: QEMU hw/vfio/iommufd.c, iommufd_cdev_unmap, with 2 operations: dirty query and DMA unmap.
+WHO: 1 passed-through guest device, 1 iommufd backend, 1 migration controller.
+WHEN: The event occurs at DMA-unmap time while migration dirty logging is active.
+WITHOUT: Control: perform 0 unmap operations after the DMA write; capture dirty set before the mapping disappears.
+WHICH: Model values: IOVA 0x2000, size 0x1000 (1 base page), page number 2.
+
+COMPLETE NUMERICAL EXAMPLE:
+Page 2 target byte=11; device writes 12. A bitmap query returns either {2} or {}. Collect the observed set and map it to restore correctness.
+Any hypothetical values in that example are a MODEL, not observed test output.
+
+DISTINCT REASONING PUZZLE:
+Unrelated transaction: a receipt log is removed at t=20, and the audit runs at t=21. Does an empty audit prove no purchase happened at t=19?
+
+UNANSWERED QUESTIONS:
+? Which function requests an iommufd dirty bitmap? ?? If querying fails, what state does the unmap leave? ? What failure code reaches the migration controller? ?? What extra requirement does safe error propagation impose?
+
+DO NOT read upstream fixes until answering the questions.

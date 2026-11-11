@@ -1,0 +1,15 @@
+UPSTREAM AUTHOR REPRO: https://www.mail-archive.com/qemu-devel@nongnu.org/msg1227109.html
+SOURCE BASELINE: QEMU code before 2026-10-29 compatibility pull, e.g. upstream 5624b266cdd513506fb333e9041778407b6d1ac4; verify baseline retains bug before claiming reproduction.
+PREREQUISITE: Build QEMU with qtest support for x86_64. Run in a disposable directory.
+STEP 1: git clone https://github.com/qemu/qemu.git
+STEP 2: cd qemu && git checkout 5624b266cdd513506fb333e9041778407b6d1ac4
+STEP 3: ./configure --target-list=x86_64-softmmu --enable-debug
+STEP 4: make -j4
+STEP 5: QTEST_QEMU_MACHINE_TYPE=pc-q35-7.2 QTEST_QEMU_BINARY=./build/qemu-system-x86_64 ./build/tests/qtest/migration-test --full -r /x86_64/migration/multifd+postcopy/preempt/plain
+STEP 6: If the binary/test path differs, locate it in the build tree and use the identical -r selector. For in-tree builds the author's exact form is:
+QTEST_QEMU_MACHINE_TYPE=pc-q35-7.2 QTEST_QEMU_BINARY=./qemu-system-x86_64 ./tests/qtest/migration-test --full -r /x86_64/migration/multifd+postcopy/preempt/plain
+STEP 7: Collect source/destination logs, last 20 trace events, process stacks, and whether the test exits. Repeat once to detect race variation.
+STEP 8: Negative control: change ONE capability or machine type and rerun otherwise identical command.
+OBSERVABLE FROM AUTHOR: destination hangs during incoming-channel initialization.
+NUMERIC: machine pc-q35-7.2; channel logs show 0 and 1.
+LOCAL TEST STATUS: NOT RUN. No fix recorded.

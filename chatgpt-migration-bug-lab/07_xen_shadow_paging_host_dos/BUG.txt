@@ -1,0 +1,25 @@
+Xen XSA-495: shadow paging can stall the host
+UPSTREAM EVIDENCE: https://xenbits.xenproject.org/xsa/advisory-495.html
+PINNED BASELINE: XSA-495 / CVE-2026-42493; public 2026-07-28; affects x86 Xen builds with SHADOW_PAGING=y.
+STATUS: Official Xen security advisory. No public safe standalone reproducer verified; inspection-only; NOT executed here.
+NO SOLUTION IS PROVIDED.
+
+WHAT: Xen identifies host-wide denial-of-service exposure when x86 shadow paging is enabled.
+WHY: One unprivileged guest can affect more than one guest; blast radius includes the entire host.
+WHERE: Xen x86 shadow paging and log-dirty table operations; version references Xen 4.17 through 4.22 in advisory patch listings.
+WHO: 1 unprivileged guest and 1 Xen host; all guests sharing the host face the outage risk.
+WHEN: Historical advisory publicly released 2026-07-28, version 2.
+WITHOUT: Control: compare build/runtime shadow-paging flag 1 vs 0 in an isolated non-production test host; do NOT attempt host-wide DoS.
+WHICH: Check SHADOW_PAGING=y in build configuration; examine 2 quantities: pages tracked and time spent walking/shrinking shadow structures.
+
+COMPLETE NUMERICAL EXAMPLE:
+Inspection model: 1 guest allocates 10,000 shadow bookkeeping entries, host has 4 guests total. Count host-wide operations; these are illustrative values, not measurements from XSA-495.
+Any hypothetical values in that example are a MODEL, not observed test output.
+
+DISTINCT REASONING PUZZLE:
+Independent scheduling: one lock is held by a task that loops through 10000 entries at 100 microseconds each. Compute 1 s total holding time and ask what happens to 3 other tasks waiting for that lock.
+
+UNANSWERED QUESTIONS:
+? Which code controls shadow-table lifetime and log-dirty clearing? ?? Which operations stay non-preemptible? ? What is the exact preemption boundary? ?? What evidence separates a guest-local delay from host-wide denial of service?
+
+DO NOT read upstream fixes until answering the questions.

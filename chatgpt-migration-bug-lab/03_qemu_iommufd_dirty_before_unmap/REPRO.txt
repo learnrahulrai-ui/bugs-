@@ -1,0 +1,15 @@
+PRIMARY EVIDENCE: https://lore.kernel.org/qemu-devel/20251218062643.624796-3-zhenzhong.duan@intel.com/
+PREFIX COMMIT: 31ec4aadd066852e2cf823f47d7fbbe9ebeca955
+PRE-FIX FILE: https://github.com/qemu/qemu/blob/31ec4aadd066852e2cf823f47d7fbbe9ebeca955/hw/vfio/iommufd.c
+STATUS: Confirmed upstream commit evidence; no standalone executable reproducer verified.
+PREREQUISITES: Linux iommufd support, migratable VFIO device with dirty-tracking limitations matching source branch, isolated guest.
+STEP 1: Checkout pinned QEMU, build x86_64-softmmu, and record kernel/QEMU/device version.
+STEP 2: Create iommufd-based VFIO migration test; enable dirty logging.
+STEP 3: DMA-write one known 4096-byte guest page and save source checksum.
+STEP 4: Unmap that DMA mapping while migration tracks dirty memory.
+STEP 5: Trace dirty-query return and unmap return separately; log which happened first.
+STEP 6: Finish migration only when safe; compare target page checksum with source snapshot.
+STEP 7: Repeat without unmapping as negative control.
+NUMERIC MODEL: page 2 = bytes [8192,12288); value 11 -> 12. Bitmap must account for the change before migration claims page is current.
+NO CLAIM of a ready-to-run reproducer; hardware-dependent test design only.
+LOCAL TEST STATUS: NOT RUN. No fix recorded.

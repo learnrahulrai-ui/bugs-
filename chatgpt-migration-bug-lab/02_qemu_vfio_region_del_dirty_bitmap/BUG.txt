@@ -1,0 +1,25 @@
+QEMU VFIO listener: dirty memory omitted on region removal
+UPSTREAM EVIDENCE: https://lore.kernel.org/qemu-devel/20251218062643.624796-8-zhenzhong.duan@intel.com/
+PINNED BASELINE: cac33cb5533ad38fd16b02468c1adbbed53ea536 (parent of upstream correction)
+STATUS: Confirmed from upstream January 2026 commit; no public standalone reproducer established; NOT executed here.
+NO SOLUTION IS PROVIDED.
+
+WHAT: Dirty data from a VFIO-passthrough DMA mapping is omitted when the guest changes its IOMMU domain.
+WHY: If a 4096-byte modified page is absent from the dirty set, the target can retain an older 4096-byte copy.
+WHERE: QEMU hw/vfio/listener.c, vfio_listener_region_del; source change occurred in January 2026.
+WHO: 1 guest VFIO device, 1 QEMU memory listener, 2 migration endpoints.
+WHEN: While global dirty tracking is active, during passthrough-domain -> blocked-domain switch and mapping removal.
+WITHOUT: Control: same 1-page DMA write without the PT -> block-domain switch; compare dirty bitmap before and after.
+WHICH: Guest physical page index 17 corresponds to 17*4096 = 69632 bytes in the numeric model.
+
+COMPLETE NUMERICAL EXAMPLE:
+Target page 17 contains value 100. Device DMA writes value 200 on source. Region is removed. Expected next transfer must include page 17. Observe bitmap membership; do not assume it is set.
+Any hypothetical values in that example are a MODEL, not observed test output.
+
+DISTINCT REASONING PUZZLE:
+Unrelated ledger: record 17 changes 100 -> 200 just before its change journal is deleted. If the journal contains 0 changed IDs, is the restored ledger provably current?
+
+UNANSWERED QUESTIONS:
+? Which callback handles region deletion? ?? Which event makes the dirty bitmap miss an old device write? ? Does the underlying IOVA identify the same bytes as the GPA? ?? What is the exact difference between RAM and IOMMU address-space unmap notifications?
+
+DO NOT read upstream fixes until answering the questions.

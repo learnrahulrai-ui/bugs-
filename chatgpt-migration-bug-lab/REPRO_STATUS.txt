@@ -1,0 +1,34 @@
+01_linux_hugetlb_migration_punch_hole
+SOURCE: https://syzkaller.appspot.com/bug?extid=2d9c96466c978346b55f
+STATUS: Confirmed upstream syzbot report; reproduced by syzbot, NOT executed here.
+PIN: 5472d60c129f (upstream Linux report; 6.18-rc series)
+
+02_qemu_vfio_region_del_dirty_bitmap
+SOURCE: https://lore.kernel.org/qemu-devel/20251218062643.624796-8-zhenzhong.duan@intel.com/
+STATUS: Confirmed from upstream January 2026 commit; no public standalone reproducer established; NOT executed here.
+PIN: cac33cb5533ad38fd16b02468c1adbbed53ea536 (parent of upstream correction)
+
+03_qemu_iommufd_dirty_before_unmap
+SOURCE: https://lore.kernel.org/qemu-devel/20251218062643.624796-3-zhenzhong.duan@intel.com/
+STATUS: Confirmed from upstream January 2026 commit; no public standalone reproducer established; NOT executed here.
+PIN: 31ec4aadd066852e2cf823f47d7fbbe9ebeca955 (parent of upstream correction)
+
+04_qemu_postcopy_vhost_user_request_count
+SOURCE: https://www.mail-archive.com/qemu-devel@nongnu.org/msg1218978.html
+STATUS: Confirmed upstream hang; original report described 9 residual entries out of about 244000 page requests. NOT executed here.
+PIN: 595273f1b71e7de40867223d1566be8355353921 (parent of upstream correction)
+
+05_qemu_multifd_postcopy_legacy_machine
+SOURCE: https://www.mail-archive.com/qemu-devel@nongnu.org/msg1227109.html
+STATUS: Confirmed upstream author supplied exact qtest reproducer. NOT executed here.
+PIN: Upstream September 2026 pre-fix report; compare checkout against pre-fix baseline 5624b266cdd513506fb333e9041778407b6d1ac4.
+
+06_qemu_qmp_stop_during_postcopy_pause
+SOURCE: https://gitlab.com/qemu-project/qemu/-/issues/1052
+STATUS: Public issue report with manual sequence; NOT executed here; issue status and current fix state require verification.
+PIN: Environment reported: RHEL 7.8, kernel 3.10.0-1127.19.1.el7.x86_64; exact QEMU commit NOT supplied.
+
+07_xen_shadow_paging_host_dos
+SOURCE: https://xenbits.xenproject.org/xsa/advisory-495.html
+STATUS: Official Xen security advisory. No public safe standalone reproducer verified; inspection-only; NOT executed here.
+PIN: XSA-495 / CVE-2026-42493; public 2026-07-28; affects x86 Xen builds with SHADOW_PAGING=y.

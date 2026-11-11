@@ -1,0 +1,15 @@
+UPSTREAM REPORT: https://www.mail-archive.com/qemu-devel@nongnu.org/msg1218978.html
+PREFIX COMMIT: 595273f1b71e7de40867223d1566be8355353921
+PRE-FIX FILE: https://github.com/qemu/qemu/blob/595273f1b71e7de40867223d1566be8355353921/migration/postcopy-ram.c
+STATUS: Upstream reported hang and ~9 leftover requests among ~244000; no standalone upstream command reproduced here.
+PREREQUISITES: Build source/destination QEMU from same pre-fix version. Add vhost-user backend with guest shared memory and enable postcopy RAM + postcopy-preempt. Isolated VMs.
+STEP 1: Launch two migration endpoints and a separate vhost-user backend.
+STEP 2: Configure guest shared memory mapped into QEMU and backend processes.
+STEP 3: Start migration; transition to postcopy; drive backend accesses to pages missing on destination.
+STEP 4: Record query-migrate periodically on both ends; save status, remaining bytes, completed pages.
+STEP 5: Trace page_requested_count, pending page requests, backend page faults, and incoming cleanup.
+STEP 6: Identify run where remaining=0 and status remains postcopy-active; capture destination/source thread stacks.
+STEP 7: Control: same migration without backend faults on missing pages.
+REPORTED OBSERVATION: ~244000 requests, 9 residual; page_requested_count != 0 even with remaining bytes = 0.
+This is a topology-specific test construction, NOT a verified command-by-command reproducer.
+LOCAL TEST STATUS: NOT RUN. No fix recorded.

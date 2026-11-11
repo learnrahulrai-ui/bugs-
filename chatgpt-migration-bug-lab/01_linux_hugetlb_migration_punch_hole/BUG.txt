@@ -1,0 +1,25 @@
+Linux hugetlb migration and MADV_REMOVE: hung tasks
+UPSTREAM EVIDENCE: https://syzkaller.appspot.com/bug?extid=2d9c96466c978346b55f
+PINNED BASELINE: 5472d60c129f (upstream Linux report; 6.18-rc series)
+STATUS: Confirmed upstream syzbot report; reproduced by syzbot, NOT executed here.
+NO SOLUTION IS PROVIDED.
+
+WHAT: 2 threads PID 5749 and 5754 remain in D state for >143 s.
+WHY: Impact to detect: 2 threads that fail to finish, even after >143 s. Do not infer the cause from D state alone.
+WHERE: Linux mm/migrate.c, mm/rmap.c, fs/hugetlbfs/inode.c; report stack corresponds to upstream 6.18-rc, not Linux 6.8 line numbers.
+WHO: PID 5749 calls mbind; PID 5754 calls madvise; both have TGID 5747.
+WHEN: The report checks the tasks after 143 s of blocking.
+WITHOUT: Control: remove the trailing 0x2 from madvise length 0x600002 -> 0x600000; record whether the last partial-page operation is still reached. This is a code-path comparison, not a claimed tested fix.
+WHICH: 2 MiB huge page; 0x600000 / 0x200000 = page 3; page-cache index 3 * 512 = 1536.
+
+COMPLETE NUMERICAL EXAMPLE:
+mmap requested 0xff5000 bytes -> 0x1000000 rounded = 16 MiB = 8 huge pages. mbind range [0x200000001000,0x200000801000). madvise length 0x600002 rounds to 0x601000.
+Any hypothetical values in that example are a MODEL, not observed test output.
+
+DISTINCT REASONING PUZZLE:
+Independent lock puzzle: worker 1 holds lock 7 and waits for 9; worker 2 holds 9 and waits for 7. Draw both wait arrows. Then replace worker 2's wait with trylock (immediate failure) and decide whether the cycle persists.
+
+UNANSWERED QUESTIONS:
+? Why are two entries bearing the same i_mmap_rwsem address not evidence of two simultaneous owners? ?? Which lock is missing from lockdep's held-lock list? ? Which rounded file page is touched by the final partial-page path? ?? Which acquisition is allowed to sleep while a folio lock is still held? Identify the first offending event without reading the fix.
+
+DO NOT read upstream fixes until answering the questions.

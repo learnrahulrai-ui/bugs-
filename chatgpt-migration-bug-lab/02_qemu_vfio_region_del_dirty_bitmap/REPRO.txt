@@ -1,0 +1,15 @@
+PRIMARY EVIDENCE: https://lore.kernel.org/qemu-devel/20251218062643.624796-8-zhenzhong.duan@intel.com/
+PREFIX COMMIT: cac33cb5533ad38fd16b02468c1adbbed53ea536
+PRE-FIX FILE: https://github.com/qemu/qemu/blob/cac33cb5533ad38fd16b02468c1adbbed53ea536/hw/vfio/listener.c
+STATUS: Confirmed commit evidence; no public standalone executable reproducer verified.
+PREREQUISITES: Device supporting VFIO passthrough, host IOMMU, migratable VFIO device, QEMU built from pre-fix commit. A generic laptop without passthrough setup is not sufficient.
+STEP 1: Build pinned QEMU and record exact --version output and VFIO device model.
+STEP 2: Launch guest with VFIO device and migration dirty logging enabled.
+STEP 3: Have device DMA-write 4096 bytes at a known guest physical page, e.g. page 17 in a MODEL.
+STEP 4: Exercise the guest passthrough (PT) to blocked IOMMU-domain transition that removes the mapping.
+STEP 5: Collect dirty bitmap before region removal and immediately after. Record whether written page survives.
+STEP 6: Migrate to clean target; compare exact 4096 bytes on A and B; log first mismatching byte.
+STEP 7: Repeat with no domain transition; collect both bitmaps as control.
+EXPECTED CLASS OF SYMPTOM (upstream): writes before region removal absent from dirty accounting.
+NOTES: Steps 2-5 are a hardware-dependent test design, NOT a verified one-command reproducer.
+LOCAL TEST STATUS: NOT RUN. No fix recorded.
