@@ -1,0 +1,13 @@
+1. Use a disposable Linux environment; never test on production data.
+2. Target reported project: RocksDB.
+3. Tested revision claimed by upstream: 11.13.0 and main 074134d98.
+4. Original issue or patch: https://github.com/meta/rocksdb/issues/15445
+5. Path to inspect: db/forward_iterator.cc; db/blob/blob_fetcher.cc; db/db_iter.cc
+6. Starting action: Create tailing iterator; write blob values; flush and compact; continue Next
+7. Reproduction order: Build reported revision with ASan; use issue's uaf.cc; compare tailing+blob with tailing disabled and blob disabled.
+8. Negative control: Blob=false and tailing=false are distinct reported noncrash controls.
+9. Detect success/failure: ASan stack must connect Version::Unref to VersionBlobFetcherBase::FetchBlob.
+10. Safety: Temporary database; ASan for reliable diagnosis.
+11. Upstream reporter reproduced this case. It has NOT been executed in this ChatGPT container.
+12. Local test status: UNTESTED_HERE; no fabricated timings, traces, or pass/fail claims.
+13. See run.sh for an executable attempt or the limitations of that environment.

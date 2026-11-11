@@ -1,0 +1,11 @@
+1. Direct evidence URL: https://syzkaller.appspot.com/bug?extid=fa52a184ebce1b30ad49
+2. Source revision or range: linux-next d517cb8cea01; upstream c339f4010dea
+3. Real code location: arch/x86/kvm/x86.c and arch/x86/kvm/emulate.c
+4. Original reporter observation: The report includes a C reproducer and an Oct 29 2026 upstream crash; some retests did not crash
+5. The report's observed failure: Guest code execution produces a host kernel WARNING
+6. A separate control condition: Repeat the same input on a different kernel revision, not a different unrecorded guest state.
+7. Observation required to confirm locally: Exact WARNING stack must name x86_emulate_insn; absence of a warning in one run does not prove fixed.
+8. Verified here: GitHub source report opened for this case when available; no full end-to-end reproducer executed here.
+9. Contrary check: compare the stated control, exact revision, and current branch independently.
+10. Confidence: upstream-reported case; local reproducibility UNVERIFIED.
+11. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in 00-AXIOMS.txt; other files reference its declared terms.

@@ -1,0 +1,7 @@
+WHAT: 1 case: Memory cap 160 MB; use 160.3 MB; mutable 32 MB; no immutable buffers; writers stop after 3 seconds.
+WHY: At 160.3 MiB used, writes stop; a 32 MiB mutable buffer is below half of the 160 MiB budget.
+WHERE: memtable/write_buffer_manager.cc; db/memtable_list.cc; TransactionDB::PrepareWrap.
+WHO: 1 customer operation (TransactionDB with allow_stall=true -> repeated writes -> memory budget reached -> write stalls) and 1 owning project (RocksDB).
+WHEN: 1c490a4a4dc3, 2026-10-31.
+WITHOUT: txn 8/4 MiB stalls in report; txn 16/4 MiB and plain DB 8/4 MiB do not.
+WHICH: Observe puts counter stops increasing while stall_active=true; kill test safely after timeout.

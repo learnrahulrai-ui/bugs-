@@ -1,0 +1,13 @@
+1. Use a disposable Linux environment; never test on production data.
+2. Target reported project: fsnotify.
+3. Tested revision claimed by upstream: fixed at commit 853adeb28b4e7b01cf719f12619fcdeea8c06d48.
+4. Original issue or patch: https://github.com/fsnotify/fsnotify/commit/853adeb28b
+5. Path to inspect: backend_inotify.go: watches.wd; watches.path; WatchList
+6. Starting action: Watch a directory, rename it, query watch list
+7. Reproduction order: At parent commit create a watcher; add /tmp/a; rename /tmp/a to /tmp/x; compare WatchList() with internal descriptor-to-path watch map; repeat after fix.
+8. Negative control: Without rename the two maps should agree.
+9. Detect success/failure: Compare the identity pair 7<->/tmp/x, not merely list length 1.
+10. Safety: Test inside TempDir only.
+11. Upstream reporter reproduced this case. It has NOT been executed in this ChatGPT container.
+12. Local test status: UNTESTED_HERE; no fabricated timings, traces, or pass/fail claims.
+13. See run.sh for an executable attempt or the limitations of that environment.

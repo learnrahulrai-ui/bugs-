@@ -1,0 +1,10 @@
+1. Initial state: A database can partition records into named column families.
+2. First customer action and code entry: Open TransactionDB -> create family ts -> Put -> Prepare -> DropColumnFamily -> Commit -> close -> reopen.
+3. Actual program location: db/write_batch.cc:MemTableInserter; utilities/transactions/transaction_base.cc.
+4. Reported failure: Prepared transaction retains a write to deleted column family; reopen dereferences missing descriptor near 0x48.
+5. Known upstream revision: main ea31360536, 2026-10-23.
+6. Independent control: Compare timestamp with ignore_missing_column_families=true and failed commit without that option.
+7. Local assertion: ASan stack has MemTableInserter::MarkCommitWithTimestamp or RebuildFromWriteBatch.
+8. ? Which earlier line first establishes the invariant for line 7?
+9. ?? Which intermediate state from line 2 first violates that invariant?
+10. Do not infer a fix from a successful-looking return value.

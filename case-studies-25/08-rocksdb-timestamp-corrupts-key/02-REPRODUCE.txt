@@ -1,0 +1,13 @@
+1. Use a disposable Linux environment; never test on production data.
+2. Target reported project: RocksDB.
+3. Tested revision claimed by upstream: main 609269e0a / 11.14.0.
+4. Original issue or patch: https://github.com/meta/rocksdb/issues/15558
+5. Path to inspect: db/write_batch_internal.h: TimestampUpdater; utilities/transactions/pessimistic_transaction.cc
+6. Starting action: BeginTransaction; DisableIndexing; write to two column families; SetCommitTimestamp(5); Commit
+7. Reproduction order: Use linked issue's C++ reproducer with 2-byte and 16-byte keys; build RocksDB revision; inspect stored keys byte-for-byte.
+8. Negative control: Enable indexing as control; use timestamp-only writes as separate control.
+9. Detect success/failure: Commit=OK and Get(original 16-byte key)=NotFound is failure; hex stored key ends 0500000000000000.
+10. Safety: Separate temporary database.
+11. Upstream reporter reproduced this case. It has NOT been executed in this ChatGPT container.
+12. Local test status: UNTESTED_HERE; no fabricated timings, traces, or pass/fail claims.
+13. See run.sh for an executable attempt or the limitations of that environment.

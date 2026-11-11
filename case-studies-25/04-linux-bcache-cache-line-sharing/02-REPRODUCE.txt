@@ -1,0 +1,13 @@
+1. Use a disposable Linux environment; never test on production data.
+2. Target reported project: Linux bcache.
+3. Tested revision claimed by upstream: historical fix 7b1002f7cfe5.
+4. Original issue or patch: https://github.com/torvalds/linux/commit/7b1002f7cfe5
+5. Path to inspect: drivers/md/bcache/writeback.c: bcache_dev_sectors_dirty_add
+6. Starting action: Attach cached backing device; account dirty sectors in parallel
+7. Reproduction order: Read the historical diff; instrument bit changes and cache-line transfers in disposable bcache test with multiple workers; compare 1 versus 20 workers.
+8. Negative control: Compare line traffic at same dirty set before and after commit; do not equate throughput with cache-line transfers.
+9. Detect success/failure: A claim of 50x is reported for authors' hardware, not a guaranteed local result.
+10. Safety: Block-device operations can destroy data. Do not run on system disks.
+11. Upstream reporter reproduced this case. It has NOT been executed in this ChatGPT container.
+12. Local test status: UNTESTED_HERE; no fabricated timings, traces, or pass/fail claims.
+13. See run.sh for an executable attempt or the limitations of that environment.

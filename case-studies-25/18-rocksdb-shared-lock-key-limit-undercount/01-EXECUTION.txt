@@ -1,0 +1,10 @@
+1. Initial state: A lock prevents certain conflicting operations on a key.
+2. First customer action and code entry: T1 shared-lock a -> T2 shared-lock a -> T3 try b => LockLimit -> T1 release a -> T3 try b => incorrect OK.
+3. Actual program location: utilities/transactions/lock/point/point_lock_manager.cc:AcquireLocked,UnLockKey.
+4. Reported failure: max_num_locks=1; two holders lock key a; one releases; key a remains locked but counter decrements.
+5. Known upstream revision: v11.12; main 0adcea5ea49c113650f2a481e8a9f76616533600.
+6. Independent control: Exclusive locks and both-holders release are comparison cases.
+7. Local assertion: Expected T3 LockLimit and 1 locked key; reported OK and 2 locked keys.
+8. ? Which earlier line first establishes the invariant for line 7?
+9. ?? Which intermediate state from line 2 first violates that invariant?
+10. Do not infer a fix from a successful-looking return value.

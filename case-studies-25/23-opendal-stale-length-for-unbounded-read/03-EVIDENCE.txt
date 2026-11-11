@@ -1,0 +1,10 @@
+1. Primary original issue: https://github.com/apache/opendal/issues/6995
+2. Source file: Reader::into_futures_async_read; parse_into_range
+3. Version: reported 2025-12-12; issue closed
+4. Recorded reporter observation: An unbounded read is turned into old size bound while file changes between size check and read
+5. Countercheck: Run with immutable/versioned object to remove replacement timing
+6. Required independent result: Expected latest full contents; reported truncated contents; exact race requires controlled storage writes
+7. Claim type: upstream-reported; locally unverified.
+8. Negative evidence sought: revisions, control tests, and issue fixes can disagree with old reports.
+9. Reproducer method: no standalone runnable test established.
+10. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in the axiomatic chain; external assumptions are tagged as upstream reported.

@@ -1,0 +1,12 @@
+1. A program receives an input and changes stored state.
+2. Stored state means the values and objects the program presently holds.
+3. An invariant is a rule that a correct state change must preserve.
+4. A bit holds either 0 or 1.
+5. A 32-bit number occupies 4 bytes.
+6. A 64-bit number occupies 8 bytes.
+7. The format %lu writes an unsigned long; Windows uses 4 bytes for this type.
+8. The destination n is declared as an 8-byte uint64_t.
+9. Writing only its first 4 bytes leaves 4 other bytes unchanged.
+10. If prior high 4 bytes are FFFFFFFF and parsed low value is 1, result is FFFFFFFF00000001 rather than 0000000000000001.
+11. The report shows a candidate violation of the rule derived above, not proof for every version.
+12. A local reproduction must record the exact source revision, input, output and control.

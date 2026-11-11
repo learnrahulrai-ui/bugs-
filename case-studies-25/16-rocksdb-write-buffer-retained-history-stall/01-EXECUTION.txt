@@ -1,0 +1,10 @@
+1. Initial state: A memory budget is the maximum charged memory allowed for writes.
+2. First customer action and code entry: TransactionDB with allow_stall=true -> repeated writes -> memory budget reached -> write stalls.
+3. Actual program location: memtable/write_buffer_manager.cc; db/memtable_list.cc; TransactionDB::PrepareWrap.
+4. Reported failure: Memory cap 160 MB; use 160.3 MB; mutable 32 MB; no immutable buffers; writers stop after 3 seconds.
+5. Known upstream revision: 1c490a4a4dc3, 2026-10-31.
+6. Independent control: txn 8/4 MiB stalls in report; txn 16/4 MiB and plain DB 8/4 MiB do not.
+7. Local assertion: Observe puts counter stops increasing while stall_active=true; kill test safely after timeout.
+8. ? Which earlier line first establishes the invariant for line 7?
+9. ?? Which intermediate state from line 2 first violates that invariant?
+10. Do not infer a fix from a successful-looking return value.

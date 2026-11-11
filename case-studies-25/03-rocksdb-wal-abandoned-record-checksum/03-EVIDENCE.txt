@@ -1,0 +1,11 @@
+1. Direct evidence URL: https://github.com/meta/rocksdb/issues/15007
+2. Source revision or range: recyclable WAL / WAL compression; PR 14709
+3. Real code location: db/log_reader.cc: log::Reader::ReadRecord; db/log_writer.cc
+4. Original reporter observation: A fragmented record A is abandoned; record B inherits checksum state from A
+5. The report's observed failure: Database refuses to open, reporting corrupted write batch despite valid returned record
+6. A separate control condition: Check hash(B) directly and compare to returned checksum on both revisions.
+7. Observation required to confirm locally: Test must fail on old reader and pass after independent fix; cite exact commit rather than treating an open PR as merged.
+8. Verified here: GitHub source report opened for this case when available; no full end-to-end reproducer executed here.
+9. Contrary check: compare the stated control, exact revision, and current branch independently.
+10. Confidence: upstream-reported case; local reproducibility UNVERIFIED.
+11. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in 00-AXIOMS.txt; other files reference its declared terms.

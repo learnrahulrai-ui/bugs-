@@ -1,0 +1,7 @@
+WHAT: 1 case: canceled flag becomes true while CompactFiles is running; compaction finishes and installs result.
+WHY: A later true value in the caller's flag is invisible to that job.
+WHERE: db/db_impl/db_impl_compaction_flush.cc:CompactFilesImpl; db/db_etc2_test.cc.
+WHO: 1 customer operation (Prepare files -> start CompactFiles -> set canceled=true after work starts -> wait) and 1 owning project (RocksDB).
+WHEN: main 2026-11-01.
+WITHOUT: CompactRange propagates its cancel flag; compare with CompactFiles on same-sized input.
+WHICH: Expected paused/canceled status without installed output; reported OK with output installed.

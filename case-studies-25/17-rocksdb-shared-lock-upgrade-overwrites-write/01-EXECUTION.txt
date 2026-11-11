@@ -1,0 +1,10 @@
+1. Initial state: A database key k begins with value v0.
+2. First customer action and code entry: Put v0 -> T snapshot -> external Put v_other -> shared GetForUpdate no validate -> T Put -> Commit.
+3. Actual program location: utilities/transactions/pessimistic_transaction.cc:TryLock.
+4. Reported failure: Snapshot read holds shared lock; another writer changes key; failed validation becomes successful lock-downgrade result.
+5. Known upstream revision: v11.12; main 302eaa8b1f5b04ee56c9d79236c514fcd9f413fc.
+6. Independent control: GetForUpdate exclusive should report Busy; shared with no later write succeeds.
+7. Local assertion: Expected Busy and value=v_other; reported OK, lock=shared, value=v_txn.
+8. ? Which earlier line first establishes the invariant for line 7?
+9. ?? Which intermediate state from line 2 first violates that invariant?
+10. Do not infer a fix from a successful-looking return value.

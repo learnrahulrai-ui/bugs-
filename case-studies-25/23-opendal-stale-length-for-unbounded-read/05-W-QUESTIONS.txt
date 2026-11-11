@@ -1,0 +1,7 @@
+WHAT: 1 case: An unbounded read is turned into old size bound while file changes between size check and read.
+WHY: If old length is 52 and replacement length is 73, 73-52=21 new bytes are outside the requested range.
+WHERE: Reader::into_futures_async_read; parse_into_range.
+WHO: 1 customer operation (Reader.into_futures_async_read(..) -> stat length -> overwrite same path -> read with stale end) and 1 owning project (Apache OpenDAL).
+WHEN: reported 2025-12-12; issue closed.
+WITHOUT: Run with immutable/versioned object to remove replacement timing.
+WHICH: Expected latest full contents; reported truncated contents; exact race requires controlled storage writes.

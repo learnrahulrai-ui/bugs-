@@ -1,0 +1,42 @@
+1. A file records bytes that the reader can inspect later.
+2. A directory groups related files under one name.
+3. This archive contains 25 numbered directories, one for each separately reported bug.
+4. Every directory contains 00-AXIOMS.txt; read its first line first.
+5. Next read 01-EXECUTION.txt to connect input, source path, and failure.
+6. Next read 02-REPRODUCE.txt to choose the reported revision and the control case.
+7. Next read 03-EVIDENCE.txt to identify what the original reporter actually observed.
+8. Next read 04-LINE-AUDIT.txt and 05-W-QUESTIONS.txt to test dependencies and numeric claims.
+9. Read run.sh before running: execute with bash run.sh only in a disposable environment.
+10. A command that exits with status 3 means no safe one-command reproduction was supplied; it does not mean the bug passed or failed.
+11. No complete upstream bug was executed in this ChatGPT environment because the required source builds, servers, hypervisors, or platforms were not installed.
+12. Independently reproduced upstream bugs: 0 out of 25.
+13. Upstream-reported but NOT independently reproduced here: 25 out of 25.
+14. A source report is evidence of what its author observed; the test on your laptop is still open.
+15. The automatic GitHub ZIP for this branch is https://github.com/learnrahulrai-ui/bugs-/archive/refs/heads/archive-25-repro-guides.zip
+16. NEW THINGS INTRODUCED WITHOUT DERIVATION: NONE within lines 1 to 14; upstream-only technical claims are defined in each case's 00-AXIOMS.txt.
+
+01. case-studies-25/01-redis-aof-hash-ttl-replay
+02. case-studies-25/02-linux-kvm-x86-emulation-warning
+03. case-studies-25/03-rocksdb-wal-abandoned-record-checksum
+04. case-studies-25/04-linux-bcache-cache-line-sharing
+05. case-studies-25/05-fsnotify-watchlist-rename-index-mismatch
+06. case-studies-25/06-fsnotify-rename-sibling-prefix
+07. case-studies-25/07-rocksdb-tailing-blob-freed-version
+08. case-studies-25/08-rocksdb-timestamp-corrupts-key
+09. case-studies-25/09-rocksdb-range-tombstone-ingestion
+10. case-studies-25/10-redis-duplicate-input-memory-accounting
+11. case-studies-25/11-qemu-aarch64-semihost-endian
+12. case-studies-25/12-qemu-incoming-debug-state-transition
+13. case-studies-25/13-linux-kvm-memslot-replacement-hang
+14. case-studies-25/14-redis-blocked-client-iterator-uaf
+15. case-studies-25/15-rocksdb-prepared-transaction-dropped-column-family
+16. case-studies-25/16-rocksdb-write-buffer-retained-history-stall
+17. case-studies-25/17-rocksdb-shared-lock-upgrade-overwrites-write
+18. case-studies-25/18-rocksdb-shared-lock-key-limit-undercount
+19. case-studies-25/19-rocksdb-singledelete-bypasses-transaction-lock
+20. case-studies-25/20-rocksdb-level-summary-stack-overflow
+21. case-studies-25/21-rocksdb-compactfiles-cancel-ignored
+22. case-studies-25/22-redis-vector-update-not-written-aof
+23. case-studies-25/23-opendal-stale-length-for-unbounded-read
+24. case-studies-25/24-linux-kvm-prefault-warning-error-code
+25. case-studies-25/25-rocksdb-windows-unsigned-long-width

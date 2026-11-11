@@ -1,0 +1,10 @@
+1. Primary original issue: https://github.com/meta/rocksdb/issues/15511
+2. Source file: utilities/transactions/pessimistic_transaction.cc:LockBatch; include/rocksdb/write_batch.h:SingleDeleteCF
+3. Version: v11.12; main 0adcea5ea49c113650f2a481e8a9f76616533600
+4. Recorded reporter observation: A write batch SingleDelete changes a key held by an exclusive lock; plain Delete waits
+5. Countercheck: On secondary column family SingleDelete returns InvalidArgument instead of silently bypassing
+6. Required independent result: Expected TimedOut and k present; reporter observed OK and k deleted
+7. Claim type: upstream-reported; locally unverified.
+8. Negative evidence sought: revisions, control tests, and issue fixes can disagree with old reports.
+9. Reproducer method: fetch independent original C++ example directly from issue then compile against pinned source.
+10. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in the axiomatic chain; external assumptions are tagged as upstream reported.

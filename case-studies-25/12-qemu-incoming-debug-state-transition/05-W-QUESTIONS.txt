@@ -1,0 +1,7 @@
+WHAT: 1 recorded case; Restore tries runstate inmigrate -> debug and prints invalid transition
+WHY: The 7.1.0 transition table omits that pair.
+WHERE: softmmu/runstate.c: runstate_transitions_def (7.1)
+WHO: 1 client action (Start guest with gdbstub; pause guest; migrate to compressed file; restore with -incoming) and 1 owning component (QEMU).
+WHEN: QEMU 7.1.0
+WITHOUT: compare the control state: Save guest while not debug-paused; compare restore state.
+WHICH: success requires this observation: Capture 'invalid runstate transition: inmigrate -> debug' and process exit.

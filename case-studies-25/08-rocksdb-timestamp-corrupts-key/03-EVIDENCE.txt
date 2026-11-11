@@ -1,0 +1,11 @@
+1. Direct evidence URL: https://github.com/meta/rocksdb/issues/15558
+2. Source revision or range: main 609269e0a / 11.14.0
+3. Real code location: db/write_batch_internal.h: TimestampUpdater; utilities/transactions/pessimistic_transaction.cc
+4. Original reporter observation: 16-byte key 0123456789abcdef becomes first 8 bytes 01234567 followed by timestamp bytes 05 00 00 00 00 00 00 00
+5. The report's observed failure: Commit returns OK but original key is NotFound
+6. A separate control condition: Enable indexing as control; use timestamp-only writes as separate control.
+7. Observation required to confirm locally: Commit=OK and Get(original 16-byte key)=NotFound is failure; hex stored key ends 0500000000000000.
+8. Verified here: GitHub source report opened for this case when available; no full end-to-end reproducer executed here.
+9. Contrary check: compare the stated control, exact revision, and current branch independently.
+10. Confidence: upstream-reported case; local reproducibility UNVERIFIED.
+11. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in 00-AXIOMS.txt; other files reference its declared terms.

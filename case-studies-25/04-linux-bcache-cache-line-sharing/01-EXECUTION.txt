@@ -1,0 +1,11 @@
+1. Customer action: Attach cached backing device; account dirty sectors in parallel.
+2. First code path: drivers/md/bcache/writeback.c: bcache_dev_sectors_dirty_add.
+3. Required initial state: A sector in the cited test contains 512 bytes.
+4. Action chain: Read the historical diff; instrument bit changes and cache-line transfers in disposable bcache test with multiple workers; compare 1 versus 20 workers.
+5. Reported visible failure: More CPU workers slow down dirty-data accounting.
+6. Exact report datum: 1 sector=512 bytes; 8192 sectors per stripe; 1 cache line=64 bytes; 20 threads measured about 50x per-call slowdown
+7. Independent control: Compare line traffic at same dirty set before and after commit; do not equate throughput with cache-line transfers.
+8. Assertion to check: A claim of 50x is reported for authors' hardware, not a guaranteed local result.
+9. ? Prove the required result from line 3 and the command sequence in line 4.
+10. ?? Find the first step where the reported result disagrees with line 8.
+11. Do not write a fix until the first broken invariant is independently located.

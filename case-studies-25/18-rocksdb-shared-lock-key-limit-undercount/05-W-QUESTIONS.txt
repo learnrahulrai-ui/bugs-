@@ -1,0 +1,7 @@
+WHAT: 1 case: max_num_locks=1; two holders lock key a; one releases; key a remains locked but counter decrements.
+WHY: The reported release path subtracts one even though a still has T2.
+WHERE: utilities/transactions/lock/point/point_lock_manager.cc:AcquireLocked,UnLockKey.
+WHO: 1 customer operation (T1 shared-lock a -> T2 shared-lock a -> T3 try b => LockLimit -> T1 release a -> T3 try b => incorrect OK) and 1 owning project (RocksDB).
+WHEN: v11.12; main 0adcea5ea49c113650f2a481e8a9f76616533600.
+WITHOUT: Exclusive locks and both-holders release are comparison cases.
+WHICH: Expected T3 LockLimit and 1 locked key; reported OK and 2 locked keys.

@@ -1,0 +1,7 @@
+WHAT: 1 case: vCPU pre-fault ioctl returns value beyond asserted allowed set {0,-EIO}; kernel warns.
+WHY: A value outside the accepted set causes a kernel warning.
+WHERE: virt/kvm/kvm_main.c:kvm_vcpu_pre_fault_memory.
+WHO: 1 customer operation (Create VM/vCPU -> invoke pre-fault memory ioctl with reporter input -> watch warning) and 1 owning project (Linux KVM).
+WHEN: upstream ce1e0223d8ad, 2026-10-03.
+WITHOUT: Do not assume error is impossible; inspect October 22 proposed patch and October 29 retest.
+WHICH: Report prints r==0||r==-EIO; kernel WARN at kvm_main.c:4389.

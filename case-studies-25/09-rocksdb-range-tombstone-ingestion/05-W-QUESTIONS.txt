@@ -1,0 +1,7 @@
+WHAT: 1 recorded case; DeleteRange [k09,k20) and [k15,k20); replace [k07,k15) with keys k11,k13; both missing
+WHY: The reported overlap check misses the earlier fragment in the two-deletion state.
+WHERE: range_del_aggregator.cc; column_family.cc; external_sst_file_ingestion_job.cc
+WHO: 1 client action (DeleteRange twice; ingest external SST; Get(k11), Get(k13)) and 1 owning component (RocksDB).
+WHEN: reported 2026-10-20; pin issue's tested source
+WITHOUT: compare the control state: Run single tombstone and double tombstone with same SST payload.
+WHICH: success requires this observation: Compare status and visible key count; success with 0 visible keys is failed invariant.

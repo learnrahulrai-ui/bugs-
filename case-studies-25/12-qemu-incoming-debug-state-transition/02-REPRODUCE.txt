@@ -1,0 +1,13 @@
+1. Use a disposable Linux environment; never test on production data.
+2. Target reported project: QEMU.
+3. Tested revision claimed by upstream: QEMU 7.1.0.
+4. Original issue or patch: https://gitlab.com/qemu-project/qemu/-/issues/1231
+5. Path to inspect: softmmu/runstate.c: runstate_transitions_def (7.1)
+6. Starting action: Start guest with gdbstub; pause guest; migrate to compressed file; restore with -incoming
+7. Reproduction order: Build QEMU 7.1.0; create a guest; start -s -S; pause through GDB; HMP migrate exec gzip; restore via -incoming exec gzip -d.
+8. Negative control: Save guest while not debug-paused; compare restore state.
+9. Detect success/failure: Capture 'invalid runstate transition: inmigrate -> debug' and process exit.
+10. Safety: Use temporary VM image and compressed migration file.
+11. Upstream reporter reproduced this case. It has NOT been executed in this ChatGPT container.
+12. Local test status: UNTESTED_HERE; no fabricated timings, traces, or pass/fail claims.
+13. See run.sh for an executable attempt or the limitations of that environment.

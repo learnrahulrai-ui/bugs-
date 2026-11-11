@@ -1,0 +1,13 @@
+1. Use a disposable Linux environment; never test on production data.
+2. Target reported project: QEMU.
+3. Tested revision claimed by upstream: QEMU 10.2.50 v10.2.0-283-g0fc482b73d.
+4. Original issue or patch: https://gitlab.com/qemu-project/qemu/-/issues/3258
+5. Path to inspect: semihosting/arm-compat-semi.c
+6. Starting action: Run AArch64 big-endian bare-metal program; request semihosting exit(0)
+7. Reproduction order: Build QEMU with --target-list=aarch64-softmmu; clone taiki-e/semihosting; follow linked issue's no-std.sh and runner changes; run aarch64_be target.
+8. Negative control: Run little-endian AArch64 target with same semihosting exit request.
+9. Detect success/failure: Expected QEMU process exit status 0; upstream reported 1 for big-endian.
+10. Safety: Bare-metal QEMU test; does not use KVM host privileges.
+11. Upstream reporter reproduced this case. It has NOT been executed in this ChatGPT container.
+12. Local test status: UNTESTED_HERE; no fabricated timings, traces, or pass/fail claims.
+13. See run.sh for an executable attempt or the limitations of that environment.

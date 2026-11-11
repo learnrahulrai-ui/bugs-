@@ -1,0 +1,12 @@
+1. A program receives an input and changes stored state.
+2. Stored state means the values and objects the program presently holds.
+3. An invariant is a rule that a correct state change must preserve.
+4. A lock prevents certain conflicting operations on a key.
+5. Two transactions T1 and T2 can hold shared locks on one key a.
+6. The limit max_num_locks=1 counts distinct locked keys in this report.
+7. The key a counts as one locked key while one or both holders exist.
+8. Releasing T1 leaves T2 holding a; the distinct locked-key count must remain one.
+9. The reported release path subtracts one even though a still has T2.
+10. A third transaction then locks b and total distinct locked keys becomes two, beyond limit one.
+11. The report shows a candidate violation of the rule derived above, not proof for every version.
+12. A local reproduction must record the exact source revision, input, output and control.

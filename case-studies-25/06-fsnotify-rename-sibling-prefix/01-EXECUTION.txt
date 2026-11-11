@@ -1,0 +1,11 @@
+1. Customer action: Watch /tmp/a and /tmp/ab; rename /tmp/a -> /tmp/x.
+2. First code path: backend_inotify.go: handleEvent; backend_windows.go.
+3. Required initial state: A path names a file or directory, e.g. /tmp/a.
+4. Action chain: Run TestRenameRecursiveDoesNotRenameSiblingPrefixWatch on fixed commit; then apply just that regression test to the parent and compare outcomes.
+5. Reported visible failure: Events for untouched sibling /tmp/ab are reported using wrong path /tmp/xb.
+6. Exact report datum: A string prefix is not the same as a path ancestor: /tmp/a prefixes /tmp/ab but /tmp/ab is not inside /tmp/a
+7. Independent control: /tmp/a/sub must become /tmp/x/sub; /tmp/ab/sub must remain /tmp/ab/sub.
+8. Assertion to check: Expected current watch names: /tmp/x, /tmp/x/sub, /tmp/ab, /tmp/ab/sub.
+9. ? Prove the required result from line 3 and the command sequence in line 4.
+10. ?? Find the first step where the reported result disagrees with line 8.
+11. Do not write a fix until the first broken invariant is independently located.

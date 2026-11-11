@@ -1,0 +1,13 @@
+1. Use a disposable Linux environment; never test on production data.
+2. Target reported project: Redis.
+3. Tested revision claimed by upstream: 8.10.1 and unstable 86561a0 source-reading.
+4. Original issue or patch: https://github.com/redis/redis/issues/16205
+5. Path to inspect: src/t_zset.c: zunionInterDiffGenericCommand; src/db.c
+6. Starting action: Create set ss, sorted set zt; ZINTERSTORE zdst 3 zt ss ss
+7. Reproduction order: Run upstream issue commands with key-memory-histograms and debug assert enabled; compare repeated ss input to unique inputs.
+8. Negative control: Use input ss once as control; assert no accounting discrepancy.
+9. Detect success/failure: 56547-52451=4096; inspect server assertion and preserve full console log.
+10. Safety: Redis DEBUG options; use throwaway server instance.
+11. Upstream reporter reproduced this case. It has NOT been executed in this ChatGPT container.
+12. Local test status: UNTESTED_HERE; no fabricated timings, traces, or pass/fail claims.
+13. See run.sh for an executable attempt or the limitations of that environment.

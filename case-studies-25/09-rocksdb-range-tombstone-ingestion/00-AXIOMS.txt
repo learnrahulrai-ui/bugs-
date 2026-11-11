@@ -1,0 +1,12 @@
+1. A program receives inputs and changes state.
+2. A state is the values and objects the program currently holds.
+3. An invariant is a rule that must hold before and after a successful operation.
+4. A range [start,end) includes start and excludes end.
+5. The range [k07,k15) includes k11 and k13.
+6. The deletion [k09,k20) overlaps [k07,k15) in [k09,k15).
+7. A second deletion [k15,k20) begins at the replace range's excluded end.
+8. The overlap check must still see the first deletion after the second is added.
+9. The reported overlap check misses the earlier fragment in the two-deletion state.
+10. An old deletion then hides the ingested file's two keys despite OK return.
+11. The reported failure violates at least one rule described above; the source report is evidence, not proof for every version.
+12. A reproduced failure requires running the same input on a recorded revision and saving the actual output.

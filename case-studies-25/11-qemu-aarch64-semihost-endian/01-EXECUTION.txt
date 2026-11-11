@@ -1,0 +1,11 @@
+1. Customer action: Run AArch64 big-endian bare-metal program; request semihosting exit(0).
+2. First code path: semihosting/arm-compat-semi.c.
+3. Required initial state: A byte is an integer from 0 to 255.
+4. Action chain: Build QEMU with --target-list=aarch64-softmmu; clone taiki-e/semihosting; follow linked issue's no-std.sh and runner changes; run aarch64_be target.
+5. Reported visible failure: Guest requests exit 0 but QEMU returns exit 1.
+6. Exact report datum: Observed argument 0x2600020000000000 compared with constant 0x20026
+7. Independent control: Run little-endian AArch64 target with same semihosting exit request.
+8. Assertion to check: Expected QEMU process exit status 0; upstream reported 1 for big-endian.
+9. ? Prove the required result from line 3 and the command sequence in line 4.
+10. ?? Find the first step where the reported result disagrees with line 8.
+11. Do not write a fix until the first broken invariant is independently located.

@@ -1,0 +1,12 @@
+1. A program receives inputs and changes state.
+2. A state is the values and objects the program currently holds.
+3. An invariant is a rule that must hold before and after a successful operation.
+4. A memory slot describes a range of guest physical memory.
+5. A virtual CPU creation can install a new internal memory slot.
+6. KVM maintains a current slot table while other tasks can read memory mappings.
+7. Replacing the current table requires protecting readers of the previous table.
+8. The trace shows a thread waiting inside the replacement path.
+9. The wait lasted more than 143 seconds in the reported run.
+10. The trace proves where execution stopped; it does not by itself prove a specific deadlock cycle.
+11. The reported failure violates at least one rule described above; the source report is evidence, not proof for every version.
+12. A reproduced failure requires running the same input on a recorded revision and saving the actual output.

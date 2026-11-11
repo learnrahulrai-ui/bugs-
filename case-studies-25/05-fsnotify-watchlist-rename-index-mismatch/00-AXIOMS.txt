@@ -1,0 +1,12 @@
+1. A program receives inputs and changes state.
+2. A state is the values and objects the program currently holds.
+3. An invariant is a rule that must hold before and after a successful operation.
+4. A watched directory has a name, e.g. /tmp/a.
+5. A watch descriptor is a number assigned to that watch, e.g. 7.
+6. A mapping from 7 to /tmp/a and a mapping from /tmp/a to 7 describe the same watch.
+7. After rename /tmp/a to /tmp/x, descriptor 7 still identifies the watch.
+8. Both mappings must describe /tmp/x for the same descriptor 7.
+9. Updating only a watch object in one mapping leaves the other mapping stale.
+10. The fixed commit changes which mapping is traversed and keeps the two views coherent.
+11. The reported failure violates at least one rule described above; the source report is evidence, not proof for every version.
+12. A reproduced failure requires running the same input on a recorded revision and saving the actual output.

@@ -1,0 +1,7 @@
+WHAT: 1 case: Prepared transaction retains a write to deleted column family; reopen dereferences missing descriptor near 0x48.
+WHY: A missing family makes the lookup return a null address, not a valid family.
+WHERE: db/write_batch.cc:MemTableInserter; utilities/transactions/transaction_base.cc.
+WHO: 1 customer operation (Open TransactionDB -> create family ts -> Put -> Prepare -> DropColumnFamily -> Commit -> close -> reopen) and 1 owning project (RocksDB).
+WHEN: main ea31360536, 2026-10-23.
+WITHOUT: Compare timestamp with ignore_missing_column_families=true and failed commit without that option.
+WHICH: ASan stack has MemTableInserter::MarkCommitWithTimestamp or RebuildFromWriteBatch.

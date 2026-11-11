@@ -1,0 +1,10 @@
+1. Initial state: A bit holds either 0 or 1.
+2. First customer action and code entry: Run sst_dump --command=scan --read_num=1 on Windows CI and compare Linux.
+3. Actual program location: tools/sst_dump_tool.cc:sst_dump --read_num parser.
+4. Reported failure: A 64-bit variable receives only 32-bit parser output on Windows, leaving high bits unchanged.
+5. Known upstream revision: Windows CI 2026-11-03; main tools/sst_dump_tool.cc.
+6. Independent control: Linux unsigned long occupies 8 bytes; on Linux that formatting bug does not create the same partial write.
+7. Local assertion: Windows CI reported scan of every entry, not the requested 1 entry.
+8. ? Which earlier line first establishes the invariant for line 7?
+9. ?? Which intermediate state from line 2 first violates that invariant?
+10. Do not infer a fix from a successful-looking return value.

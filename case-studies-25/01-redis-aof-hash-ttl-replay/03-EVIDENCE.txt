@@ -1,0 +1,11 @@
+1. Direct evidence URL: https://github.com/redis/redis/issues/16005
+2. Source revision or range: 8.10.2 / unstable 5e332cab
+3. Real code location: src/t_hash.c: hpersistCommand, hashTypeGetValue
+4. Original reporter observation: A 2000 ms expiry is removed before 2000 ms pass; after a 2500 ms wait and restart the field vanishes
+5. The report's observed failure: A saved field is present before restart and absent after restart
+6. A separate control condition: AOF rewrite before restart removes the obsolete command history; compare with and without rewrite.
+7. Observation required to confirm locally: After restart HGET session:1 token must equal t1; inspect AOF for unexpected HDEL.
+8. Verified here: GitHub source report opened for this case when available; no full end-to-end reproducer executed here.
+9. Contrary check: compare the stated control, exact revision, and current branch independently.
+10. Confidence: upstream-reported case; local reproducibility UNVERIFIED.
+11. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in 00-AXIOMS.txt; other files reference its declared terms.

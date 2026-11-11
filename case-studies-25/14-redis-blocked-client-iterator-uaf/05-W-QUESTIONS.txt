@@ -1,0 +1,7 @@
+WHAT: 1 case: Two clients wait on victimkey; waking one client evicts the other; iteration reads a freed list node.
+WHY: The iterator still retains its prior address, but the addressed allocation has been freed.
+WHERE: src/blocked.c:handleClientsBlockedOnKey; src/adlist.c:listNext.
+WHO: 1 customer operation (Redis BLPOP two clients -> LPUSH wakes first -> eviction deletes next -> listNext touches dead node) and 1 owning project (Redis).
+WHEN: 8.8.1; issue closed.
+WITHOUT: Keep eviction disabled as control; ensure both blocked clients are alive when wake begins.
+WHICH: ASan reports heap-use-after-free in adlist.c:listNext after blocked.c:handleClientsBlockedOnKey.

@@ -1,0 +1,7 @@
+WHAT: 1 recorded case; Observed argument 0x2600020000000000 compared with constant 0x20026
+WHY: QEMU reads 0x2600020000000000 where the intended exit selector is 0x20026.
+WHERE: semihosting/arm-compat-semi.c
+WHO: 1 client action (Run AArch64 big-endian bare-metal program; request semihosting exit(0)) and 1 owning component (QEMU).
+WHEN: QEMU 10.2.50 v10.2.0-283-g0fc482b73d
+WITHOUT: compare the control state: Run little-endian AArch64 target with same semihosting exit request.
+WHICH: success requires this observation: Expected QEMU process exit status 0; upstream reported 1 for big-endian.

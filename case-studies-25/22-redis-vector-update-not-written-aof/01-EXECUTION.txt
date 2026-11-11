@@ -1,0 +1,10 @@
+1. Initial state: A vector is an ordered list of numbers.
+2. First customer action and code entry: Create vector -> VADD existing member with values 0 1 0 -> VEMB -> check AOF size -> restart -> VEMB.
+3. Actual program location: modules/vector-sets/vset.c:vectorSetInsert; VADD_RedisCommand.
+4. Reported failure: Existing vector updated from [0.9,0.1,0] to [0,1,0] in memory; AOF unchanged; restart returns old vector.
+5. Known upstream revision: 8.10.3, 2026-11-09.
+6. Independent control: Remove then add in MULTI/EXEC grows AOF and survives restart according to report.
+7. Local assertion: AOF size remained 492 bytes in reporter's dataset; original vector returns after restart.
+8. ? Which earlier line first establishes the invariant for line 7?
+9. ?? Which intermediate state from line 2 first violates that invariant?
+10. Do not infer a fix from a successful-looking return value.

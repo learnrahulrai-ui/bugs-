@@ -1,0 +1,10 @@
+1. Primary original issue: https://github.com/meta/rocksdb/issues/15510
+2. Source file: utilities/transactions/pessimistic_transaction.cc:TryLock
+3. Version: v11.12; main 302eaa8b1f5b04ee56c9d79236c514fcd9f413fc
+4. Recorded reporter observation: Snapshot read holds shared lock; another writer changes key; failed validation becomes successful lock-downgrade result
+5. Countercheck: GetForUpdate exclusive should report Busy; shared with no later write succeeds
+6. Required independent result: Expected Busy and value=v_other; reported OK, lock=shared, value=v_txn
+7. Claim type: upstream-reported; locally unverified.
+8. Negative evidence sought: revisions, control tests, and issue fixes can disagree with old reports.
+9. Reproducer method: fetch independent original C++ example directly from issue then compile against pinned source.
+10. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in the axiomatic chain; external assumptions are tagged as upstream reported.

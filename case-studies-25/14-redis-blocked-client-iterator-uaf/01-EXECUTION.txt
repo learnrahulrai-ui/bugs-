@@ -1,0 +1,10 @@
+1. Initial state: A list contains elements linked in order.
+2. First customer action and code entry: Redis BLPOP two clients -> LPUSH wakes first -> eviction deletes next -> listNext touches dead node.
+3. Actual program location: src/blocked.c:handleClientsBlockedOnKey; src/adlist.c:listNext.
+4. Reported failure: Two clients wait on victimkey; waking one client evicts the other; iteration reads a freed list node.
+5. Known upstream revision: 8.8.1; issue closed.
+6. Independent control: Keep eviction disabled as control; ensure both blocked clients are alive when wake begins.
+7. Local assertion: ASan reports heap-use-after-free in adlist.c:listNext after blocked.c:handleClientsBlockedOnKey.
+8. ? Which earlier line first establishes the invariant for line 7?
+9. ?? Which intermediate state from line 2 first violates that invariant?
+10. Do not infer a fix from a successful-looking return value.

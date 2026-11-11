@@ -1,0 +1,12 @@
+1. A program receives inputs and changes state.
+2. A state is the values and objects the program currently holds.
+3. An invariant is a rule that must hold before and after a successful operation.
+4. KVM is a Linux interface that runs a guest CPU while the host controls it.
+5. A guest CPU is a program-visible machine state created by the host using /dev/kvm.
+6. KVM_RUN asks the kernel to execute that guest state.
+7. When hardware cannot directly run an instruction, KVM may emulate its effect in software.
+8. Emulation must return a guest-visible result consistent with the supplied state.
+9. An unexpected emulator result reaches a WARN; the existence of a WARN does not prove the proposed fix.
+10. A C reproducer is available at the report's C link; run it only inside a disposable VM.
+11. The reported failure violates at least one rule described above; the source report is evidence, not proof for every version.
+12. A reproduced failure requires running the same input on a recorded revision and saving the actual output.

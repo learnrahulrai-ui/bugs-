@@ -1,0 +1,7 @@
+WHAT: 1 recorded case; 1 sector=512 bytes; 8192 sectors per stripe; 1 cache line=64 bytes; 20 threads measured about 50x per-call slowdown
+WHY: Several CPU writers changing distinct bits still change the same 64-byte cache line.
+WHERE: drivers/md/bcache/writeback.c: bcache_dev_sectors_dirty_add
+WHO: 1 client action (Attach cached backing device; account dirty sectors in parallel) and 1 owning component (Linux bcache).
+WHEN: historical fix 7b1002f7cfe5
+WITHOUT: compare the control state: Compare line traffic at same dirty set before and after commit; do not equate throughput with cache-line transfers.
+WHICH: success requires this observation: A claim of 50x is reported for authors' hardware, not a guaranteed local result.

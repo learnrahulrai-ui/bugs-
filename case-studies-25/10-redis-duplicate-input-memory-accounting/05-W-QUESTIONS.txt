@@ -1,0 +1,7 @@
+WHAT: 1 recorded case; expected 56547 bytes, recorded 52451 bytes; difference 4096 bytes = 512 buckets x 8 bytes
+WHY: Charging that freed size for each argument instead of each object subtracts 4096 twice.
+WHERE: src/t_zset.c: zunionInterDiffGenericCommand; src/db.c
+WHO: 1 client action (Create set ss, sorted set zt; ZINTERSTORE zdst 3 zt ss ss) and 1 owning component (Redis).
+WHEN: 8.10.1 and unstable 86561a0 source-reading
+WITHOUT: compare the control state: Use input ss once as control; assert no accounting discrepancy.
+WHICH: success requires this observation: 56547-52451=4096; inspect server assertion and preserve full console log.

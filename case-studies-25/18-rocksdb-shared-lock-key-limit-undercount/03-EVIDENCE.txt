@@ -1,0 +1,10 @@
+1. Primary original issue: https://github.com/meta/rocksdb/issues/15513
+2. Source file: utilities/transactions/lock/point/point_lock_manager.cc:AcquireLocked,UnLockKey
+3. Version: v11.12; main 0adcea5ea49c113650f2a481e8a9f76616533600
+4. Recorded reporter observation: max_num_locks=1; two holders lock key a; one releases; key a remains locked but counter decrements
+5. Countercheck: Exclusive locks and both-holders release are comparison cases
+6. Required independent result: Expected T3 LockLimit and 1 locked key; reported OK and 2 locked keys
+7. Claim type: upstream-reported; locally unverified.
+8. Negative evidence sought: revisions, control tests, and issue fixes can disagree with old reports.
+9. Reproducer method: fetch independent original C++ example directly from issue then compile against pinned source.
+10. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in the axiomatic chain; external assumptions are tagged as upstream reported.

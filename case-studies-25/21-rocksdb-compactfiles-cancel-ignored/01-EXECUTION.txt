@@ -1,0 +1,10 @@
+1. Initial state: A compaction reads existing database files and writes replacement files.
+2. First customer action and code entry: Prepare files -> start CompactFiles -> set canceled=true after work starts -> wait.
+3. Actual program location: db/db_impl/db_impl_compaction_flush.cc:CompactFilesImpl; db/db_etc2_test.cc.
+4. Reported failure: canceled flag becomes true while CompactFiles is running; compaction finishes and installs result.
+5. Known upstream revision: main 2026-11-01.
+6. Independent control: CompactRange propagates its cancel flag; compare with CompactFiles on same-sized input.
+7. Local assertion: Expected paused/canceled status without installed output; reported OK with output installed.
+8. ? Which earlier line first establishes the invariant for line 7?
+9. ?? Which intermediate state from line 2 first violates that invariant?
+10. Do not infer a fix from a successful-looking return value.

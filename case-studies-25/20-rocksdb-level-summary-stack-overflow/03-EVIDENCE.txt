@@ -1,0 +1,10 @@
+1. Primary original issue: https://github.com/meta/rocksdb/issues/15491
+2. Source file: db/version_set.cc:VersionStorageInfo::LevelSummary
+3. Version: main 0c79400bf7b37c7f4fb8fe264a0e54f5c8d7608b
+4. Recorded reporter observation: 1000-byte local buffer; many levels expand printed summary beyond buffer; another snprintf writes outside
+5. Countercheck: Run same input at default 7 levels as clean control
+6. Required independent result: ASan shows stack-buffer-overflow in LevelSummary; plain Release may say flush ok and still be wrong
+7. Claim type: upstream-reported; locally unverified.
+8. Negative evidence sought: revisions, control tests, and issue fixes can disagree with old reports.
+9. Reproducer method: fetch independent original C++ example directly from issue then compile against pinned source.
+10. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in the axiomatic chain; external assumptions are tagged as upstream reported.

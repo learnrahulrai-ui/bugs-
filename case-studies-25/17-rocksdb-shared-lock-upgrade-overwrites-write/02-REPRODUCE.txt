@@ -1,0 +1,11 @@
+1. Run this case in a fresh isolated working directory.
+2. Primary-source report: https://github.com/meta/rocksdb/issues/15510
+3. Project: RocksDB.
+4. Historical revision or version: v11.12; main 302eaa8b1f5b04ee56c9d79236c514fcd9f413fc.
+5. Source path: utilities/transactions/pessimistic_transaction.cc:TryLock.
+6. Input sequence: Put v0 -> T snapshot -> external Put v_other -> shared GetForUpdate no validate -> T Put -> Commit.
+7. Comparison case: GetForUpdate exclusive should report Busy; shared with no later write succeeds.
+8. Expected versus reported: Expected Busy and value=v_other; reported OK, lock=shared, value=v_txn.
+9. Read run.sh before executing; a script that exits 3 is intentionally not a runnable full repro.
+10. Environment: reporter's target and build prerequisites must be matched.
+11. This chat workspace has not executed the upstream source tree; status UNTESTED_HERE.

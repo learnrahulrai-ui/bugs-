@@ -1,0 +1,11 @@
+1. Direct evidence URL: https://gitlab.com/qemu-project/qemu/-/issues/1231
+2. Source revision or range: QEMU 7.1.0
+3. Real code location: softmmu/runstate.c: runstate_transitions_def (7.1)
+4. Original reporter observation: Restore tries runstate inmigrate -> debug and prints invalid transition
+5. The report's observed failure: Paused VM snapshot cannot resume; QEMU aborts
+6. A separate control condition: Save guest while not debug-paused; compare restore state.
+7. Observation required to confirm locally: Capture 'invalid runstate transition: inmigrate -> debug' and process exit.
+8. Verified here: GitHub source report opened for this case when available; no full end-to-end reproducer executed here.
+9. Contrary check: compare the stated control, exact revision, and current branch independently.
+10. Confidence: upstream-reported case; local reproducibility UNVERIFIED.
+11. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in 00-AXIOMS.txt; other files reference its declared terms.

@@ -1,0 +1,10 @@
+1. Primary original issue: https://github.com/meta/rocksdb/issues/15536
+2. Source file: db/db_impl/db_impl_compaction_flush.cc:CompactFilesImpl; db/db_etc2_test.cc
+3. Version: main 2026-11-01
+4. Recorded reporter observation: canceled flag becomes true while CompactFiles is running; compaction finishes and installs result
+5. Countercheck: CompactRange propagates its cancel flag; compare with CompactFiles on same-sized input
+6. Required independent result: Expected paused/canceled status without installed output; reported OK with output installed
+7. Claim type: upstream-reported; locally unverified.
+8. Negative evidence sought: revisions, control tests, and issue fixes can disagree with old reports.
+9. Reproducer method: no standalone runnable test established.
+10. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in the axiomatic chain; external assumptions are tagged as upstream reported.

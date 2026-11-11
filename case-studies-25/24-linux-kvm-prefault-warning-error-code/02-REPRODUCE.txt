@@ -1,0 +1,11 @@
+1. Run this case in a fresh isolated working directory.
+2. Primary-source report: https://syzkaller.appspot.com/bug?extid=db7bd0f41c2a7e82d4ba
+3. Project: Linux KVM.
+4. Historical revision or version: upstream ce1e0223d8ad, 2026-10-03.
+5. Source path: virt/kvm/kvm_main.c:kvm_vcpu_pre_fault_memory.
+6. Input sequence: Create VM/vCPU -> invoke pre-fault memory ioctl with reporter input -> watch warning.
+7. Comparison case: Do not assume error is impossible; inspect October 22 proposed patch and October 29 retest.
+8. Expected versus reported: Report prints r==0||r==-EIO; kernel WARN at kvm_main.c:4389.
+9. Read run.sh before executing; a script that exits 3 is intentionally not a runnable full repro.
+10. Environment: reporter's target and build prerequisites must be matched.
+11. This chat workspace has not executed the upstream source tree; status UNTESTED_HERE.

@@ -1,0 +1,10 @@
+1. Initial state: A buffer has a fixed 1000-byte capacity.
+2. First customer action and code entry: Set num_levels=500 -> create/mark files -> flush -> print level summary -> ASan write outside stack buffer.
+3. Actual program location: db/version_set.cc:VersionStorageInfo::LevelSummary.
+4. Reported failure: 1000-byte local buffer; many levels expand printed summary beyond buffer; another snprintf writes outside.
+5. Known upstream revision: main 0c79400bf7b37c7f4fb8fe264a0e54f5c8d7608b.
+6. Independent control: Run same input at default 7 levels as clean control.
+7. Local assertion: ASan shows stack-buffer-overflow in LevelSummary; plain Release may say flush ok and still be wrong.
+8. ? Which earlier line first establishes the invariant for line 7?
+9. ?? Which intermediate state from line 2 first violates that invariant?
+10. Do not infer a fix from a successful-looking return value.
