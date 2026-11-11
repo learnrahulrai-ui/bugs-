@@ -1,10 +1,12 @@
-1. Line 1 of 00-AXIOMS.txt defines program input and state change.
-2. Line 2 defines state using line 1.
-3. Line 3 defines invariant using lines 1-2.
-4. Every later line in 00-AXIOMS.txt either defines a new term or follows from earlier terms and the stated upstream datum.
-5. Reported observations are not promoted to derived guarantees.
-6. The code file names in 01-EXECUTION.txt are source identifiers, not newly inferred quantities.
-7. The version in 02-REPRODUCE.txt is upstream's claimed version, not an independent local observation.
-8. Zero local bug executions have been claimed.
-9. Open question: Compare the identity pair 7<->/tmp/x, not merely list length 1.
-10. NEW THINGS INTRODUCED WITHOUT DERIVATION: NONE (within the logical chain; external facts remain explicitly cited as source reports).
+1. A claim is a sentence whose truth must be checked.
+2. A definition assigns a meaning to a word; a definition does not prove a statement about source code.
+3. A numeric deduction is valid only after its inputs, units, and operation are stated.
+4. The first three sentences of 00-AXIOMS.txt introduce input, state, and invariant.
+5. Later sentences use source-specific terms and observations reported by upstream authors.
+6. Those observations are external premises; a reported observation is not an independently reproduced result.
+7. The exact code path, source revision, and all control outputs require inspection or execution on the reported source version.
+8. No complete upstream test was executed in this ChatGPT environment.
+9. A sentence that names a source function before its behavior is independently checked remains an open proof obligation.
+10. NEW THINGS INTRODUCED WITHOUT DERIVATION: implementation-specific behavior and reported observations not independently proven by running the source.
+11. Strict axiom audit status: NOT YET ACCEPTED. Preserve the gaps instead of inventing proof.
+12. To accept: inspect each new term against preceding definitions, trace the cited source, run the control, and make line 10 empty only when actual evidence supports it.
