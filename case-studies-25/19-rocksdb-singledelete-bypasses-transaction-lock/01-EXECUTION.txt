@@ -1,0 +1,10 @@
+1. Initial state: A key k has a saved value v.
+2. First customer action and code entry: T locks k exclusively -> WriteBatch Delete(k) times out -> WriteBatch SingleDelete(k) returns OK.
+3. Actual program location: utilities/transactions/pessimistic_transaction.cc:LockBatch; include/rocksdb/write_batch.h:SingleDeleteCF.
+4. Reported failure: A write batch SingleDelete changes a key held by an exclusive lock; plain Delete waits.
+5. Known upstream revision: v11.12; main 0adcea5ea49c113650f2a481e8a9f76616533600.
+6. Independent control: On secondary column family SingleDelete returns InvalidArgument instead of silently bypassing.
+7. Local assertion: Expected TimedOut and k present; reporter observed OK and k deleted.
+8. ? Which earlier line first establishes the invariant for line 7?
+9. ?? Which intermediate state from line 2 first violates that invariant?
+10. Do not infer a fix from a successful-looking return value.

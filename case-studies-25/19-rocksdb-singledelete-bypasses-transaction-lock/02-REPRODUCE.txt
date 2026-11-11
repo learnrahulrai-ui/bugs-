@@ -1,0 +1,11 @@
+1. Run this case in a fresh isolated working directory.
+2. Primary-source report: https://github.com/meta/rocksdb/issues/15511
+3. Project: RocksDB.
+4. Historical revision or version: v11.12; main 0adcea5ea49c113650f2a481e8a9f76616533600.
+5. Source path: utilities/transactions/pessimistic_transaction.cc:LockBatch; include/rocksdb/write_batch.h:SingleDeleteCF.
+6. Input sequence: T locks k exclusively -> WriteBatch Delete(k) times out -> WriteBatch SingleDelete(k) returns OK.
+7. Comparison case: On secondary column family SingleDelete returns InvalidArgument instead of silently bypassing.
+8. Expected versus reported: Expected TimedOut and k present; reporter observed OK and k deleted.
+9. Read run.sh before executing; a script that exits 3 is intentionally not a runnable full repro.
+10. Environment: reporter's target and build prerequisites must be matched.
+11. This chat workspace has not executed the upstream source tree; status UNTESTED_HERE.

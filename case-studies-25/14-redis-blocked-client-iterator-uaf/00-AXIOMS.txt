@@ -1,0 +1,12 @@
+1. A program receives an input and changes stored state.
+2. Stored state means the values and objects the program presently holds.
+3. An invariant is a rule that a correct state change must preserve.
+4. A list contains elements linked in order.
+5. An iterator is a stored address used to find the next element.
+6. Two blocked clients have two list elements on the same key.
+7. A wakeup can run a command which in turn triggers client eviction.
+8. Eviction can delete the second blocked client's list element.
+9. The iterator still retains its prior address, but the addressed allocation has been freed.
+10. A later listNext reads freed memory; ASan reports an 8-byte read after free.
+11. The report shows a candidate violation of the rule derived above, not proof for every version.
+12. A local reproduction must record the exact source revision, input, output and control.

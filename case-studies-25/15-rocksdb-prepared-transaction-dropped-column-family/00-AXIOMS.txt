@@ -1,0 +1,12 @@
+1. A program receives an input and changes stored state.
+2. Stored state means the values and objects the program presently holds.
+3. An invariant is a rule that a correct state change must preserve.
+4. A database can partition records into named column families.
+5. A prepared transaction has saved writes not yet completed.
+6. A column-family handle identifies which family receives a write.
+7. The recorded write can remain after the named family is dropped.
+8. Recovery reads the saved transaction and looks up its family by identifier.
+9. A missing family makes the lookup return a null address, not a valid family.
+10. Using null as a real family can dereference memory near address 0x48 and crash.
+11. The report shows a candidate violation of the rule derived above, not proof for every version.
+12. A local reproduction must record the exact source revision, input, output and control.

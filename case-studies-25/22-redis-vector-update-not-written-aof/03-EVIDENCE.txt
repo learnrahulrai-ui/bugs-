@@ -1,0 +1,10 @@
+1. Primary original issue: https://github.com/redis/redis/issues/16202
+2. Source file: modules/vector-sets/vset.c:vectorSetInsert; VADD_RedisCommand
+3. Version: 8.10.3, 2026-11-09
+4. Recorded reporter observation: Existing vector updated from [0.9,0.1,0] to [0,1,0] in memory; AOF unchanged; restart returns old vector
+5. Countercheck: Remove then add in MULTI/EXEC grows AOF and survives restart according to report
+6. Required independent result: AOF size remained 492 bytes in reporter's dataset; original vector returns after restart
+7. Claim type: upstream-reported; locally unverified.
+8. Negative evidence sought: revisions, control tests, and issue fixes can disagree with old reports.
+9. Reproducer method: scripted command sequence.
+10. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in the axiomatic chain; external assumptions are tagged as upstream reported.

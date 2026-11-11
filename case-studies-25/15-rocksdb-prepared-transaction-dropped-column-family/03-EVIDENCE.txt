@@ -1,0 +1,10 @@
+1. Primary original issue: https://github.com/meta/rocksdb/issues/15473
+2. Source file: db/write_batch.cc:MemTableInserter; utilities/transactions/transaction_base.cc
+3. Version: main ea31360536, 2026-10-23
+4. Recorded reporter observation: Prepared transaction retains a write to deleted column family; reopen dereferences missing descriptor near 0x48
+5. Countercheck: Compare timestamp with ignore_missing_column_families=true and failed commit without that option
+6. Required independent result: ASan stack has MemTableInserter::MarkCommitWithTimestamp or RebuildFromWriteBatch
+7. Claim type: upstream-reported; locally unverified.
+8. Negative evidence sought: revisions, control tests, and issue fixes can disagree with old reports.
+9. Reproducer method: fetch independent original C++ example directly from issue then compile against pinned source.
+10. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in the axiomatic chain; external assumptions are tagged as upstream reported.

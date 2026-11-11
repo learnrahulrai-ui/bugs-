@@ -1,0 +1,12 @@
+1. A program receives an input and changes stored state.
+2. Stored state means the values and objects the program presently holds.
+3. An invariant is a rule that a correct state change must preserve.
+4. A compaction reads existing database files and writes replacement files.
+5. A cancellation flag is a shared boolean that becomes true when a caller requests cancellation.
+6. The caller passes that flag to CompactFiles.
+7. The function checks the flag once before the job starts.
+8. The job receives a separate false flag instead of the caller's flag.
+9. A later true value in the caller's flag is invisible to that job.
+10. The job completes although the caller requested cancellation during execution.
+11. The report shows a candidate violation of the rule derived above, not proof for every version.
+12. A local reproduction must record the exact source revision, input, output and control.

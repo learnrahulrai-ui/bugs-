@@ -1,0 +1,10 @@
+1. Primary original issue: https://github.com/meta/rocksdb/issues/15574
+2. Source file: tools/sst_dump_tool.cc:sst_dump --read_num parser
+3. Version: Windows CI 2026-11-03; main tools/sst_dump_tool.cc
+4. Recorded reporter observation: A 64-bit variable receives only 32-bit parser output on Windows, leaving high bits unchanged
+5. Countercheck: Linux unsigned long occupies 8 bytes; on Linux that formatting bug does not create the same partial write
+6. Required independent result: Windows CI reported scan of every entry, not the requested 1 entry
+7. Claim type: upstream-reported; locally unverified.
+8. Negative evidence sought: revisions, control tests, and issue fixes can disagree with old reports.
+9. Reproducer method: compile width calculation locally, Windows-only product bug remains untested.
+10. NEW THINGS INTRODUCED WITHOUT DERIVATION: none in the axiomatic chain; external assumptions are tagged as upstream reported.

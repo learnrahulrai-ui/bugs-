@@ -1,0 +1,7 @@
+WHAT: 1 case: A write batch SingleDelete changes a key held by an exclusive lock; plain Delete waits.
+WHY: The default SingleDelete handler returns OK for family zero without recording key k.
+WHERE: utilities/transactions/pessimistic_transaction.cc:LockBatch; include/rocksdb/write_batch.h:SingleDeleteCF.
+WHO: 1 customer operation (T locks k exclusively -> WriteBatch Delete(k) times out -> WriteBatch SingleDelete(k) returns OK) and 1 owning project (RocksDB).
+WHEN: v11.12; main 0adcea5ea49c113650f2a481e8a9f76616533600.
+WITHOUT: On secondary column family SingleDelete returns InvalidArgument instead of silently bypassing.
+WHICH: Expected TimedOut and k present; reporter observed OK and k deleted.

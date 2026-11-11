@@ -1,0 +1,11 @@
+1. Run this case in a fresh isolated working directory.
+2. Primary-source report: https://github.com/meta/rocksdb/issues/15473
+3. Project: RocksDB.
+4. Historical revision or version: main ea31360536, 2026-10-23.
+5. Source path: db/write_batch.cc:MemTableInserter; utilities/transactions/transaction_base.cc.
+6. Input sequence: Open TransactionDB -> create family ts -> Put -> Prepare -> DropColumnFamily -> Commit -> close -> reopen.
+7. Comparison case: Compare timestamp with ignore_missing_column_families=true and failed commit without that option.
+8. Expected versus reported: ASan stack has MemTableInserter::MarkCommitWithTimestamp or RebuildFromWriteBatch.
+9. Read run.sh before executing; a script that exits 3 is intentionally not a runnable full repro.
+10. Environment: reporter's target and build prerequisites must be matched.
+11. This chat workspace has not executed the upstream source tree; status UNTESTED_HERE.

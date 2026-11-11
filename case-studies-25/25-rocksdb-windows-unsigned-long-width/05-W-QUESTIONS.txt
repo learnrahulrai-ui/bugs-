@@ -1,0 +1,7 @@
+WHAT: 1 case: A 64-bit variable receives only 32-bit parser output on Windows, leaving high bits unchanged.
+WHY: Writing only its first 4 bytes leaves 4 other bytes unchanged.
+WHERE: tools/sst_dump_tool.cc:sst_dump --read_num parser.
+WHO: 1 customer operation (Run sst_dump --command=scan --read_num=1 on Windows CI and compare Linux) and 1 owning project (RocksDB).
+WHEN: Windows CI 2026-11-03; main tools/sst_dump_tool.cc.
+WITHOUT: Linux unsigned long occupies 8 bytes; on Linux that formatting bug does not create the same partial write.
+WHICH: Windows CI reported scan of every entry, not the requested 1 entry.

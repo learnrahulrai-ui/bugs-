@@ -1,0 +1,8 @@
+1. Axiom line 1 introduces program input and state change.
+2. Axiom line 2 defines stored state using line 1.
+3. Axiom line 3 defines invariant using line 2.
+4. Axiom lines 4-10 define the case's components and causal relationship in order.
+5. Every numeric assertion in the next files either appears in those axioms or is an attributed upstream observation.
+6. Source file paths and versions are external names; their source is 03-EVIDENCE.txt.
+7. No outcome from this ChatGPT execution is represented as a confirmed source-tree reproduction.
+8. NEW THINGS INTRODUCED WITHOUT DERIVATION: NONE within the 00-AXIOMS proof chain; upstream observations are separately sourced.

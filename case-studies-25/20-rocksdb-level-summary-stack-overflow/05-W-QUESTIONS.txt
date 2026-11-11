@@ -1,0 +1,7 @@
+WHAT: 1 case: 1000-byte local buffer; many levels expand printed summary beyond buffer; another snprintf writes outside.
+WHY: Subtracting a too-large cursor from 1000 as unsigned arithmetic creates a huge positive size.
+WHERE: db/version_set.cc:VersionStorageInfo::LevelSummary.
+WHO: 1 customer operation (Set num_levels=500 -> create/mark files -> flush -> print level summary -> ASan write outside stack buffer) and 1 owning project (RocksDB).
+WHEN: main 0c79400bf7b37c7f4fb8fe264a0e54f5c8d7608b.
+WITHOUT: Run same input at default 7 levels as clean control.
+WHICH: ASan shows stack-buffer-overflow in LevelSummary; plain Release may say flush ok and still be wrong.

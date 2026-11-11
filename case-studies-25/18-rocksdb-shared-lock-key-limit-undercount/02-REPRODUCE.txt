@@ -1,0 +1,11 @@
+1. Run this case in a fresh isolated working directory.
+2. Primary-source report: https://github.com/meta/rocksdb/issues/15513
+3. Project: RocksDB.
+4. Historical revision or version: v11.12; main 0adcea5ea49c113650f2a481e8a9f76616533600.
+5. Source path: utilities/transactions/lock/point/point_lock_manager.cc:AcquireLocked,UnLockKey.
+6. Input sequence: T1 shared-lock a -> T2 shared-lock a -> T3 try b => LockLimit -> T1 release a -> T3 try b => incorrect OK.
+7. Comparison case: Exclusive locks and both-holders release are comparison cases.
+8. Expected versus reported: Expected T3 LockLimit and 1 locked key; reported OK and 2 locked keys.
+9. Read run.sh before executing; a script that exits 3 is intentionally not a runnable full repro.
+10. Environment: reporter's target and build prerequisites must be matched.
+11. This chat workspace has not executed the upstream source tree; status UNTESTED_HERE.

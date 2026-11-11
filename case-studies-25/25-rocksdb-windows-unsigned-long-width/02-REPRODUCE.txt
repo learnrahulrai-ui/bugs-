@@ -1,0 +1,11 @@
+1. Run this case in a fresh isolated working directory.
+2. Primary-source report: https://github.com/meta/rocksdb/issues/15574
+3. Project: RocksDB.
+4. Historical revision or version: Windows CI 2026-11-03; main tools/sst_dump_tool.cc.
+5. Source path: tools/sst_dump_tool.cc:sst_dump --read_num parser.
+6. Input sequence: Run sst_dump --command=scan --read_num=1 on Windows CI and compare Linux.
+7. Comparison case: Linux unsigned long occupies 8 bytes; on Linux that formatting bug does not create the same partial write.
+8. Expected versus reported: Windows CI reported scan of every entry, not the requested 1 entry.
+9. Read run.sh before executing; a script that exits 3 is intentionally not a runnable full repro.
+10. Environment: reporter's target and build prerequisites must be matched.
+11. This chat workspace has not executed the upstream source tree; status UNTESTED_HERE.

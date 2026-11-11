@@ -1,0 +1,10 @@
+1. Initial state: A file has a content length measured in bytes.
+2. First customer action and code entry: Reader.into_futures_async_read(..) -> stat length -> overwrite same path -> read with stale end.
+3. Actual program location: Reader::into_futures_async_read; parse_into_range.
+4. Reported failure: An unbounded read is turned into old size bound while file changes between size check and read.
+5. Known upstream revision: reported 2025-12-12; issue closed.
+6. Independent control: Run with immutable/versioned object to remove replacement timing.
+7. Local assertion: Expected latest full contents; reported truncated contents; exact race requires controlled storage writes.
+8. ? Which earlier line first establishes the invariant for line 7?
+9. ?? Which intermediate state from line 2 first violates that invariant?
+10. Do not infer a fix from a successful-looking return value.
