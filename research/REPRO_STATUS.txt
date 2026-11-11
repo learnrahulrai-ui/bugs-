@@ -1,9 +1,9 @@
-RUN STATUS: SQLite WAL concurrency prerequisites exercised without reproducing bug.
-Date: 2026-11-12
-Sandbox SQLite: 3.46.1
-Write connection committed: 600 rows
-Separate checkpoint connection ran: 600 PRAGMA wal_checkpoint(PASSIVE) calls
-Final row count: 600
-PRAGMA integrity_check: ok
-Exceptions: none
-Conclusion: normal concurrency path passed. Reported WAL-reset race NOT reproduced. Official SQLite analysis needed instrumentation. Other 19 defects: NOT EXECUTED.
+RUN STATUS 2026-11-12
+
+LLVM llvm-project #86499: REPRODUCED_HERE ASSEMBLY DIFFERENCE. Sandbox Clang 17.0.0, x86-64, -O2, one 127-byte structure. Temporary assignment calls memmove@PLT; direct assignment gets inline movups. Not a correctness failure and not benchmarked for speed. Code in bugs/A01-llvm-emits-memmove-for-a-temporary-127-byte-structure/.
+
+uutils coreutils #16344: UNTESTED_HERE against uutils. Local GNU /bin/mkdir control ran with 12 workers and 5 rounds, zero violations. Controlled harness in bugs/A05-uutils-mkdir-may-claim-success-on-a-failed-concurrent-crea/mkdir_race.py.
+
+SQLite WAL concurrency: CONTROL PASSED ONLY. Sandbox SQLite 3.46.1. Separate writer committed 600 rows; checkpoint connection ran 600 PRAGMA wal_checkpoint(PASSIVE) calls; final count 600, integrity_check ok, exceptions none. Upstream race NOT REPRODUCED.
+
+All other case folders: no independent reproduction recorded in this workspace as part of this research. Reports and reproduction recipes are not substitutes for observed failing output.
