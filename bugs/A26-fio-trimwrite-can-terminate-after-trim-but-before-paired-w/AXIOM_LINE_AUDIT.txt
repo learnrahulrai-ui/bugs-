@@ -1,0 +1,16 @@
+01 A storage block can hold file data.
+02 A trim request tells storage that the block's former data are no longer required.
+03 A write request supplies new data to a block.
+04 fio trimwrite promises to trim each selected block and then write it again.
+05 Each block therefore has two dependent operations, one trim followed by one write.
+06 fio represents these as two separate I/O requests, not one indivisible request.
+07 Its do_io loop checks runtime and byte limits between requests.
+08 A limit reached after trim and before write can end the loop with only the first half completed.
+09 The upstream report includes a run with 3412 trim requests and 3411 paired writes.
+10 Subtracting 3411 from 3412 leaves one trimmed block without its promised following write.
+11 A successful exit code does not restore the missing write.
+12 Missing inference: a termination condition for a two-operation promise must respect the pair boundary, not just the next request boundary.
+13 UPSTREAM https://github.com/axboe/fio/issues/2122
+14 AFFECTED REPORTED VERSION fio 3.42. Reproduction uses a disposable loop block device and discard capability, not a live data disk.
+15 USER-LAPTOP REPRODUCTION: NOT RUN; destructive trim tests must stay inside a test VM and scratch device.
+16 NEW THINGS INTRODUCED WITHOUT DERIVATION: NONE IDENTIFIED within lines 01-12; I/O completion ordering needs more evidence.
