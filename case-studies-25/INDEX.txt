@@ -12,8 +12,8 @@
 12. Independently reproduced upstream bugs: 0 out of 25.
 13. Upstream-reported but NOT independently reproduced here: 25 out of 25.
 14. A source report is evidence of what its author observed; the test on your laptop is still open.
-15. The automatic GitHub ZIP for this branch is https://github.com/learnrahulrai-ui/bugs-/archive/refs/heads/archive-25-repro-guides.zip
-16. NEW THINGS INTRODUCED WITHOUT DERIVATION: NONE within lines 1 to 14; upstream-only technical claims are defined in each case's 00-AXIOMS.txt.
+15. The automatic full repository ZIP is https://github.com/learnrahulrai-ui/bugs-/archive/refs/heads/main.zip
+16. NEW THINGS INTRODUCED WITHOUT DERIVATION: source implementation behavior and reported outcomes still await independent code inspection and reproduction. See 04-LINE-AUDIT.txt in every folder; these cases are not yet certified as gap-free proofs.
 
 01. case-studies-25/01-redis-aof-hash-ttl-replay
 02. case-studies-25/02-linux-kvm-x86-emulation-warning
