@@ -1,0 +1,16 @@
+1. 4096 float32 entries→4096×4 B=16384 B | 4 temporary arrays→4×16384=65536 B | draw→[alloc₁:16384]→[kernel₁]→[free₁] | [alloc₂:16384]→[kernel₂]→[free₂] | [alloc₃:16384]→[kernel₃]→[free₃] | [alloc₄:16384]→[kernel₄]→[free₄].
+2. main stream A→capture_begin | substream B→wait(A)→alloc₁→kernel₁→free₁→...→alloc₄→kernel₄→free₄ | A→wait(B)→capture_end | draw every arrow.
+3. Main stream A: [begin]→[fork]----------------------→[join]→[end] | Substream B: [wait A]→[alloc]→[kernel]→[free]→[signal] | draw graph nodes as boxes; arrows=must-complete-before.
+4. ∀buffer: alloc→kernel→free | graph validation task→trace predecessor arrows backward from free to kernel | free⇐kernel=? | merely appearing earlier in Python≠GPU dependency across captured streams.
+5. Captured allocation node→bytes=16384 | live temporary→4096 float32 | deleted Python name→free request | free node→CUDA graph | allocation address→reused only after legal free.
+6. 64 replays→4 touch kernels/replay→64×4=256 kernel invocations | 256×4096=1048576 element updates | 4 free nodes/replay→64×4=256 free executions (logical replays).
+7. Data values→wp.empty()→uninitialized | x[i]=x[i]+1→numeric expected=? ✗ | graph dependency and CUDA illegal-address evidence→meaningful.
+8. 16384 B→16384÷4096=4 pages under 4KiB page arithmetic only | GPU virtual-memory mapping granularity≠established from this calculation.
+9. Historical checkout→git checkout 7cf8d8a7ad2d267260de9b0f1ad9bb115805e8a2^ | build/import historical source→verify warp.__file__ | run→python repro/1418_repro.py.
+10. Fixed checkout→git checkout 7cf8d8a7ad2d267260de9b0f1ad9bb115805e8a2 | rebuild/import→verify warp.__file__ | run identical script | compare CUDA error and graph node predecessor closure.
+11. Exact original→https://github.com/NVIDIA/warp/issues/1418 | fix revision→https://github.com/NVIDIA/warp/commit/7cf8d8a7ad2d267260de9b0f1ad9bb115805e8a2 | source→warp/native/warp.cu | graph checks→warp/native/cuda_util.cpp.
+12. Paper exercise→draw 2 incoming edges to free: A→free | B_kernel→?→free | mark valid dependency only if kernel→...→free.
+13. Paper exercise→4 allocations×4096 entries×4 B=? | 64 replays×4 kernels×4096 elements=? | verify 65536 B and 1048576 updates.
+14. Stop→64 replays finished ∧ synchronization completed ∧ no illegal address | or CUDA illegal-address→record exact replay/call | repeat old/fixed separately.
+15. Failure predictions→old captured free nodes may omit B-kernel ancestors→kernel→free path absent→legal replay can free before last use→use-after-free→cudaErrorIllegalAddress; first replay may pass→✗ as proof of safety.
+16. Failure predictions→fixed commit reported 64-replay reproducer pass | local GTX 1650 result=? | old and fixed need identical CUDA driver/toolchain for causal comparison.

@@ -1,0 +1,18 @@
+1. Input→[1]↓[2]↓[3]↓...↓[63]↓[64] | inclusive scan→[1]↓[3]↓[6]↓...↓[2016]↓[2080] | last=64×65÷2=2080 ✓.
+2. 64 entries×4 B/int32=256 B input | 64×4=256 B output | CUB scratch reported=1023 B | scratch independent from user-owned arrays.
+3. 2 scans→2×64=128 outputs | 2 scratch allocations of 1023 B (reported per scan) | 2×1023=2046 B requested across calls; not proof of simultaneous live usage.
+4. Borrowed torch stream B=nonblocking | scratch alloc= cudaMallocAsync(1023, B)→scan(B) | scratch free=cudaFreeAsync(ptr, NULL) | B≠NULL and no required B→NULL wait.
+5. Draw→[B:alloc]→[B:scan] | [NULL:free]→? | absence of scan→free order permits premature reuse; submit order in CPU code does not insert cross-stream edge.
+6. Recorded address→0x1ab2000000 on L40 | scratch range→0x1ab2000000 .. 0x1ab20003fe (=1023 bytes) | hexadecimal arithmetic→0x3ff=1023→last=base+1022.
+7. Source→warp/native/scan.cu:87,108,120–135→stream→allocate→scan→free | warp/native/warp.cu:752–771,807–814,908–912→async allocation/current stream and free/NULL.
+8. Source revision→820df377 / old Warp 1.18.0 | fixed revision→9ca77345d206c737679e0484dac47c4924015a19 | issue→https://github.com/NVIDIA/warp/issues/2094.
+9. Reproducer→repro/2094_repro.py | independent null mode→compute-sanitizer --tool memcheck --track-stream-ordered-races all --error-exitcode 99 python repro/2094_repro.py --stream null.
+10. Independent blocking mode→compute-sanitizer --tool memcheck --track-stream-ordered-races all --error-exitcode 99 python repro/2094_repro.py --stream warp.
+11. Independent borrowed nonblocking mode→compute-sanitizer --tool memcheck --track-stream-ordered-races all --error-exitcode 99 python repro/2094_repro.py --stream torch | torch required.
+12. Each scan→one free-before-alloc + one use-after-free report on affected revision→2 reports/scan | 2 scans×2 reports/scan=4 | 0 mismatched scan values can coexist with 4 memory-lifetime errors.
+13. Paper exercise→input prefix indices {1,2,3,4,5}→{1,3,6,10,15} | suffix index64→2080 | verify both, then compare sanitizer reports independently.
+14. Paper exercise→nonblocking fork B→NULL free dependency drawn as ? | ask marker for free-after-last-use | fill arrow before inspecting fixed source, no fix included.
+15. Fixed branch→rebuild/import source 9ca7734 | verify warp.__file__ points to newly built tree | repeat all modes → compare outputs and sanitizer counts.
+16. Stop→each mode separate process→exit status recorded | original numerical output unchanged; sanitize error classification decides safety.
+17. Failure predictions→1.18.0 borrowed torch nonblocking on affected GPUs→4 sanitizer errors/2 scans while numerical mismatches=0 | NULL/warp-created→0 reported errors.
+18. Failure predictions→maintainer 9ca7734 tested original on A40/L40→0 errors; version 1.20 target | GTX 1650 result not measured here→? .

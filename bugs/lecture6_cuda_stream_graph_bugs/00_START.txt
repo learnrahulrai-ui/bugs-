@@ -1,0 +1,11 @@
+1. GTX_1650→sm_75 | VRAM=4096 MiB | driver≈580 | nvidia-smi→verify | nvcc --version→verify | compute-sanitizer --version→verify.
+2. 5 issues→#1418→#1469→#1792→#2094→#2096 | original evidence→https://github.com/NVIDIA/warp/issues/1418 | https://github.com/NVIDIA/warp/issues/1469 | https://github.com/NVIDIA/warp/issues/1792 | https://github.com/NVIDIA/warp/issues/2094 | https://github.com/NVIDIA/warp/issues/2096.
+3. 3 closed→#1418,#1792,#2094 | 2 open→#1469,#2096 | closed≠reproducible on current release | open≠guaranteed failure.
+4. CPU submit→stream queue→GPU execute | stream A: alloc→write→free | stream B: wait(A)→read | dependency=? →draw arrows before running.
+5. Per experiment→source revision→GPU model→driver→CUDA toolkit→Warp version→exact command→stdout→exit code→reproduce ✓/✗/not-tested.
+6. Reproduction code→repro/ | paper exercises→01_...txt through 05_...txt | original #1469 attachment→https://github.com/user-attachments/files/28004036/repro_capture_while_multistream.py.
+7. #1418 fixed→7cf8d8a7ad2d267260de9b0f1ad9bb115805e8a2 | #1792 fixed→5cf94d5634fe6c2a0b0a893fa691ffa8a5921058 | #2094 fixed→9ca77345d206c737679e0484dac47c4924015a19.
+8. Source checkout≠imported binary | python -c "import warp; print(warp.__file__,warp.__version__)" → verify installed build before comparing revisions.
+9. Reproduction source copied from the cited upstream issues/comments; #1469 attachment unavailable to this environment→external original link retained | no substitute presented as verified original.
+10. Local GPU unavailable in file-generation environment→0 executions→0 locally verified failures | reproduce on GTX 1650→? .
+11. Failure predictions→#1418→memory-free dependency missing on old graph branch; #1469→unjoined sibling→capture error 904 on affected Warp; #1792→stale 0 instead of 3 on affected driver; #2094→nonblocking borrowed stream→4 sanitizer errors/2 scans on old Warp; #2096→first replay ≈2,000,000 instead of 1,000,000 on affected 560/570 driver, driver 580 control generally passes.

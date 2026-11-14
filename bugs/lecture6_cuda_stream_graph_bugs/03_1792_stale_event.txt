@@ -1,0 +1,18 @@
+1. 4×4 BSR matrix→rows=4→offsets slots=4+1=5 | [offset₀:0]→[offset₁:0]→[offset₂:0]→[offset₃:0]→[offset₄:0] | initial last count=0.
+2. Initial nnz_sync→CPU readback buffer=[0] | event E→completed old transfer | copy/effective count initially=0 ✓.
+3. Graph→spin kernel→offsets₄:0→3→copy_nnz_async→host pinned buffer:0→3→event record E | replay launches asynchronously.
+4. 50,000,000 iterations×20 reps=1,000,000,000 loop iterations scheduled | GPU time not inferable from iteration count | original modern GPU ≈100ms spin per rep, GTX 1650 unknown.
+5. Immediately after capture_launch→nnz_sync→wait(E) | E old completion? OR E fresh replay record? | fill exact producer→consumer edge.
+6. Required→update(offsets₄=3)→copy(3)→CPU consume(3) | forbidden→CPU consume(0) before copy(3).
+7. Matrix array vertical→[0:0]↓[1:0]↓[2:0]↓[3:0]↓[4:3] | count read from final slot→3 | 3−0=3.
+8. Capture state→E recorded before capture [done] | captured graph contains record(E) after copy | live event wait does not itself prove which replay record it waits on.
+9. 20 reps→20 expected outputs 3 | passing count=20−failure count | 1 wrong→19/20 | record exact count, not approximate success.
+10. Original executable→repro/1792_repro.py | run on historical Warp before 5cf94d5634fe6c2a0b0a893fa691ffa8a5921058→python repro/1792_repro.py.
+11. Distinct upstream variants→#1791 corrected specific nnz_sync readback | #1792 later removed implicit cached transfers from topology operations | historical revision selection controls exact failure mechanism.
+12. Source→https://github.com/NVIDIA/warp/issues/1792 | follow-up comment→https://github.com/NVIDIA/warp/issues/1792#issuecomment-5290588344 | revision→https://github.com/NVIDIA/warp/commit/5cf94d5634fe6c2a0b0a893fa691ffa8a5921058.
+13. Extended experiment→python repro/1792_multistream_repro.py | stream A: old milestone→slow update(3)→copy_A(3)→E_A | stream B: wait(old milestone)→copy_B(0)→E_B→CPU read | shared E and 4-byte buffer→producer identity=? .
+14. Paper exercise→A slow 100,000,000 iterations; B begins after only milestone | milestone→A update? ✗ | milestone→B copy ✓ | draw actual shared event E incoming record edges.
+15. Paper exercise→two producers target one 4-byte buffer | buffer addresses unique count=1 | writes=2 | required inter-producer order=? | compare two independent buffers→2 buffer addresses.
+16. Stop→20 reps recorded, device sync after each | stale count found→record version and timeline | all 20 pass→no local reproduction; ≠proof that every driver is safe.
+17. Failure predictions→on driver/capture semantics without replay event arming→old E already completed→CPU may read 0 while offsets₄ is scheduled to become 3→0≠3 ✗.
+18. Failure predictions→upstream CI 1/15206 tests failed on driver 595.84 | driver 615.44 tested 20/20 pass | GTX 1650 driver 580 outcome=?; different event alias scenarios remain important even if graph-only test passes.

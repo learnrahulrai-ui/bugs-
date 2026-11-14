@@ -1,0 +1,16 @@
+1. Stream A→K1→WHILE→K_after→wait(B)→K4 | Stream B→wait(A)→K2→signal(A) | fork=one predecessor→two branches | join=both predecessors→one successor.
+2. Draw boxes→[K1]→[fork]→[WHILE]→[K_after]→[join]→[K4] | [fork]→[K2]→[join] | WHILE path∥K2 path.
+3. K_after requires WHILE | K4 requires K_after∧K2 | K_after does not require K2 | draw dependency arrows, not wall-clock order.
+4. begin_capture(A)→fork(B)→record(K2 on B)→capture_while(A) | at capture_while→B not joined | capture_pause(A)→cudaStreamEndCapture(A).
+5. Mid-capture end(A)→outstanding(B) | allowed end only after every participant stream has joined | before actual intended join→end requested→? .
+6. Original branch→https://github.com/NVIDIA/warp/issues/1469 | original attached executable→https://github.com/user-attachments/files/28004036/repro_capture_while_multistream.py | attached bytes NOT verified in this package.
+7. Requirement→CUDA toolkit≥12.4 ∧ CUDA driver≥12.4 ∧ wp.is_conditional_graph_supported()=True | test supported state before capture.
+8. Comment regression→array size=5 | expected values=[1|2|11|22|33] | sum=1+2+11+22+33=69 | values positions={0,1,2,3,4}→5.
+9. Second branch→A: K1A→WHILE_A | B: wait(A)→K2B→WHILE_B→wait(A)→KfinalB | draw when B joins A, then separate B finish.
+10. Error code→904 | source function→wp_cuda_graph_pause_capture | trace→wp.capture_while→pause→cudaStreamEndCapture | failure before graph replay≠kernel data error.
+11. Original attachment→download through GitHub browser→save as repro_capture_while_multistream.py | do not substitute comment test: comment references helper kernels not included.
+12. Paper exercise→capture active stream set={A,B} | end(A) with B outstanding→{A,B}−{joined(B)}=? | fill missing dependency arrow.
+13. Paper exercise→K4 incoming predecessors={K_after,K2}→count=2 | K_after incoming predecessors={WHILE}→count=1 | draw distinct predecessor sets.
+14. Stop→capture succeeds and graph replays→record output | or error 904→record exact call and version | skip instead of concluding fixed when unsupported.
+15. Failure predictions→on affected Warp + supported conditional capture→premature end of parent capture while B is unjoined→CUDA error 904 | no conclusion on GTX 1650 without original attachment execution.
+16. Failure predictions→a visually valid join after WHILE cannot repair a capture failure that occurs inside WHILE construction→✗ .

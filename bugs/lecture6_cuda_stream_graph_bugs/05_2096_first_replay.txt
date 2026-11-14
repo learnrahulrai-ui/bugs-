@@ -1,0 +1,18 @@
+1. FP64 output→1 slot×8 B=8 B | reset to 0→1,000,000 atomic adds of 1.0→expected=1,000,000 exactly.
+2. 256 threads/block | 1,000,000÷256=3906 remainder 64 | ceil(1,000,000÷256)=3907 blocks | 3907×256−1,000,000=192 inactive slots.
+3. One warmup to load kernel→stream synchronized | 8 further warmups→each reset(0)→1,000,000 atomic adds | 8×1,000,000=8,000,000 queued adds.
+4. Graph capture→[reset 0]→[atomic +1 ×1,000,000] | graph instantiate→optional upload→replay₀→sync→read→replay₁→sync→read→replay₂→sync→read.
+5. CPU state diagram→[output 0]→[warmup queued]→[capture]→[upload]→[replay₀] | GPU stream ordering→warmup_i→capture nodes? | fill which synchronization is guaranteed.
+6. Controls→upload=yes/no × warmup synchronized=yes/no→2×2=4 combinations | fresh process per combination, capture stdout and return status.
+7. Source→https://github.com/NVIDIA/warp/issues/2096 | C++ direct original→repro/2096_cuda.cu | Python Warp original→repro/2096_warp.py.
+8. GTX1650→sm_75 | 64-bit atomicAdd supported for sm_60+→75≥60 ✓ | build: nvcc -O2 -arch=sm_75 repro/2096_cuda.cu -o repro/2096_cuda.
+9. Run default→./repro/2096_cuda | run no upload→./repro/2096_cuda --no-upload | run synchronized warmup→./repro/2096_cuda --sync-warmup | run both flags→./repro/2096_cuda --no-upload --sync-warmup.
+10. Exact result per replay→1,000,000 | 3 replays×4 controls=12 results/process-set | 5 fresh process runs×4 controls×3=60 result entries.
+11. Observed original 570.158.01 L40 replay₀=1,999,584 | difference=1,999,584−1,000,000=999,584 | ratio=1.999584 | near double≠proof of exactly 2 kernels.
+12. 570.158.01 L40→50/50 default failed (upstream); 580.105.08 L40→100/100 default passed (upstream) | driver change confounded with machine→same machine before/after not established.
+13. Paper exercise→exact block count=3907 | active=1,000,000 | total slots=1,000,192 | idle=192 | check 3906×256+64=1,000,000 ✓.
+14. Paper exercise→reported 1,999,584 =1,000,000 + ? | extra operations-equivalent=999,584 | determine whether observation proves double launch→no, because addition count alone leaves mechanism unresolved.
+15. Output error→not a harmless FP64 roundoff | increment 1.0 remains exact through 1,000,000 <2^53 | assert equality appropriate.
+16. Stop→3 replay results and exit code per process | exit 0=correct | exit 1=numerical mismatch | exit 2=API/usage error | device 580 pass≠disproof of L40 570 report.
+17. Failure predictions→affected NVIDIA L40/570.158.01 with pending warmup+explicit upload→replay₀ near 1,999,5xx→expected 1,000,000→✗; later replays often exact ✓.
+18. Failure predictions→GTX1650/driver 580 branch likely passes based on separate L40/580 result, not guaranteed; true CUDA component/causal mechanism unproven→? .
